@@ -1,6 +1,6 @@
 "use strict";
 
-const { User } = require("../models");
+const { User, Spot } = require("../models");
 const bcrypt = require("bcryptjs");
 
 let options = {};
@@ -36,6 +36,43 @@ module.exports = {
       ],
       { validate: true }
     );
+    await Spot.bulkCreate(
+      [ {
+          ownerId: "1",
+          address: "122 Marki st",
+          city: "Miami",
+          state: "Fl",
+          country: "USA",
+          lat: "37.7645358",
+          lng: "-137.7645358",
+          name: "Random",
+          description: "Best place eva",
+          price: "1000"
+      },{
+        ownerId: "2",
+        address: "122 Marki st",
+        city: "Miami",
+        state: "Fl",
+        country: "USA",
+        lat: "37.7645358",
+        lng: "-137.7645358",
+        name: "Random",
+        description: "Best place eva",
+        price: "1000"
+      },{
+        ownerId: "3",
+        address: "122 Marki st",
+        city: "Miami",
+        state: "Fl",
+        country: "USA",
+        lat: "37.7645358",
+        lng: "-137.7645358",
+        name: "Random",
+        description: "Best place eva",
+        price: "1000"
+      } ],
+      { validate: true }
+    );
   },
 
   async down(queryInterface, Sequelize) {
@@ -48,5 +85,6 @@ module.exports = {
       },
       {}
     );
+    ///...
   },
 };
