@@ -5,7 +5,13 @@ const bcrypt = require("bcryptjs");
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
 const { setTokenCookie, requireAuth } = require("../../utils/auth");
-const { Spot, User, Review } = require("../../db/models");
+const {
+  Spot,
+  User,
+  Review,
+  ReviewImage,
+  SpotImage,
+} = require("../../db/models");
 
 // Get all Spots
 router.get("/", async (req, res, next) => {
@@ -137,5 +143,26 @@ router.post(
   handleValidationErrors
 );
 
+// Get all Reviews by a Spot's id
+// Returns all the reviews that belong to a spot specified by id.
+router.get("/:spotId/reviews", async (req, res, next) => {
+  
+  const { spotId } = req.params;
+  let spotReview = await Review.findAll({
+    where: {
+      spotId: spotId,
+    },
+    include: [User, ReviewImage],
+  });
+  if (spotReview.length === 0) {
+    return res.status(404).json({
+      message: "Spot couldn't be found",
+    });
+  }
+  //  if(spotId !== spotReview[0].spotId){
+  //   console.log('adasdasd')
+  //  }
+  return res.json(spotReview);
+});
 
 module.exports = router;
