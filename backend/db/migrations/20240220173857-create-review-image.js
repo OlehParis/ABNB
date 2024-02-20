@@ -12,7 +12,7 @@ module.exports = {
       reviewId: {
         type: Sequelize.INTEGER
       },
-      URL: {
+      url: {
         type: Sequelize.STRING
       },
       createdAt: {

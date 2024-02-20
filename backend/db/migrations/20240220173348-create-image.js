@@ -15,7 +15,7 @@ module.exports = {
       spotId: {
         type: Sequelize.INTEGER
       },
-      URL: {
+      url: {
         type: Sequelize.STRING
       },
       createdAt: {

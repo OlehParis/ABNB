@@ -139,6 +139,31 @@ router.post(
   handleValidationErrors
 );
 
+//Add an Image to a Spot based on the Spot's id (Auth require)
+
+router.post("/:spotId/images", requireAuth, async (req, res, next) => {
+  const { url, preview } = req.body;
+  const { spotId } = req.params;
+  const curUserId = req.user.id;
+  const spot = await Spot.findByPk(spotId);
+  if (!spot) {
+    res.status(404).json({
+      message: "Spot couldn't be found",
+    });
+  }
+  if (curUserId === spot.ownerId) {
+    const newImage = await SpotImage.create({
+      url: url,
+      preview: true,
+    });
+    const { createdAt, updatedAt, ...withOutTime } = newImage.toJSON();
+    
+    return res.json(withOutTime);
+   
+  }
+  return res.json("Only host can add image");
+});
+
 // Get all Reviews by a Spot's id
 // Returns all the reviews that belong to a spot specified by id.
 router.get("/:spotId/reviews", async (req, res, next) => {
@@ -154,9 +179,7 @@ router.get("/:spotId/reviews", async (req, res, next) => {
       message: "Spot couldn't be found",
     });
   }
-  //  if(spotId !== spotReview[0].spotId){
-  //   console.log('adasdasd')
-  //  }
+
   return res.json(spotReview);
 });
 
@@ -177,7 +200,7 @@ router.post(
         message: "Spot couldn't be found",
       });
     }
-
+    //Check if Review already exist
     const existingReview = await Review.findOne({
       where: {
         userId: curUserId,

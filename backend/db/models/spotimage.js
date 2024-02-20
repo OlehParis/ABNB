@@ -15,11 +15,12 @@ module.exports = (sequelize, DataTypes) => {
     {
       preview: DataTypes.BOOLEAN,
       spotId: DataTypes.INTEGER,
-      URL: DataTypes.STRING,
+      url: DataTypes.STRING,
     },
     {
       sequelize,
       modelName: "SpotImage",
+     
     }
   );
   return SpotImage;
