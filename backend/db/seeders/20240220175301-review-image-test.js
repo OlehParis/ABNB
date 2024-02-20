@@ -9,13 +9,13 @@ if (process.env.NODE_ENV === "production") {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await ReviewImage.bulkCreate([{ URL: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.bhg.com%2Fhome-improvement%2Fexteriors%2Fcurb-appeal%2Fhouse-styles%2F&psig=AOvVaw1QUiOa1eITW-hcXUnA3Kio&ust=1708538187367000&source=images&cd=vfe&opi=89978449&ved=0CBMQjRxqFwoTCJi63e--uoQDFQAAAAAdAAAAABAO",
+    await ReviewImage.bulkCreate([{ URL: "https://www.bhg.com/thmb/3Vf9GXp3T-adDlU6tKpTbb-AEyE=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/white-modern-house-curved-patio-archway-c0a4a3b3-aa51b24d14d0464ea15d36e05aa85ac9.jpg",
   reviewId:1 },
-  { URL: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.bhg.com%2Fhome-improvement%2Fexteriors%2Fcurb-appeal%2Fhouse-styles%2F&psig=AOvVaw1QUiOa1eITW-hcXUnA3Kio&ust=1708538187367000&source=images&cd=vfe&opi=89978449&ved=0CBMQjRxqFwoTCJi63e--uoQDFQAAAAAdAAAAABAO",
+  { URL: "https://www.bhg.com/thmb/3Vf9GXp3T-adDlU6tKpTbb-AEyE=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/white-modern-house-curved-patio-archway-c0a4a3b3-aa51b24d14d0464ea15d36e05aa85ac9.jpg",
   reviewId:2 },
-  { URL: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.bhg.com%2Fhome-improvement%2Fexteriors%2Fcurb-appeal%2Fhouse-styles%2F&psig=AOvVaw1QUiOa1eITW-hcXUnA3Kio&ust=1708538187367000&source=images&cd=vfe&opi=89978449&ved=0CBMQjRxqFwoTCJi63e--uoQDFQAAAAAdAAAAABAO",
+  { URL: "https://www.bhg.com/thmb/3Vf9GXp3T-adDlU6tKpTbb-AEyE=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/white-modern-house-curved-patio-archway-c0a4a3b3-aa51b24d14d0464ea15d36e05aa85ac9.jpg",
   reviewId:3 },
-  { URL: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.bhg.com%2Fhome-improvement%2Fexteriors%2Fcurb-appeal%2Fhouse-styles%2F&psig=AOvVaw1QUiOa1eITW-hcXUnA3Kio&ust=1708538187367000&source=images&cd=vfe&opi=89978449&ved=0CBMQjRxqFwoTCJi63e--uoQDFQAAAAAdAAAAABAO",
+  { URL: "https://www.bhg.com/thmb/3Vf9GXp3T-adDlU6tKpTbb-AEyE=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/white-modern-house-curved-patio-archway-c0a4a3b3-aa51b24d14d0464ea15d36e05aa85ac9.jpg",
   reviewId:4 }]);
   },
 
