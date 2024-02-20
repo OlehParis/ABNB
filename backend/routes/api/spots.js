@@ -19,12 +19,24 @@ router.get("/", async (req, res, next) => {
 //Get all Spots owned by the Current User
 router.get("/current", requireAuth, async (req, res, next) => {
   const allSpotsCur = await Spot.findAll({
-    where:{ownerId:req.user.dataValues.id}
+    where: { ownerId: req.user.dataValues.id },
   });
   // console.log(req.user.dataValues.id)
   console.log("$$$$$$$$$$$$$$$$$$$$$    Missing avgRating and previewImage");
   return res.json(allSpotsCur);
 });
+
+  // Delete a Spot
+  router.delete("/:spotId", requireAuth, async (req, res, next) => {
+    const { spotId } = req.params;
+    const deletedSpot = await Spot.findByPk(spotId);
+    if (deletedSpot && deletedSpot.ownerId === req.user.dataValues.id) {
+      await deletedSpot.destroy();
+      return res.json("Successfully deleted");
+    }
+    return res.status(404).json("Spot couldn't be found");
+  });
+  
 // Get details of a Spot from an id
 router.get("/:spotId", async (req, res, next) => {
   const { spotId } = req.params;
@@ -32,6 +44,8 @@ router.get("/:spotId", async (req, res, next) => {
     include: User,
     attributes: { exclude: ["username"] },
   });
+
+
 
   // Check if Spot exists
   if (!spotById) {
