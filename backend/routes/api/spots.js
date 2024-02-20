@@ -119,26 +119,22 @@ router.post(
       price,
     } = req.body;
 
-    try {
-      // Create a new spot in the database associated with the authenticated user
-      const newSpot = await Spot.create({
-        address,
-        city,
-        state,
-        country,
-        lat,
-        lng,
-        name,
-        description,
-        price,
-        ownerId: req.user.id,
-      });
+    // Create a new spot in the database associated with the authenticated user
+    const newSpot = await Spot.create({
+      address,
+      city,
+      state,
+      country,
+      lat,
+      lng,
+      name,
+      description,
+      price,
+      ownerId: req.user.id,
+    });
 
-      // Respond with the newly created spot
-      return res.status(201).json(newSpot);
-    } catch (error) {
-      return next(error);
-    }
+    // Respond with the newly created spot
+    return res.status(201).json(newSpot);
   },
   handleValidationErrors
 );
@@ -146,7 +142,6 @@ router.post(
 // Get all Reviews by a Spot's id
 // Returns all the reviews that belong to a spot specified by id.
 router.get("/:spotId/reviews", async (req, res, next) => {
-  
   const { spotId } = req.params;
   let spotReview = await Review.findAll({
     where: {
@@ -164,5 +159,47 @@ router.get("/:spotId/reviews", async (req, res, next) => {
   //  }
   return res.json(spotReview);
 });
+
+//Create a Review for a Spot based on the Spot's id
+router.post(
+  "/:spotId/reviews",
+  requireAuth,
+  async (req, res, next) => {
+    const curUserId = req.user.id;
+    const { review, stars } = req.body;
+    const { spotId } = req.params;
+
+    //Check if the Spot exists
+    const findSpot = await Spot.findByPk(spotId);
+    console.log(findSpot);
+    if (!findSpot) {
+      return res.status(404).json({
+        message: "Spot couldn't be found",
+      });
+    }
+
+    const existingReview = await Review.findOne({
+      where: {
+        userId: curUserId,
+        spotId: spotId,
+      },
+    });
+    if (existingReview) {
+      return res.status(500).json({
+        message: "User already has a review for this spot",
+      });
+    }
+    // Create the new review
+    const newReview = await Review.create({
+      userId: curUserId,
+      spotId: spotId,
+      review: review,
+      stars: stars,
+    });
+
+    return res.status(201).json(newReview);
+  },
+  handleValidationErrors
+);
 
 module.exports = router;
