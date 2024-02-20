@@ -16,6 +16,15 @@ router.get("/", async (req, res, next) => {
   return res.json(allSpots);
 });
 
+//Get all Spots owned by the Current User
+router.get("/current", requireAuth, async (req, res, next) => {
+  const allSpotsCur = await Spot.findAll({
+    where:{ownerId:req.user.dataValues.id}
+  });
+  // console.log(req.user.dataValues.id)
+  console.log("$$$$$$$$$$$$$$$$$$$$$    Missing avgRating and previewImage");
+  return res.json(allSpotsCur);
+});
 // Get details of a Spot from an id
 router.get("/:spotId", async (req, res, next) => {
   const { spotId } = req.params;
@@ -23,7 +32,7 @@ router.get("/:spotId", async (req, res, next) => {
     include: User,
     attributes: { exclude: ["username"] },
   });
-  
+
   // Check if Spot exists
   if (!spotById) {
     return res.status(404).json({ message: "Spot couldn't be found" });
