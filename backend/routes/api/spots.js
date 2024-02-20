@@ -26,17 +26,17 @@ router.get("/current", requireAuth, async (req, res, next) => {
   return res.json(allSpotsCur);
 });
 
-  // Delete a Spot
-  router.delete("/:spotId", requireAuth, async (req, res, next) => {
-    const { spotId } = req.params;
-    const deletedSpot = await Spot.findByPk(spotId);
-    if (deletedSpot && deletedSpot.ownerId === req.user.dataValues.id) {
-      await deletedSpot.destroy();
-      return res.json("Successfully deleted");
-    }
-    return res.status(404).json("Spot couldn't be found");
-  });
-  
+// Delete a Spot
+router.delete("/:spotId", requireAuth, async (req, res, next) => {
+  const { spotId } = req.params;
+  const deletedSpot = await Spot.findByPk(spotId);
+  if (deletedSpot && deletedSpot.ownerId === req.user.dataValues.id) {
+    await deletedSpot.destroy();
+    return res.json("Successfully deleted");
+  }
+  return res.status(404).json("Spot couldn't be found");
+});
+
 // Get details of a Spot from an id
 router.get("/:spotId", async (req, res, next) => {
   const { spotId } = req.params;
@@ -45,14 +45,56 @@ router.get("/:spotId", async (req, res, next) => {
     attributes: { exclude: ["username"] },
   });
 
-
-
   // Check if Spot exists
   if (!spotById) {
     return res.status(404).json({ message: "Spot couldn't be found" });
   }
   return res.json(spotById);
 });
+
+//Edit a Spot
+//Updates and returns an existing spot.
+router.put(
+  "/:spotId",
+  requireAuth,
+  async (req, res, next) => {
+    const { spotId } = req.params;
+    const {
+      address,
+      city,
+      state,
+      country,
+      lat,
+      lng,
+      name,
+      description,
+      price,
+    } = req.body;
+
+    const spot = await Spot.findByPk(spotId);
+    if (!spot) {
+      return res.status(404).json({ error: "Spot not found" });
+    }
+    if (spot.ownerId !== req.user.dataValues.id) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const editSpot = await spot.update({
+      address,
+      city,
+      state,
+      country,
+      lat,
+      lng,
+      name,
+      description,
+      price,
+    });
+
+    return res.status(201).json(editSpot);
+  },
+  handleValidationErrors
+);
 
 //Create a Spot (require Auth)
 router.post(
@@ -83,25 +125,12 @@ router.post(
         name,
         description,
         price,
-        ownerId: req.user.id, // Associate the spot with the authenticated user
+        ownerId: req.user.id,
       });
 
       // Respond with the newly created spot
       return res.status(201).json(newSpot);
     } catch (error) {
-      // Handle validation errors
-      // if (error.name === "SequelizeValidationError") {
-      //   const errors = {};
-      //   error.errors.forEach((err) => {
-      //     errors[err.path] = err.message;
-      //   });
-      //   return res.status(400).json({
-      //     message: "Bad Request",
-      //     errors,
-      //   });
-      // }
-
-      // Handle other errors
       return next(error);
     }
   },
