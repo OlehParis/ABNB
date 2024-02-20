@@ -2,28 +2,18 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Reviews', {
+    await queryInterface.createTable('ReviewImages', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      review: {
-        type: Sequelize.STRING,
-        allowNull:false,
+      reviewId: {
+        type: Sequelize.INTEGER
       },
-      stars: {
-        type: Sequelize.INTEGER,
-        allowNull:false,
-      },
-      spotId: {
-        type: Sequelize.INTEGER,
-        allowNull:false,
-      },
-      userId: {
-        type: Sequelize.INTEGER,
-        allowNull:false,
+      URL: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -38,6 +28,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Reviews');
+    await queryInterface.dropTable('ReviewImages');
   }
 };
