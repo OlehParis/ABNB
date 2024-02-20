@@ -10,12 +10,9 @@ const { Spot, User, Review } = require("../../db/models");
 // Get all Spots
 router.get("/", async (req, res, next) => {
   const allSpots = await Spot.findAll({
-    where: {
-      id: 1,
-    },
-    include: [User, Review],
+    // include: [User, Review],
   });
-
+  console.log("$$$$$$$$$$$$$$$$$$$$$    Missing avgRating and previewImage");
   return res.json(allSpots);
 });
 
@@ -26,6 +23,7 @@ router.get("/:spotId", async (req, res, next) => {
     include: User,
     attributes: { exclude: ["username"] },
   });
+  
   // Check if Spot exists
   if (!spotById) {
     return res.status(404).json({ message: "Spot couldn't be found" });
@@ -34,13 +32,11 @@ router.get("/:spotId", async (req, res, next) => {
 });
 
 //Create a Spot (require Auth)
-router.post("/", requireAuth, async (req, res, next) => {
-  const { address, city, state, country, lat, lng, name, description, price } =
-    req.body;
-
-  try {
-    // Create a new spot in the database associated with the authenticated user
-    const newSpot = await Spot.create({
+router.post(
+  "/",
+  requireAuth,
+  async (req, res, next) => {
+    const {
       address,
       city,
       state,
@@ -50,27 +46,43 @@ router.post("/", requireAuth, async (req, res, next) => {
       name,
       description,
       price,
-      ownerId: req.user.id, // Associate the spot with the authenticated user
-    });
+    } = req.body;
 
-    // Respond with the newly created spot
-    return res.status(201).json(newSpot);
-  } catch (error) {
-    // Handle validation errors
-    // if (error.name === "SequelizeValidationError") {
-    //   const errors = {};
-    //   error.errors.forEach((err) => {
-    //     errors[err.path] = err.message;
-    //   });
-    //   return res.status(400).json({
-    //     message: "Bad Request",
-    //     errors,
-    //   });
-    // }
+    try {
+      // Create a new spot in the database associated with the authenticated user
+      const newSpot = await Spot.create({
+        address,
+        city,
+        state,
+        country,
+        lat,
+        lng,
+        name,
+        description,
+        price,
+        ownerId: req.user.id, // Associate the spot with the authenticated user
+      });
 
-    // Handle other errors
-    return next(error);
-  }
-}, handleValidationErrors);
+      // Respond with the newly created spot
+      return res.status(201).json(newSpot);
+    } catch (error) {
+      // Handle validation errors
+      // if (error.name === "SequelizeValidationError") {
+      //   const errors = {};
+      //   error.errors.forEach((err) => {
+      //     errors[err.path] = err.message;
+      //   });
+      //   return res.status(400).json({
+      //     message: "Bad Request",
+      //     errors,
+      //   });
+      // }
+
+      // Handle other errors
+      return next(error);
+    }
+  },
+  handleValidationErrors
+);
 
 module.exports = router;
