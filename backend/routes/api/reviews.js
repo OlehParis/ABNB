@@ -15,7 +15,11 @@ router.get("/current", requireAuth, async (req, res, next) => {
   if (currentUserId) {
     let getReview = await Review.findAll({
       where: { userId: currentUserId },
-      include: [Spot, User, ReviewImage],
+      include: [
+        { model: Spot, attributes: { exclude: ["createdAt", "updatedAt"] } },
+        { model: User },
+        { model: ReviewImage, attributes: { exclude: ["reviewId", "createdAt", "updatedAt"] } },
+      ],
     });
     if (getReview.length === 0) {
       getReview = "you don`t have any reviews";
@@ -25,35 +29,31 @@ router.get("/current", requireAuth, async (req, res, next) => {
   }
 });
 
- 
 //Add an Image to a Review based on the Review's id (Auth require)
 router.post("/:reviewId/images", requireAuth, async (req, res, next) => {
   const { url } = req.body;
   const { reviewId } = req.params;
   const curUserId = req.user.id;
   const review = await Review.findByPk(reviewId);
- 
+
   if (!review) {
     res.status(404).json({
-      "message": "Review couldn't be found"
+      message: "Review couldn't be found",
     });
   }
-  if (curUserId === review.userId && count <=9) {
+  if (curUserId === review.userId && count <= 9) {
     const newImage = await ReviewImage.create({
-      url: url
+      url: url,
     });
     count++;
-    console.log(count)
+    console.log(count);
     const { createdAt, updatedAt, ...withOutTime } = newImage.toJSON();
-    
+
     return res.json(withOutTime);
-   
   }
   return res.status(403).json({
-    "message": "Maximum number of images for this resource was reached"
+    message: "Maximum number of images for this resource was reached",
   });
 });
-
-
 
 module.exports = router;

@@ -157,9 +157,8 @@ router.post("/:spotId/images", requireAuth, async (req, res, next) => {
       preview: true,
     });
     const { createdAt, updatedAt, ...withOutTime } = newImage.toJSON();
-    
+
     return res.json(withOutTime);
-   
   }
   return res.json("Only host can add image");
 });
@@ -172,7 +171,15 @@ router.get("/:spotId/reviews", async (req, res, next) => {
     where: {
       spotId: spotId,
     },
-    include: [User, ReviewImage],
+    include: [
+      {
+        model: User,
+      },
+      {
+        model: ReviewImage,
+        attributes: { exclude: ["reviewId", "createdAt", "updatedAt"] },
+      },
+    ],
   });
   if (spotReview.length === 0) {
     return res.status(404).json({
