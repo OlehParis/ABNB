@@ -5,13 +5,7 @@ const bcrypt = require("bcryptjs");
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
 const { setTokenCookie, requireAuth } = require("../../utils/auth");
-const {
-  Spot,
-  User,
-  Review,
-  ReviewImage,
-  SpotImage,
-} = require("../../db/models");
+const {Spot,User,Review,ReviewImage,SpotImage} = require("../../db/models");
 
 // Get all Spots
 router.get("/", async (req, res, next) => {
@@ -155,6 +149,7 @@ router.post("/:spotId/images", requireAuth, async (req, res, next) => {
     const newImage = await SpotImage.create({
       url: url,
       preview: true,
+      spotId:spotId,
     });
     const { createdAt, updatedAt, ...withOutTime } = newImage.toJSON();
 
@@ -207,7 +202,6 @@ router.post(
         message: "Spot couldn't be found",
       });
     }
-    //Check if Review already exist
     const existingReview = await Review.findOne({
       where: {
         userId: curUserId,
@@ -219,7 +213,6 @@ router.post(
         message: "User already has a review for this spot",
       });
     }
-    // Create the new review
     const newReview = await Review.create({
       userId: curUserId,
       spotId: spotId,

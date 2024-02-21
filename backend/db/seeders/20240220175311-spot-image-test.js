@@ -16,7 +16,9 @@ module.exports = {
     { url: "https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/home-improvement/wp-content/uploads/2022/07/download-23.jpg",
     spotId:3 },
     { url: "https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/home-improvement/wp-content/uploads/2022/07/download-23.jpg",
-    spotId:4 }]);
+    spotId:4 },
+    { url: "https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/home-improvement/wp-content/uploads/2022/07/download-23.jpg",
+    spotId:5 },]);
     },
   
 
@@ -25,7 +27,7 @@ module.exports = {
 
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
-      spotId: { [Op.in]: ["1, 2, 3 ,4 "]}
+      spotId: { [Op.in]: ["1, 2, ,3, 4 ,5 "]}
     });
   }
 };
