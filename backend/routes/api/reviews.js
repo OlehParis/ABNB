@@ -47,6 +47,7 @@ router.post("/:reviewId/images", requireAuth, async (req, res, next) => {
   if (curUserId === review.userId && count <= 9) {
     const newImage = await ReviewImage.create({
       url: url,
+      reviewId:reviewId
     });
     count++;
     console.log(count);

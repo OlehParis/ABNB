@@ -13,27 +13,28 @@ const {
   SpotImage,
 } = require("../../db/models");
 //findByPK((imageId, { include: [Spot] }));
+
+//Delete a Spot Image (require Auth)
 router.delete("/:imageId", requireAuth, async (req, res, next) => {
   const { imageId } = req.params;
-  
-    let imageByPk = await SpotImage.findAll({
-      where: { id: imageId },
-      include: [Spot],
-    });
-    if (!imageByPk) {
-      return res.status(404).json({
-        message: "Spot Image couldn't be found",
-      });
-    }
-    if (imageByPk[0].Spot.ownerId !== req.user.dataValues.id) {
-      return res.status(401).json({ error: "Unauthorized" });
-    }
 
-    await imageByPk[0].destroy();
-    return res.status(200).json({
-      message: "Successfully deleted",
+  let imageByPk = await SpotImage.findAll({
+    where: { id: imageId },
+    include: [Spot],
+  });
+  if (!imageByPk) {
+    return res.status(404).json({
+      message: "Spot Image couldn't be found",
     });
-  
+  }
+  if (imageByPk[0].Spot.ownerId !== req.user.dataValues.id) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  await imageByPk[0].destroy();
+  return res.status(200).json({
+    message: "Successfully deleted",
+  });
 });
 
 //test route get Image with associated Spot by imageId
