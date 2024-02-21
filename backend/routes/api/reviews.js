@@ -18,7 +18,10 @@ router.get("/current", requireAuth, async (req, res, next) => {
       include: [
         { model: Spot, attributes: { exclude: ["createdAt", "updatedAt"] } },
         { model: User },
-        { model: ReviewImage, attributes: { exclude: ["reviewId", "createdAt", "updatedAt"] } },
+        {
+          model: ReviewImage,
+          attributes: { exclude: ["reviewId", "createdAt", "updatedAt"] },
+        },
       ],
     });
     if (getReview.length === 0) {
@@ -55,5 +58,33 @@ router.post("/:reviewId/images", requireAuth, async (req, res, next) => {
     message: "Maximum number of images for this resource was reached",
   });
 });
+
+// Edit a Review (Auth require)
+router.put(
+  "/:reviewId",
+  requireAuth,
+  async (req, res, next) => {
+    const { reviewId } = req.params;
+    const { review, stars } = req.body;
+    const reviewByPk = await Review.findByPk(reviewId);
+    if (!reviewByPk) {
+      return res.status(404).json({
+        message: "Review couldn't be found",
+      });
+    }
+    if (reviewByPk.userId !== req.user.dataValues.id) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    
+    const editReview = await reviewByPk.update({
+      review,
+      stars,
+    });
+
+    return res.status(200).json(editReview);
+  },
+  handleValidationErrors
+);
 
 module.exports = router;
