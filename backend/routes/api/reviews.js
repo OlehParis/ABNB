@@ -60,10 +60,7 @@ router.post("/:reviewId/images", requireAuth, async (req, res, next) => {
 });
 
 // Edit a Review (Auth require)
-router.put(
-  "/:reviewId",
-  requireAuth,
-  async (req, res, next) => {
+router.put("/:reviewId", requireAuth, async (req, res, next) => {
     const { reviewId } = req.params;
     const { review, stars } = req.body;
     const reviewByPk = await Review.findByPk(reviewId);
@@ -87,4 +84,22 @@ router.put(
   handleValidationErrors
 );
 
+//Delete a Review
+router.delete("/:reviewId", requireAuth, async (req, res, next) => {
+  const { reviewId } = req.params;
+  const reviewByPk = await Review.findByPk(reviewId);
+  if (!reviewByPk) {
+    return res.status(404).json({
+      message: "Review couldn't be found",
+    });
+  }
+  if (reviewByPk.userId !== req.user.dataValues.id) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+  await reviewByPk.destroy();
+  return res.status(200).json({
+    "message": "Successfully deleted"
+  })
+
+})
 module.exports = router;
