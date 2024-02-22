@@ -288,14 +288,23 @@ router.post("/:spotId/bookings", requireAuth, async (req, res, next) => {
       });
     }
 
+    // const formattedStartDate = startDate.split("T")[0];
+    // const formattedEndDate = endDate.split("T")[0];
+    // console.log(formattedStartDate);
     // Create new booking
     const newBooking = await Booking.create({
       spotId: spotId,
       userId: curUserId,
-      startDate: startDate.split("T")[0],
-      endDate: endDate.split("T")[0],
+      startDate: startDate,
+      endDate: endDate,
     });
-
+    // const newReturn = {
+    //   spotId: spotId,
+    //   userId: curUserId,
+    //   startDate: formattedStartDate,
+    //   endDate: formattedEndDate,
+    // };
+    // const toReturn = newBooking.startDate.toString().split("T")[0]
     return res.status(200).json(newBooking);
   } catch (error) {
     console.error("Error:", error);
