@@ -1,11 +1,19 @@
 // backend/routes/api/users.js
 const express = require("express");
 const router = express.Router();
+const { Op } = require("sequelize");
 const bcrypt = require("bcryptjs");
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
 const { setTokenCookie, requireAuth } = require("../../utils/auth");
-const {Spot,User,Review,ReviewImage,SpotImage} = require("../../db/models");
+const {
+  Spot,
+  User,
+  Review,
+  ReviewImage,
+  SpotImage,
+  Booking,
+} = require("../../db/models");
 
 // Get all Spots
 router.get("/", async (req, res, next) => {
@@ -149,7 +157,7 @@ router.post("/:spotId/images", requireAuth, async (req, res, next) => {
     const newImage = await SpotImage.create({
       url: url,
       preview: true,
-      spotId:spotId,
+      spotId: spotId,
     });
     const { createdAt, updatedAt, ...withOutTime } = newImage.toJSON();
 
@@ -224,5 +232,75 @@ router.post(
   },
   handleValidationErrors
 );
+
+//Create a Booking from a Spot based on the Spot's id
+
+router.post("/:spotId/bookings", requireAuth, async (req, res, next) => {
+  try {
+    const curUserId = req.user.id;
+    const { startDate, endDate } = req.body;
+    const { spotId } = req.params;
+
+    // Retrieve spot information along with associated bookings
+    const spotByPk = await Spot.findByPk(spotId, {
+      include: [Booking],
+    });
+
+    if (!spotByPk) {
+      return res.status(404).json({
+        message: "Spot couldn't be found",
+      });
+    }
+
+    // Check if the spot belongs to the current user
+    if (curUserId === spotByPk.ownerId) {
+      return res.json({
+        message: "You can't book your own spot",
+      });
+    }
+
+    const arrBookings = spotByPk.dataValues.Bookings || [];
+    let hasConflict = false;
+    const conflicts = {};
+
+    for (let booking of arrBookings) {
+      const bs = new Date(booking.startDate).getTime();
+      const be = new Date(booking.endDate).getTime();
+      const s = new Date(startDate).getTime();
+      const e = new Date(endDate).getTime();
+
+      // Check for overlap between the existing booking and the new booking
+      if ((s < be && e > bs) || (bs < e && be > s)) {
+        hasConflict = true;
+        if (s > bs && s < be) {
+          conflicts.startDate = "Start date conflicts with an existing booking";
+        }
+        if (e > bs && e < be) {
+          conflicts.endDate = "End date conflicts with an existing booking";
+        }
+      }
+    }
+
+    if (hasConflict) {
+      return res.status(403).json({
+        message: "Sorry, this spot is already booked for the specified dates",
+        errors: conflicts,
+      });
+    }
+
+    // Create new booking
+    const newBooking = await Booking.create({
+      spotId: spotId,
+      userId: curUserId,
+      startDate: startDate.split("T")[0],
+      endDate: endDate.split("T")[0],
+    });
+
+    return res.status(200).json(newBooking);
+  } catch (error) {
+    console.error("Error:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+});
 
 module.exports = router;
