@@ -123,6 +123,7 @@ router.put(
       return res.json(editBooking);
     }
   },
+  
   handleValidationErrors
 );
 
