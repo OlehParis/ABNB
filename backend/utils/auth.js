@@ -72,4 +72,10 @@ const requireAuth = function (req, _res, next) {
 const formatDate = function (date) {
   return date.toISOString().split('T')[0];
 }
-module.exports = { setTokenCookie, restoreUser, requireAuth, formatDate };
+const formatWithTime = function (date) {
+  const dateToStringIso = new Date(date).toISOString();
+  const formattedDate = dateToStringIso.split('T')[0];
+  const formattedTime = dateToStringIso.split('T')[1].split('.')[0];
+  return `${formattedDate} ${formattedTime}`;
+}
+module.exports = { setTokenCookie, restoreUser, requireAuth, formatDate ,formatWithTime};

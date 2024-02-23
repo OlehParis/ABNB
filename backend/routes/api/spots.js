@@ -5,23 +5,30 @@ const { Op } = require("sequelize");
 const bcrypt = require("bcryptjs");
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
-const { setTokenCookie, requireAuth, formatDate } = require("../../utils/auth");
-const {
-  Spot,
-  User,
-  Review,
-  ReviewImage,
-  SpotImage,
-  Booking,
-} = require("../../db/models");
+const { setTokenCookie, requireAuth, formatDate, formatWithTime} = require("../../utils/auth");
+const {Spot,User,Review,ReviewImage,SpotImage,Booking} = require("../../db/models");
 
 // Get all Spots
 router.get("/", async (req, res, next) => {
-  const allSpots = await Spot.findAll({
-    // include: [User, Review],
-  });
+  const allSpots = await Spot.findAll({});
+ 
+
+  const getSpotsRes = allSpots.map((spot) => ({
+    ownerId: spot.ownerId,
+    address:spot.address,
+    city:spot.city,
+    state:spot.state,
+    country:spot.country,
+    lat:spot.lat,
+    lng:spot.lng,
+    name:spot.name,
+    description:spot.description,
+    price:spot.price,
+    createdAt:formatWithTime(spot.createdAt),
+    updatedAt:formatWithTime(spot.updatedAt)
+  }));
   console.log("$$$$$$$$$$$$$$$$$$$$$    Missing avgRating and previewImage");
-  return res.json(allSpots);
+  return res.json({Spots:getSpotsRes});
 });
 
 //Get all Spots owned by the Current User
@@ -320,7 +327,20 @@ router.get("/:spotId/bookings", requireAuth, async (req, res, next) => {
   const allSpots = await Spot.findAll({
     where: { id: spotId },
     attributes: {
-      exclude: ["city","id","address","state", "country","lat", "lng", "name","description","price","createdAt","updatedAt"],
+      exclude: [
+        "city",
+        "id",
+        "address",
+        "state",
+        "country",
+        "lat",
+        "lng",
+        "name",
+        "description",
+        "price",
+        "createdAt",
+        "updatedAt",
+      ],
     },
     include: [{ model: Booking, include: [User] }],
   });
@@ -331,19 +351,18 @@ router.get("/:spotId/bookings", requireAuth, async (req, res, next) => {
     });
   }
   //if you are owner of the spot
-  if(curUserId === allSpots[0].ownerId){
-   
-  const ownerBookings = allSpots[0].Bookings.map((booking) => ({
-    User: booking.User,
-    id: booking.id,
-    spotId: spotId,
-    userId: booking.userId,
-    startDate: formatDate(booking.startDate),
-    endDate: formatDate(booking.endDate),
-    createdAt: booking.createdAt,
-    updatedAt: booking.updatedAt,
-  }));
-  return res.json({ Bookings: ownerBookings });
+  if (curUserId === allSpots[0].ownerId) {
+    const ownerBookings = allSpots[0].Bookings.map((booking) => ({
+      User: booking.User,
+      id: booking.id,
+      spotId: spotId,
+      userId: booking.userId,
+      startDate: formatDate(booking.startDate),
+      endDate: formatDate(booking.endDate),
+      createdAt: booking.createdAt,
+      updatedAt: booking.updatedAt,
+    }));
+    return res.json({ Bookings: ownerBookings });
   }
 
   //if you are not owner of the spot
