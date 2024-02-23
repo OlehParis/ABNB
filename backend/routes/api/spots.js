@@ -22,9 +22,17 @@ const {
 
 // Get all Spots
 router.get("/", async (req, res, next) => {
-  const allSpots = await Spot.findAll({});
+  const allSpots = await Spot.findAll({
+    include: [
+      {
+        model: SpotImage,
+      },
+    ],
+  });
 
+  // return res.json(allSpots);
   const getSpotsRes = allSpots.map((spot) => ({
+    id: spot.id,
     ownerId: spot.ownerId,
     address: spot.address,
     city: spot.city,
@@ -37,8 +45,9 @@ router.get("/", async (req, res, next) => {
     price: spot.price,
     createdAt: formatWithTime(spot.createdAt),
     updatedAt: formatWithTime(spot.updatedAt),
+    previewImage: spot.SpotImages[0].url,
   }));
-  console.log("$$$$$$$$$$$$$$$$$$$$$    Missing avgRating and previewImage");
+
   return res.json({ Spots: getSpotsRes });
 });
 
