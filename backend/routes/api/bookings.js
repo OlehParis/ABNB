@@ -4,7 +4,7 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
-const { setTokenCookie, requireAuth } = require("../../utils/auth");
+const { setTokenCookie, requireAuth, formatDate } = require("../../utils/auth");
 const { Spot, User, Review, ReviewImage, Booking } = require("../../db/models");
 
 //Get all of the Current User's Bookings (Auth require)
@@ -62,9 +62,68 @@ router.get("/:bookingId", requireAuth, async (req, res, next) => {
       message: "Successfully deleted",
     });
   }
-  
-   
-  
 });
+
+router.put(
+  "/:bookingId",
+  requireAuth,
+  async (req, res, next) => {
+    const curUserId = req.user.id;
+    const { startDate, endDate } = req.body;
+    const { bookingId } = req.params;
+    const bookingById = await Booking.findAll({
+      where: { id: bookingId },
+    });
+    if (!bookingById[0]) {
+      return res.status(404).json({
+        message: "Booking couldn't be found",
+      });
+    }
+    let hasConflict = false;
+    const conflicts = {};
+    const bs = new Date(bookingById[0].startDate).getTime();
+    const be = new Date(bookingById[0].endDate).getTime();
+    const s = new Date(startDate).getTime();
+    const e = new Date(endDate).getTime();
+    const curTime = new Date().getTime();
+
+    if (curTime > be) {
+      return res.status(403).json({
+        message: "Past bookings can't be modified",
+      });
+    }
+
+    // Check for overlap between the existing booking and the new booking
+    if ((s < be && e > bs) || (bs < e && be > s)) {
+      hasConflict = true;
+      if (s > bs && s < be || s == bs) {
+        conflicts.startDate = "Start date conflicts with an existing booking";
+      }
+      if (e > bs && e < be || e == be) {
+        conflicts.endDate = "End date conflicts with an existing booking";
+      }
+    }
+
+    if (hasConflict) {
+      return res.status(403).json({
+        message: "Sorry, this spot is already booked for the specified dates",
+        errors: conflicts,
+      });
+    }
+
+    if (curUserId === bookingById[0].userId) {
+     
+      const editBooking = await bookingById[0].update({
+        startDate: (startDate),
+        endDate: endDate,
+        createdAt: bookingById[0].createdAt,
+        updatedAt: bookingById[0].updatedAt,
+      });
+
+      return res.json(editBooking);
+    }
+  },
+  handleValidationErrors
+);
 
 module.exports = router;

@@ -5,30 +5,41 @@ const { Op } = require("sequelize");
 const bcrypt = require("bcryptjs");
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
-const { setTokenCookie, requireAuth, formatDate, formatWithTime} = require("../../utils/auth");
-const {Spot,User,Review,ReviewImage,SpotImage,Booking} = require("../../db/models");
+const {
+  setTokenCookie,
+  requireAuth,
+  formatDate,
+  formatWithTime,
+} = require("../../utils/auth");
+const {
+  Spot,
+  User,
+  Review,
+  ReviewImage,
+  SpotImage,
+  Booking,
+} = require("../../db/models");
 
 // Get all Spots
 router.get("/", async (req, res, next) => {
   const allSpots = await Spot.findAll({});
- 
 
   const getSpotsRes = allSpots.map((spot) => ({
     ownerId: spot.ownerId,
-    address:spot.address,
-    city:spot.city,
-    state:spot.state,
-    country:spot.country,
-    lat:spot.lat,
-    lng:spot.lng,
-    name:spot.name,
-    description:spot.description,
-    price:spot.price,
-    createdAt:formatWithTime(spot.createdAt),
-    updatedAt:formatWithTime(spot.updatedAt)
+    address: spot.address,
+    city: spot.city,
+    state: spot.state,
+    country: spot.country,
+    lat: spot.lat,
+    lng: spot.lng,
+    name: spot.name,
+    description: spot.description,
+    price: spot.price,
+    createdAt: formatWithTime(spot.createdAt),
+    updatedAt: formatWithTime(spot.updatedAt),
   }));
   console.log("$$$$$$$$$$$$$$$$$$$$$    Missing avgRating and previewImage");
-  return res.json({Spots:getSpotsRes});
+  return res.json({ Spots: getSpotsRes });
 });
 
 //Get all Spots owned by the Current User
@@ -243,76 +254,74 @@ router.post(
 //Create a Booking from a Spot based on the Spot's id
 
 router.post("/:spotId/bookings", requireAuth, async (req, res, next) => {
- 
-    const curUserId = req.user.id;
-    const { startDate, endDate } = req.body;
-    const { spotId } = req.params;
+  const curUserId = req.user.id;
+  const { startDate, endDate } = req.body;
+  const { spotId } = req.params;
 
-    // Retrieve spot information along with associated bookings
-    const spotByPk = await Spot.findByPk(spotId, {
-      include: [Booking],
+  // Retrieve spot information along with associated bookings
+  const spotByPk = await Spot.findByPk(spotId, {
+    include: [Booking],
+  });
+
+  if (!spotByPk) {
+    return res.status(404).json({
+      message: "Spot couldn't be found",
     });
+  }
 
-    if (!spotByPk) {
-      return res.status(404).json({
-        message: "Spot couldn't be found",
-      });
-    }
+  // Check if the spot belongs to the current user
+  if (curUserId === spotByPk.ownerId) {
+    return res.json({
+      message: "You can't book your own spot",
+    });
+  }
 
-    // Check if the spot belongs to the current user
-    if (curUserId === spotByPk.ownerId) {
-      return res.json({
-        message: "You can't book your own spot",
-      });
-    }
+  const arrBookings = spotByPk.dataValues.Bookings || [];
+  let hasConflict = false;
+  const conflicts = {};
 
-    const arrBookings = spotByPk.dataValues.Bookings || [];
-    let hasConflict = false;
-    const conflicts = {};
+  for (let booking of arrBookings) {
+    const bs = new Date(booking.startDate).getTime();
+    const be = new Date(booking.endDate).getTime();
+    const s = new Date(startDate).getTime();
+    const e = new Date(endDate).getTime();
 
-    for (let booking of arrBookings) {
-      const bs = new Date(booking.startDate).getTime();
-      const be = new Date(booking.endDate).getTime();
-      const s = new Date(startDate).getTime();
-      const e = new Date(endDate).getTime();
-
-      // Check for overlap between the existing booking and the new booking
-      if ((s < be && e > bs) || (bs < e && be > s)) {
-        hasConflict = true;
-        if (s > bs && s < be) {
-          conflicts.startDate = "Start date conflicts with an existing booking";
-        }
-        if (e > bs && e < be) {
-          conflicts.endDate = "End date conflicts with an existing booking";
-        }
+    // Check for overlap between the existing booking and the new booking
+    if ((s < be && e > bs) || (bs < e && be > s)) {
+      hasConflict = true;
+      if ((s > bs && s < be) || s == bs) {
+        conflicts.startDate = "Start date conflicts with an existing booking";
+      }
+      if ((e > bs && e < be) || e == be) {
+        conflicts.endDate = "End date conflicts with an existing booking";
       }
     }
+  }
 
-    if (hasConflict) {
-      return res.status(403).json({
-        message: "Sorry, this spot is already booked for the specified dates",
-        errors: conflicts,
-      });
-    }
-
-    // console.log(formattedStartDate);
-
-    // Create new booking
-    const newBooking = await Booking.create({
-      spotId: spotId,
-      userId: curUserId,
-      startDate: startDate,
-      endDate: endDate,
+  if (hasConflict) {
+    return res.status(403).json({
+      message: "Sorry, this spot is already booked for the specified dates",
+      errors: conflicts,
     });
-    const newReturn = {
-      spotId: spotId,
-      userId: curUserId,
-      startDate: startDate,
-      endDate: endDate,
-    };
-   
-    return res.status(200).json(newReturn);
- 
+  }
+
+  // console.log(formattedStartDate);
+
+  // Create new booking
+  const newBooking = await Booking.create({
+    spotId: spotId,
+    userId: curUserId,
+    startDate: startDate,
+    endDate: endDate,
+  });
+  const newReturn = {
+    spotId: spotId,
+    userId: curUserId,
+    startDate: startDate,
+    endDate: endDate,
+  };
+
+  return res.status(200).json(newReturn);
 });
 
 //Get all Bookings for a Spot based on the Spot's id (Auth require)
