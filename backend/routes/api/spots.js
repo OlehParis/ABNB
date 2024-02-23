@@ -5,7 +5,7 @@ const { Op } = require("sequelize");
 const bcrypt = require("bcryptjs");
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
-const { setTokenCookie, requireAuth } = require("../../utils/auth");
+const { setTokenCookie, requireAuth, formatDate } = require("../../utils/auth");
 const {
   Spot,
   User,
@@ -310,6 +310,50 @@ router.post("/:spotId/bookings", requireAuth, async (req, res, next) => {
     console.error("Error:", error);
     return res.status(500).json({ message: "Internal Server Error" });
   }
+});
+
+//Get all Bookings for a Spot based on the Spot's id (Auth require)
+router.get("/:spotId/bookings", requireAuth, async (req, res, next) => {
+  const curUserId = req.user.id;
+  const { spotId } = req.params;
+
+  const allSpots = await Spot.findAll({
+    where: { id: spotId },
+    attributes: {
+      exclude: ["city","id","address","state", "country","lat", "lng", "name","description","price","createdAt","updatedAt"],
+    },
+    include: [{ model: Booking, include: [User] }],
+  });
+  // res.json(allSpots[0]);
+  if (!allSpots.length) {
+    res.status(404).json({
+      message: "Spot couldn't be found",
+    });
+  }
+  //if you are owner of the spot
+  if(curUserId === allSpots[0].ownerId){
+   
+  const ownerBookings = allSpots[0].Bookings.map((booking) => ({
+    User: booking.User,
+    id: booking.id,
+    spotId: spotId,
+    userId: booking.userId,
+    startDate: formatDate(booking.startDate),
+    endDate: formatDate(booking.endDate),
+    createdAt: booking.createdAt,
+    updatedAt: booking.updatedAt,
+  }));
+  return res.json({ Bookings: ownerBookings });
+  }
+
+  //if you are not owner of the spot
+  const notOwnerBookings = allSpots[0].Bookings.map((booking) => ({
+    spotId: booking.spotId,
+    startDate: formatDate(booking.startDate),
+    endDate: formatDate(booking.endDate),
+  }));
+
+  return res.json({ Bookings: notOwnerBookings });
 });
 
 module.exports = router;
