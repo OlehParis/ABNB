@@ -30,16 +30,16 @@ router.get("/:bookingId", requireAuth, async (req, res, next) => {
     where: { id: bookingId },
     include: [Spot, User],
   });
-    if (allBooking.length === 0) {
-      res.status(404).json({
-        message: "Booking couldn't be found",
-      });
-    }
+  if (allBooking.length === 0 || !allBooking[0]) {
+    res.status(404).json({
+      message: "Booking couldn't be found",
+    });
+  }
 
   const bs = allBooking[0].startDate.getTime();
   const be = allBooking[0].endDate.getTime();
   const curTime = new Date().getTime();
- console.log(curTime > bs && curTime < be)
+  //  console.log(curTime > bs && curTime < be)
   if (curTime > bs && curTime < be) {
     res.status(403).json({
       message: "Bookings that have been started can't be deleted",
@@ -55,12 +55,16 @@ router.get("/:bookingId", requireAuth, async (req, res, next) => {
   }
 
   //Spot must belong to the current user
-  if (curUserId === allBooking[0].Spot.ownerId) {
+
+  if (allBooking[0].Spot && curUserId === allBooking[0].Spot.ownerId) {
     await allBooking[0].destroy();
     return res.json({
       message: "Successfully deleted",
     });
   }
+  
+   
+  
 });
 
 module.exports = router;

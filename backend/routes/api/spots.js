@@ -243,7 +243,7 @@ router.post(
 //Create a Booking from a Spot based on the Spot's id
 
 router.post("/:spotId/bookings", requireAuth, async (req, res, next) => {
-  try {
+ 
     const curUserId = req.user.id;
     const { startDate, endDate } = req.body;
     const { spotId } = req.params;
@@ -295,9 +295,8 @@ router.post("/:spotId/bookings", requireAuth, async (req, res, next) => {
       });
     }
 
-    // const formattedStartDate = startDate.split("T")[0];
-    // const formattedEndDate = endDate.split("T")[0];
     // console.log(formattedStartDate);
+
     // Create new booking
     const newBooking = await Booking.create({
       spotId: spotId,
@@ -305,18 +304,15 @@ router.post("/:spotId/bookings", requireAuth, async (req, res, next) => {
       startDate: startDate,
       endDate: endDate,
     });
-    // const newReturn = {
-    //   spotId: spotId,
-    //   userId: curUserId,
-    //   startDate: formattedStartDate,
-    //   endDate: formattedEndDate,
-    // };
-    // const toReturn = newBooking.startDate.toString().split("T")[0]
-    return res.status(200).json(newBooking);
-  } catch (error) {
-    console.error("Error:", error);
-    return res.status(500).json({ message: "Internal Server Error" });
-  }
+    const newReturn = {
+      spotId: spotId,
+      userId: curUserId,
+      startDate: startDate,
+      endDate: endDate,
+    };
+   
+    return res.status(200).json(newReturn);
+ 
 });
 
 //Get all Bookings for a Spot based on the Spot's id (Auth require)
