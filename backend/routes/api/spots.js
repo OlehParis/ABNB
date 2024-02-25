@@ -117,8 +117,9 @@ router.get("/current", requireAuth, async (req, res, next) => {
 // Delete a Spot
 router.delete("/:spotId", requireAuth, async (req, res, next) => {
   const { spotId } = req.params;
+  const curUserId = req.user.id;
   const deletedSpot = await Spot.findByPk(spotId);
-  if (deletedSpot && deletedSpot.ownerId === req.user.dataValues.id) {
+  if (deletedSpot && deletedSpot.ownerId === curUserId) {
     await deletedSpot.destroy();
     return res.json("Successfully deleted");
   }
