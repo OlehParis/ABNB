@@ -3,6 +3,8 @@ const express = require("express");
 const router = express.Router();
 const { Op } = require("sequelize");
 const bcrypt = require("bcryptjs");
+const moment = require("moment");
+const currentTime = moment().format("YYYY-MM-DD HH:mm:ss");
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
 const {
@@ -19,6 +21,7 @@ const {
   SpotImage,
   Booking,
 } = require("../../db/models");
+const e = require("express");
 
 // Get all Spots
 router.get("/", async (req, res, next) => {
@@ -226,8 +229,21 @@ router.put(
       description,
       price,
     });
+    let resSpot = {
+      address,
+      city,
+      state,
+      country,
+      lat,
+      lng,
+      name,
+      description,
+      price,
+      createdAt: formatWithTime(editSpot.createdAt),
+      updateAt: currentTime,
+    };
 
-    return res.status(201).json(editSpot);
+    return res.status(201).json(resSpot);
   },
   handleValidationErrors
 );
@@ -306,12 +322,16 @@ router.post("/:spotId/images", requireAuth, async (req, res, next) => {
   if (curUserId === spot.ownerId) {
     const newImage = await SpotImage.create({
       url: url,
-      preview: true,
+      preview: preview,
       spotId: spotId,
     });
-    const { createdAt, updatedAt, ...withOutTime } = newImage.toJSON();
+    const resImage = {
+      id: newImage.id,
+      url,
+      preview,
+    };
 
-    return res.json(withOutTime);
+    return res.json(resImage);
   }
   return res.json("Only host can add image");
 });
