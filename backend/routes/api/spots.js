@@ -67,8 +67,8 @@ router.get("/", async (req, res, next) => {
 
 //Get all Spots owned by the Current User
 router.get("/current", requireAuth, async (req, res, next) => {
-  const allSpots = await Spot.findAll({ 
-      where: { ownerId: req.user.dataValues.id },
+  const allSpots = await Spot.findAll({
+    where: { ownerId: req.user.dataValues.id },
     include: [
       {
         model: SpotImage,
@@ -111,8 +111,6 @@ router.get("/current", requireAuth, async (req, res, next) => {
   return res.json({ Spots: getSpotsRes });
 });
 
-
-
 // Delete a Spot
 router.delete("/:spotId", requireAuth, async (req, res, next) => {
   const { spotId } = req.params;
@@ -127,16 +125,67 @@ router.delete("/:spotId", requireAuth, async (req, res, next) => {
 // Get details of a Spot from an id
 router.get("/:spotId", async (req, res, next) => {
   const { spotId } = req.params;
-  const spotById = await Spot.findByPk(spotId, {
-    include: User,
-    attributes: { exclude: ["username"] },
+  const allSpots = await Spot.findAll({
+    where: { id: spotId },
+    include: [
+      {
+        model: SpotImage,
+        attributes: { exclude: ["createdAt", "updatedAt", "spotId"] },
+      },
+      {
+        model: Review,
+      },
+      {
+        model: User,
+        attributes: {
+          exclude: [
+            "username",
+            "createdAt",
+            "updatedAt",
+            "email",
+            "hashedPassword",
+          ],
+        },
+      },
+    ],
   });
 
   // Check if Spot exists
-  if (!spotById) {
+  if (allSpots.length === 0) {
     return res.status(404).json({ message: "Spot couldn't be found" });
   }
-  return res.json(spotById);
+  // res.json(allSpots);
+  const getSpotsRes = allSpots.map((spot) => {
+    let totalStars = 0;
+    let avgRating = 0;
+    console.log(spot);
+    if (spot.Reviews && spot.Reviews.length > 0) {
+      spot.Reviews.forEach((review) => {
+        totalStars += review.stars;
+      });
+      avgRating = totalStars / spot.Reviews.length;
+    }
+    return {
+      id: spot.id,
+      ownerId: spot.ownerId,
+      address: spot.address,
+      city: spot.city,
+      state: spot.state,
+      country: spot.country,
+      lat: spot.lat,
+      lng: spot.lng,
+      name: spot.name,
+      description: spot.description,
+      price: spot.price,
+      createdAt: formatWithTime(spot.createdAt),
+      updatedAt: formatWithTime(spot.updatedAt),
+      avgRating: avgRating,
+      SpotImages: spot.SpotImages,
+      Owner: spot.User,
+    };
+  });
+
+  return res.json(getSpotsRes);
 });
 
 //Edit a Spot
