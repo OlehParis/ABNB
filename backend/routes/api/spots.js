@@ -33,7 +33,6 @@ router.get("/", async (req, res, next) => {
     ],
   });
 
-  // return res.json(allSpots);
   const getSpotsRes = allSpots.map((spot) => {
     let totalStars = 0;
     let avgRating = 0;
@@ -68,13 +67,51 @@ router.get("/", async (req, res, next) => {
 
 //Get all Spots owned by the Current User
 router.get("/current", requireAuth, async (req, res, next) => {
-  const allSpotsCur = await Spot.findAll({
-    where: { ownerId: req.user.dataValues.id },
+  const allSpots = await Spot.findAll({ 
+      where: { ownerId: req.user.dataValues.id },
+    include: [
+      {
+        model: SpotImage,
+      },
+      {
+        model: Review,
+      },
+    ],
   });
-  // console.log(req.user.dataValues.id)
-  console.log("$$$$$$$$$$$$$$$$$$$$$    Missing avgRating and previewImage");
-  return res.json(allSpotsCur);
+
+  const getSpotsRes = allSpots.map((spot) => {
+    let totalStars = 0;
+    let avgRating = 0;
+    console.log(spot);
+    if (spot.Reviews && spot.Reviews.length > 0) {
+      spot.Reviews.forEach((review) => {
+        totalStars += review.stars;
+      });
+      avgRating = totalStars / spot.Reviews.length;
+    }
+    return {
+      id: spot.id,
+      ownerId: spot.ownerId,
+      address: spot.address,
+      city: spot.city,
+      state: spot.state,
+      country: spot.country,
+      lat: spot.lat,
+      lng: spot.lng,
+      name: spot.name,
+      description: spot.description,
+      price: spot.price,
+      createdAt: formatWithTime(spot.createdAt),
+      updatedAt: formatWithTime(spot.updatedAt),
+      avgRating: avgRating,
+      previewImage: spot.SpotImages[0].url,
+    };
+  });
+
+  return res.json({ Spots: getSpotsRes });
 });
+
+
 
 // Delete a Spot
 router.delete("/:spotId", requireAuth, async (req, res, next) => {
