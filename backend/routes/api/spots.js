@@ -250,21 +250,43 @@ router.post(
     } = req.body;
 
     // Create a new spot in the database associated with the authenticated user
-    const newSpot = await Spot.create({
-      address,
-      city,
-      state,
-      country,
-      lat,
-      lng,
-      name,
-      description,
-      price,
-      ownerId: req.user.id,
-    });
+    try {
+      const newSpot = await Spot.create({
+        ownerId: req.user.id,
+        address,
+        city,
+        state,
+        country,
+        lat,
+        lng,
+        name,
+        description,
+        price,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
 
-    // Respond with the newly created spot
-    return res.status(201).json(newSpot);
+      const resSpot = {
+        id: newSpot.id,
+        ownerId: newSpot.ownerId,
+        address: newSpot.address,
+        city: newSpot.city,
+        state: newSpot.state,
+        country: newSpot.country,
+        lat: newSpot.lat,
+        lng: newSpot.lng,
+        name: newSpot.name,
+        description: newSpot.description,
+        price: newSpot.price,
+        createdAt: formatWithTime(newSpot.createdAt),
+        updatedAt: formatWithTime(newSpot.updatedAt),
+      };
+
+      return res.status(201).json(resSpot);
+    } catch (error) {
+      // Handle any errors that occur during spot creation
+      return next(error);
+    }
   },
   handleValidationErrors
 );
