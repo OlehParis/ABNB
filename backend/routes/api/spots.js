@@ -27,26 +27,41 @@ router.get("/", async (req, res, next) => {
       {
         model: SpotImage,
       },
+      {
+        model: Review,
+      },
     ],
   });
 
   // return res.json(allSpots);
-  const getSpotsRes = allSpots.map((spot) => ({
-    id: spot.id,
-    ownerId: spot.ownerId,
-    address: spot.address,
-    city: spot.city,
-    state: spot.state,
-    country: spot.country,
-    lat: spot.lat,
-    lng: spot.lng,
-    name: spot.name,
-    description: spot.description,
-    price: spot.price,
-    createdAt: formatWithTime(spot.createdAt),
-    updatedAt: formatWithTime(spot.updatedAt),
-    previewImage: spot.SpotImages[0].url,
-  }));
+  const getSpotsRes = allSpots.map((spot) => {
+    let totalStars = 0;
+    let avgRating = 0;
+    console.log(spot);
+    if (spot.Reviews && spot.Reviews.length > 0) {
+      spot.Reviews.forEach((review) => {
+        totalStars += review.stars;
+      });
+      avgRating = totalStars / spot.Reviews.length;
+    }
+    return {
+      id: spot.id,
+      ownerId: spot.ownerId,
+      address: spot.address,
+      city: spot.city,
+      state: spot.state,
+      country: spot.country,
+      lat: spot.lat,
+      lng: spot.lng,
+      name: spot.name,
+      description: spot.description,
+      price: spot.price,
+      createdAt: formatWithTime(spot.createdAt),
+      updatedAt: formatWithTime(spot.updatedAt),
+      avgRating: avgRating,
+      previewImage: spot.SpotImages[0].url,
+    };
+  });
 
   return res.json({ Spots: getSpotsRes });
 });

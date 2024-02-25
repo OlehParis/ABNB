@@ -20,14 +20,14 @@ module.exports = {
         },
         {
           review: "good two",
-          stars: 3,
-          spotId: 2,
+          stars: 5,
+          spotId: 1,
           userId: 2,
         },
         {
           review: "good tree",
-          stars: 3,
-          spotId: 3,
+          stars: 5,
+          spotId: 1,
           userId: 3,
         },
       ],
