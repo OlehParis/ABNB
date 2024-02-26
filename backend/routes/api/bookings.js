@@ -68,11 +68,8 @@ router.get("/:bookingId", requireAuth, async (req, res, next) => {
     });
   }
 });
-//edit booking
-router.put(
-  "/:bookingId",
-  requireAuth,
-  async (req, res, next) => {
+//Edit booking (Auth require)
+  router.put("/:bookingId", requireAuth, async (req, res, next) => {
     const curUserId = req.user.id;
     const { startDate, endDate } = req.body;
     const { bookingId } = req.params;

@@ -529,14 +529,16 @@ router.post("/:spotId/bookings", requireAuth, async (req, res, next) => {
     startDate: startDate,
     endDate: endDate,
   });
-  const newReturn = {
-    spotId: spotId,
-    userId: curUserId,
-    startDate: startDate,
-    endDate: endDate,
+  const resBooking = {
+    id: newBooking.id,
+    spotId: newBooking.spotId,
+    userId: newBooking.userId,
+    startDate: formatDate(newBooking.startDate),
+    endDate: formatDate(newBooking.endDate),
+    createdAt: formatWithTime(newBooking.createdAt),
+    updatedAt: formatWithTime(newBooking.updatedAt),
   };
-
-  return res.status(200).json(newReturn);
+  return res.json(resBooking);
 });
 
 //Get all Bookings for a Spot based on the Spot's id (Auth require)
