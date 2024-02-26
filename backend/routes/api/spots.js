@@ -250,12 +250,54 @@ router.put(
   handleValidationErrors
 );
 
+const validateSpotBody = [
+  check("address")
+    .exists({ checkFalsy: true })
+    .notEmpty()
+    .withMessage("Street address is required"),
+  check("city")
+    .exists({ checkFalsy: true })
+    .notEmpty()
+    .withMessage("City is required"),
+  check("state")
+    .exists({ checkFalsy: true })
+    .notEmpty()
+    .withMessage("State is required"),
+  check("country")
+    .exists({ checkFalsy: true })
+    .notEmpty()
+    .withMessage("Country is required"),
+  check("lat")
+    .notEmpty()
+    .isFloat({ min: -90, max: 90 })
+    .withMessage("Latitude must be between -90 and 90"),
+  check("lng")
+    .notEmpty()
+    .isFloat({ min: -180, max: 180 })
+    .withMessage("Longitude must be between -180 and 180"),
+  check("name")
+    .notEmpty()
+    .isLength({ max: 50 })
+    .withMessage("Name must be less than 50 characters"),
+  check("description")
+    .notEmpty()
+    .exists({ checkFalsy: true })
+    .withMessage("Description is required"),
+  check("price")
+    .notEmpty()
+    .isFloat({ min: 0 })
+    .withMessage("Price per day must be a positive number"),
+  handleValidationErrors,
+];
 //Create a Spot (require Auth)
-router.post(
-  "/",
-  requireAuth,
-  async (req, res, next) => {
-    const {
+router.post("/", requireAuth, validateSpotBody, async (req, res, next) => {
+  const { address, city, state, country, lat, lng, name, description, price } =
+    req.body;
+
+  // Create a new spot in the database associated with the authenticated user
+  try {
+    const newSpot = await Spot.create({
+      ownerId: req.user.id,
       address,
       city,
       state,
@@ -265,49 +307,32 @@ router.post(
       name,
       description,
       price,
-    } = req.body;
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
 
-    // Create a new spot in the database associated with the authenticated user
-    try {
-      const newSpot = await Spot.create({
-        ownerId: req.user.id,
-        address,
-        city,
-        state,
-        country,
-        lat,
-        lng,
-        name,
-        description,
-        price,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
+    const resSpot = {
+      id: newSpot.id,
+      ownerId: newSpot.ownerId,
+      address: newSpot.address,
+      city: newSpot.city,
+      state: newSpot.state,
+      country: newSpot.country,
+      lat: newSpot.lat,
+      lng: newSpot.lng,
+      name: newSpot.name,
+      description: newSpot.description,
+      price: newSpot.price,
+      createdAt: formatWithTime(newSpot.createdAt),
+      updatedAt: formatWithTime(newSpot.updatedAt),
+    };
 
-      const resSpot = {
-        id: newSpot.id,
-        ownerId: newSpot.ownerId,
-        address: newSpot.address,
-        city: newSpot.city,
-        state: newSpot.state,
-        country: newSpot.country,
-        lat: newSpot.lat,
-        lng: newSpot.lng,
-        name: newSpot.name,
-        description: newSpot.description,
-        price: newSpot.price,
-        createdAt: formatWithTime(newSpot.createdAt),
-        updatedAt: formatWithTime(newSpot.updatedAt),
-      };
-
-      return res.status(201).json(resSpot);
-    } catch (error) {
-      // Handle any errors that occur during spot creation
-      return next(error);
-    }
-  },
-  handleValidationErrors
-);
+    return res.status(201).json(resSpot);
+  } catch (error) {
+    // Handle any errors that occur during spot creation
+    return next(error);
+  }
+});
 
 //Add an Image to a Spot based on the Spot's id (Auth require)
 
@@ -460,7 +485,7 @@ router.post("/:spotId/bookings", requireAuth, async (req, res, next) => {
     const be = new Date(booking.endDate).getTime();
     const s = new Date(startDate).getTime();
     const e = new Date(endDate).getTime();
-    
+
     // Check for overlap between the existing booking and the new booking
     if ((s < be && e > bs) || (bs < e && be > s)) {
       hasConflict = true;
