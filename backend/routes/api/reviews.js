@@ -114,13 +114,22 @@ router.post("/:reviewId/images", requireAuth, async (req, res, next) => {
     message: "Maximum number of images for this resource was reached",
   });
 });
-
+validateReview = [
+  check("review")
+    .exists({ checkFalsy: true })
+    .notEmpty()
+    .withMessage("Review text is required"),
+  check("stars")
+    .notEmpty()
+    .isInt({ min: 1 , max: 5})
+    .withMessage("Stars must be an integer from 1 to 5"),
+  handleValidationErrors,
+]
 // Edit a Review (Auth require)
-router.put(
-  "/:reviewId",
-  requireAuth,
+router.put("/:reviewId",requireAuth, validateReview,
   async (req, res, next) => {
     const { reviewId } = req.params;
+    const curUserId = req.user.id;
     const { review, stars } = req.body;
     const reviewByPk = await Review.findByPk(reviewId);
     if (!reviewByPk) {
@@ -128,7 +137,7 @@ router.put(
         message: "Review couldn't be found",
       });
     }
-    if (reviewByPk.userId !== req.user.dataValues.id) {
+    if (reviewByPk.userId !== curUserId) {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
@@ -136,8 +145,17 @@ router.put(
       review,
       stars,
     });
+    const resReview = {
+      id: editReview.id,
+      userId: curUserId,
+      spotId: editReview.spotId,
+      review: editReview.review,
+      stars: editReview.stars,
+      createdAt: formatWithTime(editReview.createdAt),
+      updatedAt: formatWithTime(editReview.updatedAt),
+    };
 
-    return res.status(200).json(editReview);
+    return res.status(201).json(resReview);
   },
   handleValidationErrors
 );
