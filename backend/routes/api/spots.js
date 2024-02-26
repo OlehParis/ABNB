@@ -22,6 +22,7 @@ const {
   Booking,
 } = require("../../db/models");
 const e = require("express");
+const review = require("../../db/models/review");
 
 // Get all Spots
 router.get("/", async (req, res, next) => {
@@ -349,6 +350,7 @@ router.get("/:spotId/reviews", async (req, res, next) => {
       {
         model: User,
       },
+
       {
         model: ReviewImage,
         attributes: { exclude: ["reviewId", "createdAt", "updatedAt"] },
@@ -360,8 +362,28 @@ router.get("/:spotId/reviews", async (req, res, next) => {
       message: "Spot couldn't be found",
     });
   }
+  const resReviews = spotReview.map((review) => {
+    return {
+      id: review.id,
+      userId: review.userId,
+      spotId: review.spotId,
+      review: review.review,
+      stars: review.stars,
+      createdAt: formatWithTime(review.createdAt),
+      updatedAt: formatWithTime(review.updatedAt),
+      User: {
+        id: review.User.id,
+        firstName: review.User.firstName,
+        lastName: review.User.lastName,
+      },
 
-  return res.json(spotReview);
+      ReviewImages: review.ReviewImages.map((image) => ({
+        id: image.id,
+        url: image.url,
+      })),
+    };
+  });
+  return res.json({ Reviews: resReviews });
 });
 
 //Create a Review for a Spot based on the Spot's id
