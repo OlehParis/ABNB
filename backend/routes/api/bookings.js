@@ -63,7 +63,7 @@ router.get("/:bookingId", requireAuth, async (req, res, next) => {
     });
   }
 });
-
+//edit booking
 router.put(
   "/:bookingId",
   requireAuth,
