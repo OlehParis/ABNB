@@ -98,6 +98,7 @@ router.post("/:reviewId/images", requireAuth, async (req, res, next) => {
       message: "Review couldn't be found",
     });
   }
+  //Check if review belongs to the current user
   if (curUserId === review.userId && count <= 9) {
     const newImage = await ReviewImage.create({
       url: url,
@@ -144,13 +145,14 @@ router.put(
 //Delete a Review
 router.delete("/:reviewId", requireAuth, async (req, res, next) => {
   const { reviewId } = req.params;
+  // const curUserId = req.user.id;
   const reviewByPk = await Review.findByPk(reviewId);
   if (!reviewByPk) {
     return res.status(404).json({
       message: "Review couldn't be found",
     });
   }
-  if (reviewByPk.userId !== req.user.dataValues.id) {
+  if (reviewByPk.userId === req.user.dataValues.id) {
     return res.status(401).json({ error: "Unauthorized" });
   }
   await reviewByPk.destroy();
