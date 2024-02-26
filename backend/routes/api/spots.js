@@ -193,63 +193,6 @@ router.get("/:spotId", async (req, res, next) => {
   return res.json(getSpotsRes);
 });
 
-//Edit a Spot
-//Updates and returns an existing spot.
-router.put(
-  "/:spotId",
-  requireAuth,
-  async (req, res, next) => {
-    const { spotId } = req.params;
-    const {
-      address,
-      city,
-      state,
-      country,
-      lat,
-      lng,
-      name,
-      description,
-      price,
-    } = req.body;
-
-    const spot = await Spot.findByPk(spotId);
-    if (!spot) {
-      return res.status(404).json({ error: "Spot not found" });
-    }
-    if (spot.ownerId !== req.user.dataValues.id) {
-      return res.status(401).json({ error: "Unauthorized" });
-    }
-
-    const editSpot = await spot.update({
-      address,
-      city,
-      state,
-      country,
-      lat,
-      lng,
-      name,
-      description,
-      price,
-    });
-    let resSpot = {
-      address,
-      city,
-      state,
-      country,
-      lat,
-      lng,
-      name,
-      description,
-      price,
-      createdAt: formatWithTime(editSpot.createdAt),
-      updateAt: currentTime,
-    };
-
-    return res.status(201).json(resSpot);
-  },
-  handleValidationErrors
-);
-
 const validateSpotBody = [
   check("address")
     .exists({ checkFalsy: true })
@@ -289,6 +232,66 @@ const validateSpotBody = [
     .withMessage("Price per day must be a positive number"),
   handleValidationErrors,
 ];
+
+//Edit a Spot
+//Updates and returns an existing spot.
+router.put(
+  "/:spotId",
+  requireAuth,
+  validateSpotBody,
+  async (req, res, next) => {
+    const { spotId } = req.params;
+    const {
+      address,
+      city,
+      state,
+      country,
+      lat,
+      lng,
+      name,
+      description,
+      price,
+    } = req.body;
+
+    const spot = await Spot.findByPk(spotId);
+    if (!spot) {
+      return res.status(404).json({
+        message: "Spot couldn't be found",
+      });
+    }
+    if (spot.ownerId !== req.user.dataValues.id) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const editSpot = await spot.update({
+      address,
+      city,
+      state,
+      country,
+      lat,
+      lng,
+      name,
+      description,
+      price,
+    });
+    let resSpot = {
+      address,
+      city,
+      state,
+      country,
+      lat,
+      lng,
+      name,
+      description,
+      price,
+      createdAt: formatWithTime(editSpot.createdAt),
+      updateAt: currentTime,
+    };
+
+    return res.status(201).json(resSpot);
+  }
+);
+
 //Create a Spot (require Auth)
 router.post("/", requireAuth, validateSpotBody, async (req, res, next) => {
   const { address, city, state, country, lat, lng, name, description, price } =
@@ -411,11 +414,20 @@ router.get("/:spotId/reviews", async (req, res, next) => {
   return res.json({ Reviews: resReviews });
 });
 
+validateReview = [
+  check("review")
+    .exists({ checkFalsy: true })
+    .notEmpty()
+    .withMessage("Review text is required"),
+  check("stars")
+    .notEmpty()
+    .isInt({ min: 1 , max: 5})
+    .withMessage("Stars must be an integer from 1 to 5"),
+  handleValidationErrors,
+]
+
 //Create a Review for a Spot based on the Spot's id
-router.post(
-  "/:spotId/reviews",
-  requireAuth,
-  async (req, res, next) => {
+router.post("/:spotId/reviews", requireAuth, validateReview, async (req, res, next) => {
     const curUserId = req.user.id;
     const { review, stars } = req.body;
     const { spotId } = req.params;
@@ -441,12 +453,21 @@ router.post(
     }
     const newReview = await Review.create({
       userId: curUserId,
-      spotId: spotId,
+      spotId: Number(spotId),
       review: review,
       stars: stars,
     });
+    const resReview = {
+      id: newReview.id,
+      userId: curUserId,
+      spotId: Number(spotId),
+      review: review,
+      stars: stars,
+      createdAt: formatWithTime(newReview.createdAt),
+      updatedAt: formatWithTime(newReview.updatedAt),
+    };
 
-    return res.status(201).json(newReview);
+    return res.status(201).json(resReview);
   },
   handleValidationErrors
 );
