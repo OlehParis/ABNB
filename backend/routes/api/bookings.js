@@ -4,7 +4,12 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
-const { setTokenCookie, requireAuth, formatDate } = require("../../utils/auth");
+const {
+  setTokenCookie,
+  requireAuth,
+  formatDate,
+  formatWithTime,
+} = require("../../utils/auth");
 const { Spot, User, Review, ReviewImage, Booking } = require("../../db/models");
 
 //Get all of the Current User's Bookings (Auth require)
@@ -74,7 +79,7 @@ router.put(
     const bookingById = await Booking.findAll({
       where: { id: bookingId },
     });
-    if (!bookingById[0]) {
+    if (bookingById.length === 0 || !bookingById) {
       return res.status(404).json({
         message: "Booking couldn't be found",
       });
@@ -96,34 +101,41 @@ router.put(
     // Check for overlap between the existing booking and the new booking
     if ((s < be && e > bs) || (bs < e && be > s)) {
       hasConflict = true;
-      if (s > bs && s < be || s == bs) {
+      if ((s > bs && s < be) || s == bs) {
         conflicts.startDate = "Start date conflicts with an existing booking";
       }
-      if (e > bs && e < be || e == be) {
+      if ((e > bs && e < be) || e == be) {
         conflicts.endDate = "End date conflicts with an existing booking";
       }
     }
 
     if (hasConflict) {
-      return res.status(403).json({
+      return res.status(400).json({
         message: "Sorry, this spot is already booked for the specified dates",
         errors: conflicts,
       });
     }
 
     if (curUserId === bookingById[0].userId) {
-     
       const editBooking = await bookingById[0].update({
-        startDate: (startDate),
+        startDate: startDate,
         endDate: endDate,
         createdAt: bookingById[0].createdAt,
         updatedAt: bookingById[0].updatedAt,
       });
-
-      return res.json(editBooking);
+      const resBooking = {
+        id: editBooking.id,
+        spotId: editBooking.spotId,
+        userId: editBooking.userId,
+        startDate: formatDate(editBooking.startDate),
+        endDate: formatDate(editBooking.endDate),
+        createdAt: formatWithTime(editBooking.createdAt),
+        updatedAt: formatWithTime(editBooking.updatedAt),
+      };
+      return res.json(resBooking);
     }
   },
-  
+
   handleValidationErrors
 );
 
