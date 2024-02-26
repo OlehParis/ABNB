@@ -235,12 +235,10 @@ const validateSpotBody = [
 
 //Edit a Spot
 //Updates and returns an existing spot.
-router.put(
-  "/:spotId",
-  requireAuth,
-  validateSpotBody,
+router.put("/:spotId", requireAuth, validateSpotBody,
   async (req, res, next) => {
     const { spotId } = req.params;
+    const curUserId = req.user.id;
     const {
       address,
       city,
@@ -259,7 +257,7 @@ router.put(
         message: "Spot couldn't be found",
       });
     }
-    if (spot.ownerId !== req.user.dataValues.id) {
+    if (spot.ownerId !== curUserId) {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
@@ -297,8 +295,7 @@ router.post("/", requireAuth, validateSpotBody, async (req, res, next) => {
   const { address, city, state, country, lat, lng, name, description, price } =
     req.body;
 
-  // Create a new spot in the database associated with the authenticated user
-  try {
+  
     const newSpot = await Spot.create({
       ownerId: req.user.id,
       address,
@@ -331,10 +328,7 @@ router.post("/", requireAuth, validateSpotBody, async (req, res, next) => {
     };
 
     return res.status(201).json(resSpot);
-  } catch (error) {
-    // Handle any errors that occur during spot creation
-    return next(error);
-  }
+ 
 });
 
 //Add an Image to a Spot based on the Spot's id (Auth require)
