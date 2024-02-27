@@ -478,7 +478,7 @@ router.post("/:spotId/images", requireAuth, async (req, res, next) => {
 
     return res.json(resImage);
   }
-  return res.json({ message: "Forbidden" });
+  return res.status(403).json({ message: "Forbidden" });
 });
 
 // Get all Reviews by a Spot's id
