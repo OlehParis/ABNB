@@ -137,12 +137,24 @@ router.get("/", handleValidateQuery, async (req, res) => {
     offset,
   };
 
-  if (minLat) {options.where.lat = { [Op.gte]: minLat };}
-  if (maxLat) {options.where.lat = { [Op.lte]: maxLat };}
-  if (minLng) {options.where.lng = { [Op.gte]: minLng };}
-  if (maxLng) {options.where.lng = { [Op.lte]: maxLng };}
-  if (minPrice) {options.where.price = { [Op.gte]: minPrice };}
-  if (maxPrice) {options.where.price = { [Op.lte]: maxPrice };}
+  if (minLat) {
+    options.where.lat = { [Op.gte]: minLat };
+  }
+  if (maxLat) {
+    options.where.lat = { [Op.lte]: maxLat };
+  }
+  if (minLng) {
+    options.where.lng = { [Op.gte]: minLng };
+  }
+  if (maxLng) {
+    options.where.lng = { [Op.lte]: maxLng };
+  }
+  if (minPrice) {
+    options.where.price = { [Op.gte]: minPrice };
+  }
+  if (maxPrice) {
+    options.where.price = { [Op.lte]: maxPrice };
+  }
   let allSpots = await Spot.findAll(options);
 
   allSpots = allSpots.map((spot) => {
@@ -171,7 +183,7 @@ router.get("/", handleValidateQuery, async (req, res) => {
     delete spot.dataValues.SpotImages;
     return spot;
   });
-  const resObj = { Spots: spots, page, size };
+  const resObj = { Spots: allSpots, page, size };
   return res.status(200).json(resObj);
 });
 
