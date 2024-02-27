@@ -2,28 +2,22 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Reviews', {
+    await queryInterface.createTable('SpotImages', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      review: {
-        type: Sequelize.STRING,
-        allowNull:false,
-      },
-      stars: {
-        type: Sequelize.INTEGER,
-        allowNull:false,
+      preview: {
+        type: Sequelize.BOOLEAN
       },
       spotId: {
         type: Sequelize.INTEGER,
-        allowNull:false,
+        allowNull:false
       },
-      userId: {
-        type: Sequelize.INTEGER,
-        allowNull:false,
+      url: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -38,6 +32,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Reviews');
+    await queryInterface.dropTable('SpotImages');
   }
 };

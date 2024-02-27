@@ -1,29 +1,28 @@
 'use strict';
-
+/** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Reviews', {
+    await queryInterface.createTable('Bookings', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      review: {
-        type: Sequelize.STRING,
-        allowNull:false,
-      },
-      stars: {
-        type: Sequelize.INTEGER,
-        allowNull:false,
-      },
-      spotId: {
-        type: Sequelize.INTEGER,
-        allowNull:false,
-      },
       userId: {
         type: Sequelize.INTEGER,
-        allowNull:false,
+        
+      },
+      startDate: {
+        type: Sequelize.DATE,
+        allowNull:false
+      },
+      endDate: {
+        type: Sequelize.DATE,
+        allowNull:false
+      },
+      spotId: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
@@ -38,6 +37,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Reviews');
+    await queryInterface.dropTable('Bookings');
   }
 };
