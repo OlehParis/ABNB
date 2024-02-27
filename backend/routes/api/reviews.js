@@ -138,7 +138,9 @@ router.put("/:reviewId",requireAuth, validateReview,
       });
     }
     if (reviewByPk.userId !== curUserId) {
-      return res.status(401).json({ error: "Unauthorized" });
+      return res.status(403).json({
+        "message": "Forbidden"
+      });
     }
 
     const editReview = await reviewByPk.update({
@@ -171,7 +173,9 @@ router.delete("/:reviewId", requireAuth, async (req, res, next) => {
     });
   }
   if (reviewByPk.userId !== curUserId) {
-    return res.status(401).json({ error: "Unauthorized" });
+    return res.status(403).json({
+      "message": "Forbidden"
+    });
   }
   await reviewByPk.destroy();
   return res.status(200).json({

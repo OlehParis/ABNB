@@ -18,7 +18,9 @@ router.delete("/:imageId", requireAuth, async (req, res, next) => {
     });
   }
   if (reviewByPk.Review.dataValues.userId !== req.user.dataValues.id) {
-    return res.status(401).json({ error: "Unauthorized" });
+    return res.status(403).json({
+      "message": "Forbidden"
+    });
   }
 
   await reviewByPk.destroy();

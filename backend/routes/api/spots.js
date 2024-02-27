@@ -379,7 +379,9 @@ router.put(
       });
     }
     if (spot.ownerId !== curUserId) {
-      return res.status(401).json({ error: "Unauthorized" });
+      return res.status(403).json({
+        "message": "Forbidden"
+      });
     }
 
     const editSpot = await spot.update({

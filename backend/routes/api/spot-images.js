@@ -28,7 +28,9 @@ router.delete("/:imageId", requireAuth, async (req, res, next) => {
     });
   }
   if (imageByPk[0].Spot.ownerId !== req.user.dataValues.id) {
-    return res.status(401).json({ error: "Unauthorized" });
+    return res.status(403).json({
+      "message": "Forbidden"
+    });
   }
 
   await imageByPk[0].destroy();
