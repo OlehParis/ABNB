@@ -106,7 +106,7 @@ router.post("/:reviewId/images", requireAuth, async (req, res, next) => {
     });
     count++;
     console.log(count);
-    const { createdAt, updatedAt, ...withOutTime } = newImage.toJSON();
+    const { createdAt, updatedAt, reviewId, ...withOutTime } = newImage.toJSON();
 
     return res.json(withOutTime);
   }
