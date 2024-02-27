@@ -5,24 +5,97 @@ const { Op } = require("sequelize");
 const bcrypt = require("bcryptjs");
 const moment = require("moment");
 const currentTime = moment().format("YYYY-MM-DD HH:mm:ss");
-const { check } = require("express-validator");
+const { check, query } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
-const {
-  setTokenCookie,
-  requireAuth,
-  formatDate,
-  formatWithTime,
-} = require("../../utils/auth");
-const {
-  Spot,
-  User,
-  Review,
-  ReviewImage,
-  SpotImage,
-  Booking,
-} = require("../../db/models");
-const e = require("express");
-const review = require("../../db/models/review");
+const { setTokenCookie,requireAuth,formatDate, formatWithTime} = require("../../utils/auth");
+const { Spot, User, Review,ReviewImage,SpotImage, Booking,} = require("../../db/models");
+
+
+const validateQuery = [
+    query('page')
+        .isInt({ min: 1 })
+        .withMessage('Page must be greater than or equal to 1')
+        .optional(),
+    query('page')
+        .isInt({ max: 10 })
+        .withMessage('Page must be less than or equal to 10')
+        .optional(),
+    query('size')
+        .isInt({ min: 1 })
+        .withMessage('Size must be greater than or equal to 1')
+        .optional(),
+    query('size')
+        .isInt({ max: 20 })
+        .withMessage('Size must be less than or equal to 20')
+        .optional(),
+    query('minLat')
+        .isFloat({ min: -90, max: 90 })
+        .withMessage('Minimum latitude must be -90 or greater')
+        .bail()
+        .custom(async (min, { req }) => {
+            const max = req.query.maxLat;
+            if (Number.parseFloat(min) > Number.parseFloat(max)) {
+                throw new Error('Minimum latitude cannot be greater than maximum latitude')
+            }
+        })
+        .optional(),
+    query('maxLat')
+        .isFloat({ min: -90, max: 90 })
+        .withMessage('Maximum latitude must be equal to or less than 90')
+        .bail()
+        .custom(async (max, { req }) => {
+            const min = req.query.minLat;
+            if (Number.parseFloat(max) < Number.parseFloat(min)) {
+                throw new Error('Maximum latitude cannot be less than minimum latitude')
+            }
+        })
+        .optional(),
+    query('minLng')
+        .isFloat({ min: -180, max: 180 })
+        .withMessage('Minimum longitude must be -180 or greater')
+        .bail()
+        .custom(async (min, { req }) => {
+            const max = req.query.maxLng;
+            if (Number.parseFloat(min) > Number.parseFloat(max)) {
+                throw new Error('Minimum longitude cannot be greater than maximum longitude')
+            }
+        })
+        .optional(),
+    query('maxLng')
+        .isFloat({ min: -180, max: 180 })
+        .withMessage('Maximum longitude must be 180 or less')
+        .bail()
+        .custom(async (max, { req }) => {
+            const min = req.query.minLng;
+            if (Number.parseFloat(max) < Number.parseFloat(min)) {
+                throw new Error('Maximum longitude cannot be less than minimum longitude')
+            }
+        })
+        .optional(),
+    query('minPrice')
+        .isFloat({ min: 0 })
+        .withMessage('Minimum price must be greater than or equal to 0')
+        .bail()
+        .custom(async (min, { req }) => {
+            const max = req.query.maxPrice;
+            if (Number.parseFloat(min) > Number.parseFloat(max)) {
+                throw new Error('Minimum price cannot be greater than maximum price')
+            }
+        })
+        .optional(),
+    query('maxPrice')
+        .isFloat({ min: 0 })
+        .withMessage('Maximum price must be greater than or equal to 0')
+        .bail()
+        .custom(async (max, { req }) => {
+            const min = req.query.minPrice;
+            if (Number.parseFloat(max) < Number.parseFloat(min)) {
+                throw new Error('Maximum price cannot be less than minimum price')
+            }
+        })
+        .optional(),
+    handleValidationErrors
+];
 
 // Get all Spots
 router.get("/", async (req, res, next) => {
