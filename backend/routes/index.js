@@ -13,8 +13,8 @@ router.get("/api/csrf/restore", (req, res) => {
     });
   });
 
-router.get('/', (req, res , next) => {
-  return res.send('test route')
-})
+// router.get('/', (req, res , next) => {
+//   return res.send('test route')
+// })
 // ...
 module.exports = router;
