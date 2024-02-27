@@ -22,7 +22,7 @@ module.exports = {
         endDate:"2025-11-23",
         spotId:1,
       }
-    ])
+    ],{ validate: true })
   },
 
   async down (queryInterface, Sequelize) {

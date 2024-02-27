@@ -23,7 +23,8 @@ module.exports = {
     preview: true },
     { url: "s.com/thumborttps://www.forbes.com/home-improvement/wp-content/uploads/2022/07/download-23.jpg",
     spotId:5,
-    preview: true },]);
+    preview: true },
+  ],{ validate: true } );
     },
   
 
