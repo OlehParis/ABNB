@@ -1,4 +1,4 @@
-# `<Airbnb>`
+# `ABNB`
 
 ## Database Schema Design
 
@@ -1541,4 +1541,3 @@ Return spots filtered by query parameters.
       }
     }
     ```
-# ABNB
