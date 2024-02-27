@@ -105,10 +105,13 @@ router.post("/:reviewId/images", requireAuth, async (req, res, next) => {
       reviewId: reviewId,
     });
     count++;
-    console.log(count);
-    const { createdAt, updatedAt, reviewId, ...withOutTime } = newImage.toJSON();
+    const resReview = {
+      id:newImage.id,
+      url:newImage.url
+    };
+    
 
-    return res.json(withOutTime);
+    return res.json(resReview);
   }
   return res.status(403).json({
     message: "Maximum number of images for this resource was reached",
