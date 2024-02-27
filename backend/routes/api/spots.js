@@ -380,7 +380,7 @@ router.put(
     }
     if (spot.ownerId !== curUserId) {
       return res.status(403).json({
-        "message": "Forbidden"
+        message: "Forbidden",
       });
     }
 
@@ -478,7 +478,7 @@ router.post("/:spotId/images", requireAuth, async (req, res, next) => {
 
     return res.json(resImage);
   }
-  return res.json("Only host can add image");
+  return res.json({ message: "Forbidden" });
 });
 
 // Get all Reviews by a Spot's id
