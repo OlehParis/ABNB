@@ -62,22 +62,29 @@ const restoreUser = (req, res, next) => {
 
 const requireAuth = function (req, _res, next) {
   if (req.user) return next();
- if(!isProduction){const err = new Error("Authentication required");
- err.title = "Authentication required";
- err.errors = { message: "Authentication required" };
- err.status = 401;
- return next(err);}else {
-  err.errors = {message: "Authentication required" }
- }
-  
-}
+  if (!isProduction) {
+    const err = new Error("Authentication required");
+    err.title = "Authentication required";
+    err.errors = { message: "Authentication required" };
+    err.status = 401;
+    return next(err);
+  } else {
+    err.errors = { message: "Authentication required" };
+  }
+};
 const formatDate = function (date) {
-  return date.toISOString().split('T')[0];
-}
+  return date.toISOString().split("T")[0];
+};
 const formatWithTime = function (date) {
   const dateToStringIso = new Date(date).toISOString();
-  const formattedDate = dateToStringIso.split('T')[0];
-  const formattedTime = dateToStringIso.split('T')[1].split('.')[0];
+  const formattedDate = dateToStringIso.split("T")[0];
+  const formattedTime = dateToStringIso.split("T")[1].split(".")[0];
   return `${formattedDate} ${formattedTime}`;
-}
-module.exports = { setTokenCookie, restoreUser, requireAuth, formatDate ,formatWithTime};
+};
+module.exports = {
+  setTokenCookie,
+  restoreUser,
+  requireAuth,
+  formatDate,
+  formatWithTime,
+};
