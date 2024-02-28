@@ -27,13 +27,12 @@ router.get("/current", requireAuth, async (req, res, next) => {
       userId: booking.userId,
       Spot: booking.Spot,
       userId: booking.userId,
-      startDate:formatDate(booking.startDate),
-      endDate:formatDate(booking.endDate),
-      createdAt:formatWithTime(booking.createdAt),
-      updatedAt:formatWithTime(booking.updatedAt)
-    
+      startDate: formatDate(booking.startDate),
+      endDate: formatDate(booking.endDate),
+      createdAt: formatWithTime(booking.createdAt),
+      updatedAt: formatWithTime(booking.updatedAt),
     };
-    })
+  });
   res.json(resBookings);
 });
 
@@ -78,10 +77,37 @@ router.get("/:bookingId", requireAuth, async (req, res, next) => {
     });
   }
 });
+const validateBooking = [
+  check("startDate")
+    .exists({ checkFalsy: true })
+    .withMessage("startDate is required")
+    .isISO8601()
+    .withMessage("startDate must be a valid date")
+    .custom((value, { req }) => {
+      if (new Date(value) < new Date()) {
+        throw new Error("startDate cannot be in the past");
+      }
+      return true;
+    }),
+  check("endDate")
+    .exists({ checkFalsy: true })
+    .withMessage("endDate is required")
+    .isISO8601()
+    .withMessage("endDate must be a valid date")
+    .custom((value, { req }) => {
+      if (new Date(value) <= new Date(req.body.startDate)) {
+        throw new Error("endDate cannot be on or before start date");
+      }
+      return true;
+    }),
+  handleValidationErrors,
+];
+
 //Edit booking (Auth require)
 router.put(
   "/:bookingId",
   requireAuth,
+  validateBooking,
   async (req, res, next) => {
     const curUserId = req.user.id;
     const { startDate, endDate } = req.body;

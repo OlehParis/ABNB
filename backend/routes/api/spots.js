@@ -209,7 +209,7 @@ router.get("/current", requireAuth, async (req, res, next) => {
       spot.Reviews.forEach((review) => {
         totalStars += review.stars;
       });
-     
+
       avgRating = totalStars / spot.Reviews.length;
     }
     return {
@@ -239,16 +239,16 @@ router.delete("/:spotId", requireAuth, async (req, res, next) => {
   const { spotId } = req.params;
   const curUserId = req.user.id;
   const deletedSpot = await Spot.findByPk(spotId);
-  if(!deletedSpot){
-    res.status(404).json("Spot couldn't be found")
+  if (!deletedSpot) {
+    res.status(404).json("Spot couldn't be found");
   }
   if (deletedSpot && deletedSpot.ownerId === curUserId) {
     await deletedSpot.destroy();
     return res.json("Successfully deleted");
   }
   res.status(403).json({
-    "message": "Forbidden"
-  })
+    message: "Forbidden",
+  });
 });
 
 // Get details of a Spot from an id
@@ -597,9 +597,34 @@ router.post(
   handleValidationErrors
 );
 
+const validateBooking = [
+  check('startDate')
+      .exists({ checkFalsy: true })
+      .withMessage('startDate is required')
+      .isISO8601()
+      .withMessage('startDate must be a valid date')
+      .custom((value, { req }) => {
+          if (new Date(value) < new Date()) {
+              throw new Error('startDate cannot be in the past');
+          }
+          return true;
+      }),
+  check('endDate')
+      .exists({ checkFalsy: true })
+      .withMessage('endDate is required')
+      .isISO8601()
+      .withMessage('endDate must be a valid date')
+      .custom((value, { req }) => {
+          if (new Date(value) <= new Date(req.body.startDate)) {
+              throw new Error('endDate cannot be on or before start date');
+          }
+          return true;
+      }),
+  handleValidationErrors
+];
 //Create a Booking from a Spot based on the Spot's id
 
-router.post("/:spotId/bookings", requireAuth, async (req, res, next) => {
+router.post("/:spotId/bookings", requireAuth, validateBooking, async (req, res, next) => {
   const curUserId = req.user.id;
   const { startDate, endDate } = req.body;
   const { spotId } = req.params;
@@ -633,17 +658,18 @@ router.post("/:spotId/bookings", requireAuth, async (req, res, next) => {
     const e = new Date(endDate).getTime();
 
     // Check for overlap between the existing booking and the new booking
-    if ((s < be && e > bs) || (bs < e && be > s)) {
+    if ((s <= be && e > bs) || (bs <= e && be > s)) {
       hasConflict = true;
-      if ((s > bs && s < be) || s === bs) {
+      if ((s > bs && s <= be) || s === bs) {
+        console.log(s === bs);
         conflicts.startDate = "Start date conflicts with an existing booking";
       }
-      if ((e > bs && e < be) || e === be) {
+      if ((e >= bs && e <= be) || e === be) {
         conflicts.endDate = "End date conflicts with an existing booking";
       }
     }
   }
-
+  
   if (hasConflict) {
     return res.status(403).json({
       message: "Sorry, this spot is already booked for the specified dates",

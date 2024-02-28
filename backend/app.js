@@ -68,13 +68,13 @@ app.use((err, _req, res, _next) => {
   console.error(err);
   if (!isProduction) {
     res.json({
-      title: err.title || "Server Error",
+      
       message: err.message,
       errors: err.errors,
       stack: isProduction ? null : err.stack,
     });
   } else {
-    res.json({ message: err.message, errors: err.errors });
+    res.json({ message: err.message});
   };
 });
 module.exports = app;
