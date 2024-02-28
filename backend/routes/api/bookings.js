@@ -104,10 +104,7 @@ const validateBooking = [
 ];
 
 //Edit booking (Auth require)
-router.put(
-  "/:bookingId",
-  requireAuth,
-  validateBooking,
+router.put("/:bookingId",requireAuth, validateBooking,
   async (req, res, next) => {
     const curUserId = req.user.id;
     const { startDate, endDate } = req.body;
