@@ -203,12 +203,13 @@ router.get("/current", requireAuth, async (req, res, next) => {
 
   const getSpotsRes = allSpots.map((spot) => {
     let totalStars = 0;
-    let avgRating = 0;
+    let avgRating = null;
     console.log(spot);
     if (spot.Reviews && spot.Reviews.length > 0) {
       spot.Reviews.forEach((review) => {
         totalStars += review.stars;
       });
+     
       avgRating = totalStars / spot.Reviews.length;
     }
     return {
