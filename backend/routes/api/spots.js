@@ -239,11 +239,16 @@ router.delete("/:spotId", requireAuth, async (req, res, next) => {
   const { spotId } = req.params;
   const curUserId = req.user.id;
   const deletedSpot = await Spot.findByPk(spotId);
+  if(!deletedSpot){
+    res.status(404).json("Spot couldn't be found")
+  }
   if (deletedSpot && deletedSpot.ownerId === curUserId) {
     await deletedSpot.destroy();
     return res.json("Successfully deleted");
   }
-  return res.status(404).json("Spot couldn't be found");
+  res.status(403).json({
+    "message": "Forbidden"
+  })
 });
 
 // Get details of a Spot from an id
