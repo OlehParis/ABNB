@@ -21,10 +21,20 @@ router.get("/current", requireAuth, async (req, res, next) => {
       { model: Spot, attributes: { exclude: ["createdAt", "updatedAt"] } },
     ],
   });
-  // if(!curBookings) {
-  //     res.status(201).json(you)
-  // }
-  res.json(curBookings);
+  const resBookings = curBookings.map((booking) => {
+    return {
+      id: booking.id,
+      userId: booking.userId,
+      Spot: booking.Spot,
+      userId: booking.userId,
+      startDate:formatDate(booking.startDate),
+      endDate:formatDate(booking.endDate),
+      createdAt:formatWithTime(booking.createdAt),
+      updatedAt:formatWithTime(booking.updatedAt)
+    
+    };
+    })
+  res.json(resBookings);
 });
 
 //Delete a Booking
@@ -69,7 +79,10 @@ router.get("/:bookingId", requireAuth, async (req, res, next) => {
   }
 });
 //Edit booking (Auth require)
-  router.put("/:bookingId", requireAuth, async (req, res, next) => {
+router.put(
+  "/:bookingId",
+  requireAuth,
+  async (req, res, next) => {
     const curUserId = req.user.id;
     const { startDate, endDate } = req.body;
     const { bookingId } = req.params;
