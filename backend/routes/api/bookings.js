@@ -117,6 +117,11 @@ router.put("/:bookingId",requireAuth, validateBooking,
         message: "Booking couldn't be found",
       });
     }
+    if(curUserId !== bookingById[0].userId) {
+      return res.status(403).json({
+          "message": "Forbidden"
+      })
+   }
     let hasConflict = false;
     const conflicts = {};
     const bs = new Date(bookingById[0].startDate).getTime();
