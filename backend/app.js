@@ -74,7 +74,7 @@ app.use((err, _req, res, _next) => {
       stack: isProduction ? null : err.stack,
     });
   } else {
-    res.json({ message: err.message, errors:err.errors });
+    res.json({ message: err.message, errors: err.errors });
   };
 });
 module.exports = app;
