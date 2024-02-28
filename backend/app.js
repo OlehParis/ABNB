@@ -75,6 +75,6 @@ app.use((err, _req, res, _next) => {
     });
   } else {
     res.json({ message: err.message });
-  }
+  };
 });
 module.exports = app;

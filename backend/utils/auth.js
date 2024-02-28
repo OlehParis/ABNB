@@ -60,17 +60,10 @@ const restoreUser = (req, res, next) => {
   });
 };
 
-const requireAuth = function (req, _res, next) {
+const requireAuth = function (req, res, next) {
   if (req.user) return next();
-  if (!isProduction) {
-    const err = new Error("Authentication required");
-    err.title = "Authentication required";
-    err.errors = { message: "Authentication required" };
-    err.status = 401;
-    return next(err);
-  } else {
-    err.errors = { message: "Authentication required" };
-  }
+
+  return res.status(401).json({ message: 'Authentication required' });
 };
 const formatDate = function (date) {
   return date.toISOString().split("T")[0];
