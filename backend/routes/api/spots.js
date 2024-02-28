@@ -635,10 +635,10 @@ router.post("/:spotId/bookings", requireAuth, async (req, res, next) => {
     // Check for overlap between the existing booking and the new booking
     if ((s < be && e > bs) || (bs < e && be > s)) {
       hasConflict = true;
-      if ((s > bs && s < be) || s == bs) {
+      if ((s > bs && s < be) || s === bs) {
         conflicts.startDate = "Start date conflicts with an existing booking";
       }
-      if ((e > bs && e < be) || e == be) {
+      if ((e > bs && e < be) || e === be) {
         conflicts.endDate = "End date conflicts with an existing booking";
       }
     }
