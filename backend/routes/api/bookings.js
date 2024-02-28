@@ -45,9 +45,14 @@ router.get("/:bookingId", requireAuth, async (req, res, next) => {
     include: [Spot, User],
   });
   if (allBooking.length === 0 || !allBooking[0]) {
-    res.status(404).json({
+   return  res.status(404).json({
       message: "Booking couldn't be found",
     });
+  }
+  if(curUserId !== allBooking[0].userId){
+    return res.status(403).json({
+      "message": "Forbidden"
+    })
   }
 
   const bs = allBooking[0].startDate.getTime();

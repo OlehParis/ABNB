@@ -94,9 +94,14 @@ router.post("/:reviewId/images", requireAuth, async (req, res, next) => {
   const review = await Review.findByPk(reviewId);
 
   if (!review) {
-    res.status(404).json({
+   return res.status(404).json({
       message: "Review couldn't be found",
     });
+  }
+  if(curUserId !== review.User) {
+    return res.status(403).json({
+      "message": "Forbidden"
+    })
   }
   //Check if review belongs to the current user
   if (curUserId === review.userId && count <= 9) {

@@ -189,8 +189,9 @@ router.get("/", handleValidateQuery, async (req, res) => {
 
 //Get all Spots owned by the Current User
 router.get("/current", requireAuth, async (req, res, next) => {
+  const curUserId = req.user.id;
   const allSpots = await Spot.findAll({
-    where: { ownerId: req.user.dataValues.id },
+    where: { ownerId: curUserId },
     include: [
       {
         model: SpotImage,
@@ -200,7 +201,11 @@ router.get("/current", requireAuth, async (req, res, next) => {
       },
     ],
   });
-
+if(curUserId !== allSpots[0].ownerId) {
+return res.status(403).json({
+  "message": "Forbidden"
+})
+}
   const getSpotsRes = allSpots.map((spot) => {
     let totalStars = 0;
     let avgRating = null;
@@ -640,8 +645,8 @@ router.post("/:spotId/bookings", requireAuth, validateBooking, async (req, res, 
 
   // Check if the spot belongs to the current user
   if (curUserId === spotByPk.ownerId) {
-    return res.json({
-      message: "You can't book your own spot",
+    return res.status(403).json({
+      "message": "Forbidden"
     });
   }
 
