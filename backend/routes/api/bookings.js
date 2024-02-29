@@ -33,7 +33,7 @@ router.get("/current", requireAuth, async (req, res, next) => {
       updatedAt: formatWithTime(booking.updatedAt),
     };
   });
-  res.json(resBookings);
+  res.json({Bookings:resBookings});
 });
 
 //Delete a Booking
