@@ -7,19 +7,21 @@ const { handleValidationErrors } = require("../../utils/validation");
 const { setTokenCookie, requireAuth } = require("../../utils/auth");
 const { Spot, User, Review, ReviewImage } = require("../../db/models");
 
+//Delete Image Review
 router.delete("/:imageId", requireAuth, async (req, res, next) => {
   const { imageId } = req.params;
-
-  let reviewByPk = await ReviewImage.findByPk(imageId,{include:Review});
-//   console.log(reviewByPk.Review.dataValues.userId);
-  if (!reviewByPk) {
+  const curUserId = req.user.id;
+  let reviewByPk = await ReviewImage.findByPk(imageId, { include: Review });
+  //   console.log(reviewByPk.Review.dataValues.userId);
+  console.log(reviewByPk);
+  if (!reviewByPk || curUserId !== reviewByPk.Review.userId) {
     return res.status(404).json({
-      "message": "Review Image couldn't be found"
+      message: "Review Image couldn't be found",
     });
   }
-  if (reviewByPk.Review.dataValues.userId !== req.user.dataValues.id) {
+  if (reviewByPk.Review.userId !== curUserId) {
     return res.status(403).json({
-      "message": "Forbidden"
+      message: "Forbidden",
     });
   }
 

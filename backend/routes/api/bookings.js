@@ -37,7 +37,7 @@ router.get("/current", requireAuth, async (req, res, next) => {
 });
 
 //Delete a Booking
-router.get("/:bookingId", requireAuth, async (req, res, next) => {
+router.delete("/:bookingId", requireAuth, async (req, res, next) => {
   const curUserId = req.user.id;
   const { bookingId } = req.params;
   const allBooking = await Booking.findAll({
