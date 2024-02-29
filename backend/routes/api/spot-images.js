@@ -22,12 +22,13 @@ router.delete("/:imageId", requireAuth, async (req, res, next) => {
     where: { id: imageId },
     include: [Spot],
   });
- 
-  if (!imageByPk) {
+
+  if (imageByPk.length === 0) {
     return res.status(404).json({
       message: "Spot Image couldn't be found",
     });
   }
+
   if (imageByPk[0].Spot.ownerId !== curUserId) {
     return res.status(403).json({
       message: "Forbidden",
