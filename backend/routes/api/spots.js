@@ -201,7 +201,8 @@ router.get("/current", requireAuth, async (req, res, next) => {
       },
     ],
   });
-  if (curUserId !== allSpots[0].ownerId) {
+
+  if (!allSpots && curUserId !== allSpots[0].ownerId) {
     return res.status(403).json({
       message: "Forbidden",
     });
@@ -232,7 +233,7 @@ router.get("/current", requireAuth, async (req, res, next) => {
       createdAt: formatWithTime(spot.createdAt),
       updatedAt: formatWithTime(spot.updatedAt),
       avgRating: avgRating,
-      previewImage: spot.SpotImages.url || null
+      previewImage: spot.SpotImages.url || null,
     };
   });
 
