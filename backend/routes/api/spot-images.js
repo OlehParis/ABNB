@@ -22,6 +22,7 @@ router.delete("/:imageId", requireAuth, async (req, res, next) => {
     where: { id: imageId },
     include: [Spot],
   });
+  res.json(imageByPk[0].Spot.ownerId);
   if (!imageByPk) {
     return res.status(404).json({
       message: "Spot Image couldn't be found",
@@ -29,7 +30,7 @@ router.delete("/:imageId", requireAuth, async (req, res, next) => {
   }
   if (imageByPk[0].Spot.ownerId !== curUserId) {
     return res.status(403).json({
-      "message": "Forbidden"
+      message: "Forbidden",
     });
   }
 
@@ -40,14 +41,14 @@ router.delete("/:imageId", requireAuth, async (req, res, next) => {
 });
 
 //test route get Image with associated Spot by imageId
-router.get("/:imageId", async (req, res, next) => {
-  const { imageId } = req.params;
-  const imageByPk = await SpotImage.findAll({
-    where: { id: imageId },
-    include: [Spot],
-  });
-  console.log(imageByPk);
+// router.get("/:imageId", async (req, res, next) => {
+//   const { imageId } = req.params;
+//   const imageByPk = await SpotImage.findAll({
+//     where: { id: imageId },
+//     include: [Spot],
+//   });
+//   console.log(imageByPk);
 
-  res.json(imageByPk);
-});
+//   res.json(imageByPk);
+// });
 module.exports = router;

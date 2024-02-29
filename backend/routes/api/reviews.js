@@ -41,7 +41,7 @@ router.get("/current", requireAuth, async (req, res, next) => {
       });
       // res.json(getReview);
       if (getReview.length === 0) {
-        return res.json({ Reviews: "You don't have any reviews" });
+        return res.json({ Reviews: [] });
       }
 
       const resReviews = getReview.map((review) => {
