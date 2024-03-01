@@ -3,13 +3,9 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const { check } = require("express-validator");
+const { Op } = require("sequelize");
 const { handleValidationErrors } = require("../../utils/validation");
-const {
-  setTokenCookie,
-  requireAuth,
-  formatDate,
-  formatWithTime,
-} = require("../../utils/auth");
+const { requireAuth, formatDate, formatWithTime } = require("../../utils/auth");
 const { Spot, User, Review, ReviewImage, Booking } = require("../../db/models");
 
 //Get all of the Current User's Bookings (Auth require)
@@ -33,7 +29,7 @@ router.get("/current", requireAuth, async (req, res, next) => {
       updatedAt: formatWithTime(booking.updatedAt),
     };
   });
-  res.json({Bookings:resBookings});
+  res.json({ Bookings: resBookings });
 });
 
 //Delete a Booking
@@ -45,14 +41,14 @@ router.delete("/:bookingId", requireAuth, async (req, res, next) => {
     include: [Spot, User],
   });
   if (allBooking.length === 0 || !allBooking[0]) {
-   return  res.status(404).json({
+    return res.status(404).json({
       message: "Booking couldn't be found",
     });
   }
-  if(curUserId !== allBooking[0].userId){
+  if (curUserId !== allBooking[0].userId) {
     return res.status(403).json({
-      "message": "Forbidden"
-    })
+      message: "Forbidden",
+    });
   }
 
   const bs = allBooking[0].startDate.getTime();
@@ -109,6 +105,7 @@ const validateBooking = [
 ];
 
 //Edit booking (Auth require)
+
 router.put("/:bookingId",requireAuth, validateBooking,
   async (req, res, next) => {
     const curUserId = req.user.id;
@@ -117,7 +114,7 @@ router.put("/:bookingId",requireAuth, validateBooking,
     const bookingById = await Booking.findAll({
       where: { id: bookingId },
     });
-    if ( !bookingById) {
+    if (bookingById.length === 0 || !bookingById) {
       return res.status(404).json({
         message: "Booking couldn't be found",
       });
@@ -127,8 +124,7 @@ router.put("/:bookingId",requireAuth, validateBooking,
           "message": "Forbidden"
       })
    }
-    let hasConflict = false;
-    const conflicts = {};
+   
     const bs = new Date(bookingById[0].startDate).getTime();
     const be = new Date(bookingById[0].endDate).getTime();
     const s = new Date(startDate).getTime();
@@ -142,35 +138,39 @@ router.put("/:bookingId",requireAuth, validateBooking,
     }
 
     // Check for overlap between the existing booking and the new booking
-    const restBookings = await Booking.findAll({
+    const otherBookings = await Booking.findAll({
       where: {
           id: {
-              [Op.ne]: bookingId
-          },
-          spotId: bookingById.spotId
+              [Op.ne]: bookingId },
+          spotId: bookingById[0].spotId
       }
   });
 
-  for (let otherBooking of restBookings) {
-      const allbs = new Date(otherBooking.startDate).getTime();
-      const allbe = new Date(otherBooking.endDate).getTime();
+  let conflicts = {};
+  let hasConflict = false;
 
-      if ((newStart < allbe && newEnd > allbs) || (newStart === allbe || newEnd === allbs)) {
+  for (let booking of otherBookings) {
+      const otherStart = new Date(booking.startDate).getTime();
+      const otherEnd = new Date(booking.endDate).getTime();
+
+      if ((s < otherEnd && e > otherStart) || (s === otherEnd || e === otherStart)) {
           hasConflict = true;
-          if (newStart <= allbe) {
+          if (s <= otherEnd) {
               conflicts.startDate = "Start date conflicts with another booking";
           }
-          if (newEnd >= allbs) {
+          if (e >= otherStart) {
               conflicts.endDate = "End date conflicts with another booking";
           }
       }
   }
+
   if (hasConflict) {
       return res.status(403).json({
           message: "Sorry, this spot is already booked for the specified dates",
           errors: conflicts,
       });
   }
+    if (curUserId === bookingById[0].userId) {
       const editBooking = await bookingById[0].update({
         startDate: startDate,
         endDate: endDate,
@@ -187,10 +187,11 @@ router.put("/:bookingId",requireAuth, validateBooking,
         updatedAt: formatWithTime(editBooking.updatedAt),
       };
       return res.json(resBooking);
-    
+    }
   },
 
   handleValidationErrors
 );
+
 
 module.exports = router;
