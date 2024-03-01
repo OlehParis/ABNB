@@ -6,7 +6,14 @@ const { check } = require("express-validator");
 const { Op } = require("sequelize");
 const { handleValidationErrors } = require("../../utils/validation");
 const { requireAuth, formatDate, formatWithTime } = require("../../utils/auth");
-const { Spot, User, Review, ReviewImage, Booking } = require("../../db/models");
+const {
+  Spot,
+  User,
+  Review,
+  ReviewImage,
+  SpotImage,
+  Booking,
+} = require("../../db/models");
 
 //Get all of the Current User's Bookings (Auth require)
 router.get("/current", requireAuth, async (req, res, next) => {
@@ -14,14 +21,36 @@ router.get("/current", requireAuth, async (req, res, next) => {
   const curBookings = await Booking.findAll({
     where: { userId: curUserId },
     include: [
-      { model: Spot, attributes: { exclude: ["createdAt", "updatedAt"] } },
+      {
+        model: Spot,
+        attributes: { exclude: ["createdAt", "updatedAt", "description"] },
+        include: [
+          {
+            model: SpotImage,
+            attributes: ["url"],
+          },
+        ],
+      },
     ],
   });
   const resBookings = curBookings.map((booking) => {
+    const previewImage = booking.Spot.SpotImages.length > 0 ? booking.Spot.SpotImages[0].url : null;
     return {
+      
       id: booking.id,
-      userId: booking.userId,
-      Spot: booking.Spot,
+      spotId: booking.Spot.id,
+      Spot: {
+        id: booking.Spot.id,
+        ownerId: booking.Spot.ownerId,
+        address: booking.Spot.address,
+        city: booking.Spot.city,
+        state: booking.Spot.state,
+        country: booking.Spot.country,
+        lat: booking.Spot.lat,
+        lng: booking.Spot.lng,
+        price: booking.Spot.price,
+        previewImage: previewImage,
+      },
       userId: booking.userId,
       startDate: formatDate(booking.startDate),
       endDate: formatDate(booking.endDate),
@@ -106,7 +135,10 @@ const validateBooking = [
 
 //Edit booking (Auth require)
 
-router.put("/:bookingId",requireAuth, validateBooking,
+router.put(
+  "/:bookingId",
+  requireAuth,
+  validateBooking,
   async (req, res, next) => {
     const curUserId = req.user.id;
     const { startDate, endDate } = req.body;
@@ -119,12 +151,12 @@ router.put("/:bookingId",requireAuth, validateBooking,
         message: "Booking couldn't be found",
       });
     }
-    if(curUserId !== bookingById[0].userId) {
+    if (curUserId !== bookingById[0].userId) {
       return res.status(403).json({
-          "message": "Forbidden"
-      })
-   }
-   
+        message: "Forbidden",
+      });
+    }
+
     const bs = new Date(bookingById[0].startDate).getTime();
     const be = new Date(bookingById[0].endDate).getTime();
     const s = new Date(startDate).getTime();
@@ -140,38 +172,37 @@ router.put("/:bookingId",requireAuth, validateBooking,
     // Check for overlap between the existing booking and the new booking
     const otherBookings = await Booking.findAll({
       where: {
-          id: {
-              [Op.ne]: bookingId },
-          spotId: bookingById[0].spotId
-      }
-  });
+        id: {
+          [Op.ne]: bookingId,
+        },
+        spotId: bookingById[0].spotId,
+      },
+    });
 
-  let conflicts = {};
-  let hasConflict = false;
+    let conflicts = {};
+    let hasConflict = false;
 
-  for (let booking of otherBookings) {
+    for (let booking of otherBookings) {
       const oS = new Date(booking.startDate).getTime();
       const oE = new Date(booking.endDate).getTime();
 
       if ((s <= oE && e > oS) || (oS <= e && oE > s)) {
         hasConflict = true;
-        if ((s >= oS && s <= oE)  || s < oS && e > oE) {
-        
+        if ((s >= oS && s <= oE) || (s < oS && e > oE)) {
           conflicts.startDate = "Start date conflicts with an existing booking";
         }
-        if ((e >= oS && e <= oE)   || e > oE && s < oS ) {
+        if ((e >= oS && e <= oE) || (e > oE && s < oS)) {
           conflicts.endDate = "End date conflicts with an existing booking";
         }
       }
-  
-  }
+    }
 
-  if (hasConflict) {
+    if (hasConflict) {
       return res.status(403).json({
-          message: "Sorry, this spot is already booked for the specified dates",
-          errors: conflicts,
+        message: "Sorry, this spot is already booked for the specified dates",
+        errors: conflicts,
       });
-  }
+    }
     if (curUserId === bookingById[0].userId) {
       const editBooking = await bookingById[0].update({
         startDate: startDate,
@@ -194,6 +225,5 @@ router.put("/:bookingId",requireAuth, validateBooking,
 
   handleValidationErrors
 );
-
 
 module.exports = router;

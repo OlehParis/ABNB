@@ -32,6 +32,11 @@ const handleValidateQuery = [
     if (!req.query.size) {
       req.query.size = 20;
     }
+    for (const key in req.query) {
+      if (req.query.hasOwnProperty(key) && req.query[key] === "") {
+        delete req.query[key];
+      }
+    }
     next();
   },
   query("page")
@@ -175,7 +180,7 @@ router.get("/", handleValidateQuery, async (req, res) => {
     reviews.forEach((review) => {
       sum += review.stars;
     });
-    const avgRating = Math.round(sum / numReviews * 10) / 10;
+    const avgRating = Math.round((sum / numReviews) * 10) / 10;
     spot.dataValues.avgRating = avgRating;
     delete spot.dataValues.Reviews;
 
@@ -186,10 +191,12 @@ router.get("/", handleValidateQuery, async (req, res) => {
       });
       if (foundSpotImage) {
         spot.dataValues.previewImage = foundSpotImage.url;
-      }
+      }else {
+        spot.dataValues.previewImage = null; 
     }
-    spot.dataValues.createdAt = formatDate(spot.dataValues.createdAt);
-    spot.dataValues.updatedAt = formatDate(spot.dataValues.updatedAt);
+    }
+    spot.dataValues.createdAt = formatWithTime(spot.dataValues.createdAt);
+    spot.dataValues.updatedAt = formatWithTime(spot.dataValues.updatedAt);
 
     delete spot.dataValues.SpotImages;
     return spot;
@@ -229,6 +236,8 @@ router.get("/current", requireAuth, async (req, res, next) => {
 
       avgRating = totalStars / spot.Reviews.length;
     }
+    const previewImage =
+      spot.SpotImages.length > 0 ? spot.SpotImages[0].url : null;
     return {
       id: spot.id,
       ownerId: spot.ownerId,
@@ -244,7 +253,7 @@ router.get("/current", requireAuth, async (req, res, next) => {
       createdAt: formatWithTime(spot.createdAt),
       updatedAt: formatWithTime(spot.updatedAt),
       avgRating: avgRating,
-      previewImage: spot.SpotImages.url || null,
+      previewImage: previewImage,
     };
   });
 
@@ -303,14 +312,16 @@ router.get("/:spotId", async (req, res, next) => {
   // res.json(allSpots);
   const getSpotsRes = allSpots.map((spot) => {
     let totalStars = 0;
-    let avgRating = 0;
-    console.log(spot);
+    let avgRating = null;
+
     if (spot.Reviews && spot.Reviews.length > 0) {
       spot.Reviews.forEach((review) => {
         totalStars += review.stars;
       });
       avgRating = totalStars / spot.Reviews.length;
+      avgRating = Math.round(avgRating * 10) / 10;
     }
+
     return {
       id: spot.id,
       ownerId: spot.ownerId,
@@ -325,8 +336,9 @@ router.get("/:spotId", async (req, res, next) => {
       price: spot.price,
       createdAt: formatWithTime(spot.createdAt),
       updatedAt: formatWithTime(spot.updatedAt),
+      numReviews: spot.Reviews.length || null,
       avgStarRating: avgRating,
-      SpotImages: spot.SpotImages,
+      SpotImages: spot.SpotImages.length > 0 ? spot.SpotImages : null,
       Owner: spot.User,
     };
   });
@@ -419,6 +431,8 @@ router.put(
       price,
     });
     let resSpot = {
+      id: spot.id,
+      ownerId: spot.ownerId,
       address,
       city,
       state,
