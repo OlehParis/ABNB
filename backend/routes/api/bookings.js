@@ -150,18 +150,20 @@ router.put("/:bookingId",requireAuth, validateBooking,
   let hasConflict = false;
 
   for (let booking of otherBookings) {
-      const otherStart = new Date(booking.startDate).getTime();
-      const otherEnd = new Date(booking.endDate).getTime();
+      const oS = new Date(booking.startDate).getTime();
+      const oE = new Date(booking.endDate).getTime();
 
-      if ((s < otherEnd && e > otherStart) || (s === otherEnd || e === otherStart)) {
-          hasConflict = true;
-          if (s <= otherEnd) {
-              conflicts.startDate = "Start date conflicts with another booking";
-          }
-          if (e >= otherStart) {
-              conflicts.endDate = "End date conflicts with another booking";
-          }
+      if ((s <= oE && e > oS) || (oS <= e && oE > s)) {
+        hasConflict = true;
+        if ((s >= oS && s <= oE)  || s < oS && e > oE) {
+        
+          conflicts.startDate = "Start date conflicts with an existing booking";
+        }
+        if ((e >= oS && e <= oE)   || e > oE && s < oS ) {
+          conflicts.endDate = "End date conflicts with an existing booking";
+        }
       }
+  
   }
 
   if (hasConflict) {

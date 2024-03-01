@@ -23,6 +23,17 @@ const {
 } = require("../../db/models");
 
 const handleValidateQuery = [
+  (req, res, next) => {
+    // If page is not provided, set it to the default value of 10
+    if (!req.query.page) {
+      req.query.page = 1;
+    }
+
+    if (!req.query.size) {
+      req.query.size = 20;
+    }
+    next();
+  },
   query("page")
     .isInt({ min: 1 })
     .withMessage("Page must be greater than or equal to 1")
@@ -118,7 +129,7 @@ const handleValidateQuery = [
 
 // Get all Spots
 router.get("/", handleValidateQuery, async (req, res) => {
-  let { page, size, maxLat, minLat, minLng, maxLng } = req.query;
+  let { page = 1, size = 20, maxLat, minLat, minLng, maxLng } = req.query;
   let minPrice = req.query.minPrice;
   let maxPrice = req.query.maxPrice;
   page = parseInt(page) || 1;
@@ -164,7 +175,7 @@ router.get("/", handleValidateQuery, async (req, res) => {
     reviews.forEach((review) => {
       sum += review.stars;
     });
-    const avgRating = sum / numReviews;
+    const avgRating = Math.round(sum / numReviews * 10) / 10;
     spot.dataValues.avgRating = avgRating;
     delete spot.dataValues.Reviews;
 
