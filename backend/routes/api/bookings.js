@@ -117,7 +117,7 @@ router.put("/:bookingId",requireAuth, validateBooking,
     const bookingById = await Booking.findAll({
       where: { id: bookingId },
     });
-    if (bookingById.length === 0 || !bookingById) {
+    if ( !bookingById) {
       return res.status(404).json({
         message: "Booking couldn't be found",
       });
@@ -142,24 +142,35 @@ router.put("/:bookingId",requireAuth, validateBooking,
     }
 
     // Check for overlap between the existing booking and the new booking
-    if ((s < be && e > bs) || (bs < e && be > s)) {
-      hasConflict = true;
-      if ((s > bs && s < be) || s == bs) {
-        conflicts.startDate = "Start date conflicts with an existing booking";
+    const restBookings = await Booking.findAll({
+      where: {
+          id: {
+              [Op.ne]: bookingId
+          },
+          spotId: bookingById.spotId
       }
-      if ((e > bs && e < be) || e == be) {
-        conflicts.endDate = "End date conflicts with an existing booking";
-      }
-    }
+  });
 
-    if (hasConflict) {
-      return res.status(400).json({
-        message: "Sorry, this spot is already booked for the specified dates",
-        errors: conflicts,
+  for (let otherBooking of restBookings) {
+      const allbs = new Date(otherBooking.startDate).getTime();
+      const allbe = new Date(otherBooking.endDate).getTime();
+
+      if ((newStart < allbe && newEnd > allbs) || (newStart === allbe || newEnd === allbs)) {
+          hasConflict = true;
+          if (newStart <= allbe) {
+              conflicts.startDate = "Start date conflicts with another booking";
+          }
+          if (newEnd >= allbs) {
+              conflicts.endDate = "End date conflicts with another booking";
+          }
+      }
+  }
+  if (hasConflict) {
+      return res.status(403).json({
+          message: "Sorry, this spot is already booked for the specified dates",
+          errors: conflicts,
       });
-    }
-
-    if (curUserId === bookingById[0].userId) {
+  }
       const editBooking = await bookingById[0].update({
         startDate: startDate,
         endDate: endDate,
@@ -176,7 +187,7 @@ router.put("/:bookingId",requireAuth, validateBooking,
         updatedAt: formatWithTime(editBooking.updatedAt),
       };
       return res.json(resBooking);
-    }
+    
   },
 
   handleValidationErrors
