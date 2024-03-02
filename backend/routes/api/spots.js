@@ -695,11 +695,11 @@ router.post(
       // Check for overlap between the existing booking and the new booking
       if ((s <= be && e > bs) || (bs <= e && be > s)) {
         hasConflict = true;
-        if ((s > bs && s <= be) || s === bs) {
+        if ((s > bs && s <= be) || (s < bs && e > be)) {
           console.log(s === bs);
           conflicts.startDate = "Start date conflicts with an existing booking";
         }
-        if ((e >= bs && e <= be) || e === be) {
+        if ((e >= bs && e <= be) || (e > be && s < bs)) {
           conflicts.endDate = "End date conflicts with an existing booking";
         }
       }
