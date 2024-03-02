@@ -446,7 +446,7 @@ router.put(
       updateAt: currentTime,
     };
 
-    return res.status(201).json(resSpot);
+    return res.status(200).json(resSpot);
   }
 );
 
