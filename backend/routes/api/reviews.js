@@ -166,7 +166,7 @@ router.put("/:reviewId",requireAuth, validateReview,
       updatedAt: formatWithTime(editReview.updatedAt),
     };
 
-    return res.status(201).json(resReview);
+    return res.status(200).json(resReview);
   },
   handleValidationErrors
 );
