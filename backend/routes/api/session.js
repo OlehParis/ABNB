@@ -63,26 +63,27 @@ router.delete("/", (_req, res) => {
 });
 
 // Restore session user
-router.get("/", requireAuth, async (req, res) => {
-  // const { user } = req;
-  const user = await User.unscoped().findOne({
-    where: {
-      id: req.user.id,
-    },
-    exclude: ["hashedPassword", "createdAt", "updatedAt"],
-  });
-  console.log(user);
-  if (user) {
+router.get("/",  async (req, res) => {
+  const { user } = req;
+  if(user)
+{const user1 = await User.unscoped().findOne({
+  where: {
+    id: req.user.id,
+  },
+  exclude: ["hashedPassword", "createdAt", "updatedAt"],
+});
+
+  if (user1) {
     const safeUser = {
-      id: user.id,
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      username: user.username,
+      id: user1.id,
+      email: user1.email,
+      firstName: user1.firstName,
+      lastName: user1.lastName,
+      username: user1.username,
     };
     return res.json({
       user: safeUser,
-    });
+    });}
   } else return res.json({ user: null });
 });
 
