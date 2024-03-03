@@ -219,7 +219,7 @@ router.put(
         createdAt: formatWithTime(editBooking.createdAt),
         updatedAt: formatWithTime(editBooking.updatedAt),
       };
-      return res.json(resBooking);
+      return res.status(200).json(resBooking);
     }
   },
 
