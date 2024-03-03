@@ -48,6 +48,7 @@ router.get("/current", requireAuth, async (req, res, next) => {
         country: booking.Spot.country,
         lat: booking.Spot.lat,
         lng: booking.Spot.lng,
+        name: booking.Spot.name,
         price: booking.Spot.price,
         previewImage: previewImage,
       },

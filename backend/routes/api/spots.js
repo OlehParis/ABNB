@@ -774,8 +774,8 @@ router.get("/:spotId/bookings", requireAuth, async (req, res, next) => {
       userId: booking.userId,
       startDate: formatDate(booking.startDate),
       endDate: formatDate(booking.endDate),
-      createdAt: booking.createdAt,
-      updatedAt: booking.updatedAt,
+      createdAt: formatWithTime(booking.createdAt),
+      updatedAt: formatWithTime(booking.updatedAt),
     }));
     return res.json({ Bookings: ownerBookings });
   }
