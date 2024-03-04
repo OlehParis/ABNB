@@ -537,11 +537,13 @@ router.get("/:spotId/reviews", async (req, res, next) => {
       },
     ],
   });
-  if (spotReview.length === 0) {
+ 
+  if (!spotReview) {
     return res.status(404).json({
       message: "Spot couldn't be found",
     });
   }
+  
   const resReviews = spotReview.map((review) => {
     return {
       id: review.id,
