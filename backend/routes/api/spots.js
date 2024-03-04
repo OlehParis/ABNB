@@ -522,6 +522,10 @@ router.post("/:spotId/images", requireAuth, async (req, res, next) => {
 // Returns all the reviews that belong to a spot specified by id.
 router.get("/:spotId/reviews", async (req, res, next) => {
   const { spotId } = req.params;
+  const spot = await Spot.findByPk(spotId);
+  if (!spot) {
+      return res.status(404).json({ message: "Spot couldn't be found" });
+  }
   let spotReview = await Review.findAll({
     where: {
       spotId: spotId,
@@ -538,11 +542,7 @@ router.get("/:spotId/reviews", async (req, res, next) => {
     ],
   });
  
-  if (!spotReview) {
-    return res.status(404).json({
-      message: "Spot couldn't be found",
-    });
-  }
+
   
   const resReviews = spotReview.map((review) => {
     return {
