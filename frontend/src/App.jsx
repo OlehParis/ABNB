@@ -4,7 +4,6 @@ import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import * as sessionActions from './store/session';
 
 import Navigation from './components/Navigation/Navigation';
-import LoginFormModal from './components/LoginFormModal/LoginFormModal';
 
 function Layout() {
   const dispatch = useDispatch();
