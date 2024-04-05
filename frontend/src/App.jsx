@@ -1,43 +1,51 @@
 import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import * as sessionActions from './store/session';
-
+import SpotCard from './components/Spots/Spots';
+import { fetchSpots } from './store/spots';
 import Navigation from './components/Navigation/Navigation';
 
-function Layout() {
+function App() {
   const dispatch = useDispatch();
+  const spots = useSelector(state => state.spots.data);
+
   const [isLoaded, setIsLoaded] = useState(false);
+  
 
   useEffect(() => {
     dispatch(sessionActions.restoreUser()).then(() => {
       setIsLoaded(true)
     });
   }, [dispatch]);
+  
+  useEffect(() => {
+    dispatch(fetchSpots()); // Fetch spot data when component mounts
+  }, [dispatch]);
 
-  return (
+  const Layout = () => (
     <>
-     <Navigation isLoaded={isLoaded} />
+      <Navigation isLoaded={isLoaded} />
       {isLoaded && <Outlet />}
+      <SpotCard spot= {spots} /> 
     </>
   );
-}
 
-const router = createBrowserRouter([
-  {
-    element: <Layout />,
-    children: [
-      {
-        path: '/',
-        element: <h1>Welcome!</h1>
-      },
-   
-    ]
-  }
-]);
+  const router = createBrowserRouter([
+    {
+      element: <Layout />,
+      children: [
+        {
+          path: '/',
+          element: <Outlet />
+        },
+      ]
+    }
+  ]);
 
-function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <RouterProvider router={router} />
+  );
 }
 
 export default App;
