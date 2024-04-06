@@ -15,8 +15,9 @@ function SpotCard() {
                 <div className="tooltip">
                     <p>{spot.name}</p>  
                     <img src={spot.previewImage} alt={spot.name} />
-                    <p>${spot.price} per night</p>
                     <p>{spot.address}  {spot.state}</p>
+                    <p>${spot.price} night</p>
+                  
                   
                     <span className="tooltiptext">{spot.name}</span>
                 </div>
