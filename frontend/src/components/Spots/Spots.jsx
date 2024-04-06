@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux';
 import './Spots.css';
+import { FaStar } from 'react-icons/fa';
 
 function SpotCard() {
     // Accessing spot data from Redux state
@@ -13,13 +14,17 @@ function SpotCard() {
         {spotsData.map(spot => (
             <div key={spot.id} className="spot">
                 <div className="tooltip">
-                    <p>{spot.name}</p>  
+                <span className="tooltiptext">{spot.name}</span>
                     <img src={spot.previewImage} alt={spot.name} />
+                    <div className='addressAvgRating'>
                     <p>{spot.address}  {spot.state}</p>
-                    <p>${spot.price} night</p>
+                    <p>{FaStar}{spot.avgRating}</p>
+                    </div>
+                    
+                    <div>${spot.price} night</div>
                   
                   
-                    <span className="tooltiptext">{spot.name}</span>
+               
                 </div>
             </div>
         ))}  
