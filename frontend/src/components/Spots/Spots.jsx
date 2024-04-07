@@ -15,10 +15,10 @@ function SpotCard() {
             <div key={spot.id} className="spot">
                 <div className="tooltip">
                 <span className="tooltiptext">{spot.name}</span>
-                    <img src={spot.previewImage} alt={spot.name} />
+                    <img  className='spot-img'src={spot.previewImage} alt={spot.name} />
                     <div className='addressAvgRating'>
                     <p>{spot.address}  {spot.state}</p>
-                    <p>{FaStar}{spot.avgRating}</p>
+                    <p><FaStar/> {spot.avgRating ? spot.avgRating : 'New'}</p>
                     </div>
                     
                     <div>${spot.price} night</div>

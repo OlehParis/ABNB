@@ -3,6 +3,7 @@ import * as sessionActions from '../../store/session';
 import { useDispatch } from 'react-redux';
 import { useModal } from '../../context/Modal';
 import './LoginForm.css';
+// import { demoUser } from '../../../../backend/db/seeders/20240210211714-demo-user';
 
 function LoginFormModal() {
   const dispatch = useDispatch();
@@ -23,34 +24,42 @@ function LoginFormModal() {
         }
       });
   };
-
+  const isSubmitDisabled = credential.length < 4 || password.length < 6;
+  const handleDemoUserLogin = () => {
+    setCredential(demoUser.email);
+    // setPassword(demoUser.hashedPassword);
+  };
   return (
-    <>
+    <><div className='modal-login'>
       <h1>Log In</h1>
       <form onSubmit={handleSubmit}>
         <label>
-          Username or Email
+          
           <input
             type="text"
             value={credential}
             onChange={(e) => setCredential(e.target.value)}
+            placeholder='Username or Email'
             required
           />
         </label>
         <label>
-          Password
+         
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            placeholder='Password'
             required
           />
         </label>
         {errors.credential && (
           <p>{errors.credential}</p>
         )}
-        <button type="submit">Log In</button>
+        <button type="submit" disabled={isSubmitDisabled}>Log In</button>
       </form>
+      <button onClick={handleDemoUserLogin} className="demo-user-button">Demo User</button>
+      </div>
     </>
   );
 }
