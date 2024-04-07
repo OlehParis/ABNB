@@ -20,7 +20,7 @@ module.exports = {
         },
         {
           review: "good two",
-          stars: 5,
+          stars: 2,
           spotId: 1,
           userId: 2,
         },

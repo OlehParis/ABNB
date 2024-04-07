@@ -9,21 +9,23 @@ if (process.env.NODE_ENV === "production") {
 }
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await SpotImage.bulkCreate([{ url: "httpscom/thumbor/fit-in/900x510/https://www.forbes.com/home-improvement/wp-content/uploads/2022/07/download-23.jpg",
+    await SpotImage.bulkCreate([
+    { url: "https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg",
     spotId:1,
-  preview: true },
-    { url: "https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/home-improvement/wp-content/uploads/2022/07/download-23.jpg",
+    preview: true },
+    { url: "https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=800",
     spotId:2,
     preview: true },
-    { url: "https://thuit-in/900x510/https://www.forbes.com/home-improvement/wp-content/uploads/2022/07/download-23.jpg",
-    spotId:3 ,
+    { url: "https://images.pexels.com/photos/221540/pexels-photo-221540.jpeg?auto=compress&cs=tinysrgb&w=800",
+    spotId:3,
     preview: true},
-    { url: "httpses.nload-23.jpg",
+    { url: "https://images.pexels.com/photos/208736/pexels-photo-208736.jpeg?auto=compress&cs=tinysrgb&w=800",
     spotId:4,
     preview: true },
-    { url: "s.com/thumborttps://www.forbes.com/home-improvement/wp-content/uploads/2022/07/download-23.jpg",
+    { url: "https://images.pexels.com/photos/206172/pexels-photo-206172.jpeg?auto=compress&cs=tinysrgb&w=800",
     spotId:5,
     preview: true },
+    
   ],{ validate: true } );
     },
   
