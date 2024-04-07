@@ -40,7 +40,8 @@ function SignupFormModal() {
       confirmPassword: "Confirm Password field must be the same as the Password field"
     });
   };
-
+  const isDisabled = email.trim() === "" || username.trim().length < 4 || firstName.trim() === "" || lastName.trim() === "" || password.trim().length < 6 || confirmPassword.trim() === "";
+  
   return (
    <div className='modal-signup'>
       <h1>Sign Up</h1>
@@ -116,7 +117,7 @@ function SignupFormModal() {
           />
         </label>
        
-        <button type="submit">Sign Up</button>
+        <button type="submit" disabled={isDisabled}>Sign Up</button>
       </form>
       </div>
  
