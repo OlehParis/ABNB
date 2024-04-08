@@ -26,7 +26,7 @@ function LoginFormModal() {
   };
   const isSubmitDisabled = credential.length < 4 || password.length < 6;
   const handleDemoUserLogin = () => {
-    setCredential(demoUser.email);
+    // setCredential(demoUser.email);
     // setPassword(demoUser.hashedPassword);
   };
   return (

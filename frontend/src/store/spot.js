@@ -8,11 +8,20 @@ export const fetchSpotsSuccess = (spot) => ({
 
     return async (dispatch) => {
       const response = await fetch(`/api/spots/${spotId}`);
+      const res2 = await fetch (`/api/spots/${spotId}/reviews`)
+     
       if (!response.ok) {
         throw new Error("Failed to fetch spots");
       }
-      const data = await response.json();
-   
+      if(!res2.ok) {
+        throw new Error("Failed to fetch reviews");
+      }
+      const data1 = await response.json();
+      const data2 = await res2.json()
+      const data = {
+        ...data1,
+        reviews: data2,
+      };
       dispatch(fetchSpotsSuccess(data));
     };
   

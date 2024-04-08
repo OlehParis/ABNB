@@ -23,7 +23,7 @@ function SpotCard() {
                     <img  className='spot-img'  onClick={() => handleClick(spot.id)} src={spot.previewImage} alt={spot.name} />
                     <div className='addressAvgRating'>
                     <p>{spot.address}  {spot.state}</p>
-                    <p><FaStar/> {spot.avgRating ? spot.avgRating : 'New'}</p>
+                    <p><FaStar color="#ffc107"/> {spot.avgRating ? spot.avgRating : 'New'}</p>
                     </div>
                     
                     <div>${spot.price} night</div>
