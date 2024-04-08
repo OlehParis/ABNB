@@ -25,9 +25,9 @@ function SpotDetails() {
         <h2>{spotData.name}</h2>
         <p>{spotData.address}, {spotData.state},  {spotData.country}</p>
         <div className='images'>
-            <div className='container1'>
+            
             <img className='mainImage' src={spotData.SpotImages[0].url} alt={spotData.name} />
-            </div>
+            
             <div className="image-gallery">
                 {spotData.SpotImages.map((image, index) => (
                     <img key={index} src={image.url} alt={`Image ${index + 1}`} />
@@ -35,11 +35,25 @@ function SpotDetails() {
             </div>
         </div>
         <div className="details">
+            <div className='info'>
             <h2> Hosted by {spotData.Owner.firstName} {spotData.Owner.lastName}</h2>
             <p>{spotData.description}</p>
-            <p><FaStar/> {spotData.avgRating ? spotData.avgRating : 'New'}</p>
-            <p>${spotData.price} night</p>
+            </div>
+            <div className='container-price'>
+                <div className='container-inner'>
+                    <div className='container'>
+                    <div className='price'><h3>${spotData.price}</h3> <p>night</p></div>
+                    <p className='rating'><FaStar/> {spotData.avgStarRating ? spotData.avgStarRating : 'New'} · {spotData.numReviews ? spotData.numReviews : '0'} reviews </p>
+                    </div>
+                    <button onClick={()=> alert('Feature Coming Soon...')}>Reserve</button>
+                </div>
+           </div>
         </div>
+        <div className='reviews'>
+        <h3 className='rating2'><FaStar/> {spotData.avgStarRating ? spotData.avgStarRating : 'New'} · {spotData.numReviews ? spotData.numReviews : '0'} reviews </h3>
+        <div> </div>
+        </div>
+    
     </div>
 );
 }

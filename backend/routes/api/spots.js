@@ -289,6 +289,7 @@ router.get("/:spotId", async (req, res, next) => {
       },
       {
         model: Review,
+         attributes: { exclude: ["createdAt", "spotId"  , "id"] },
       },
       {
         model: User,
@@ -304,7 +305,7 @@ router.get("/:spotId", async (req, res, next) => {
       },
     ],
   });
-
+  
   // Check if Spot exists
   if (allSpots.length === 0) {
     return res.status(404).json({ message: "Spot couldn't be found" });
@@ -313,7 +314,7 @@ router.get("/:spotId", async (req, res, next) => {
   const getSpotsRes = allSpots.map((spot) => {
     let totalStars = 0;
     let avgRating = null;
-
+   
     if (spot.Reviews && spot.Reviews.length > 0) {
       spot.Reviews.forEach((review) => {
         totalStars += review.stars;
@@ -340,6 +341,7 @@ router.get("/:spotId", async (req, res, next) => {
       avgStarRating: avgRating,
       SpotImages: spot.SpotImages.length > 0 ? spot.SpotImages : null,
       Owner: spot.User,
+      Reviews: spot.Reviews
     };
   });
 

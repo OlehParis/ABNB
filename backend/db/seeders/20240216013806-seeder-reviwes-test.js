@@ -19,11 +19,12 @@ module.exports = {
           userId: 1,
         },
         {
-          review: "good two",
+          review: "good Place love it ",
           stars: 2,
           spotId: 1,
           userId: 2,
         },
+        
       ],
       { validate: true }
     );
