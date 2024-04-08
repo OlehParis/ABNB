@@ -5,6 +5,7 @@ import * as sessionActions from './store/session';
 import SpotCard from './components/Spots/Spots';
 import { fetchSpots } from './store/spots';
 import Navigation from './components/Navigation/Navigation';
+import SpotDetails from './components/SpotDetails/SpotDetails';
 
 function App() {
   const dispatch = useDispatch();
@@ -27,7 +28,8 @@ function App() {
     <>
       <Navigation isLoaded={isLoaded} />
       {isLoaded && <Outlet />}
-      <SpotCard spot= {spots} /> 
+    
+    
     </>
   );
 
@@ -37,12 +39,16 @@ function App() {
       children: [
         {
           path: '/',
-          element: <Outlet />
+          element:   <SpotCard spot= {spots} /> 
+        },
+        {
+          path: "spots/:spotId",
+          element:  <SpotDetails spot = {spots} />
         },
       ]
     }
   ]);
-
+ 
   return (
     <RouterProvider router={router} />
   );

@@ -3,6 +3,7 @@ export const fetchSpotsSuccess = (spots) => ({
   payload: spots,
 });
 
+
 export const fetchSpots = () => {
   return async (dispatch) => {
     const response = await fetch("/api/spots");

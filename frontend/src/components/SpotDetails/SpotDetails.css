@@ -1,0 +1,48 @@
+.spot-details {
+  padding: 20px; /* Adjust padding as needed */
+}
+
+.spot-details h2 {
+  font-size: 24px; /* Adjust font size as needed */
+  margin-bottom: 10px; /* Add space below heading */
+}
+
+.spot-details p {
+  margin-bottom: 10px; /* Add space below paragraphs */
+}
+
+.images {
+
+  display: grid;
+  grid-template-columns: 50% 50%;
+  max-height: fit-content;
+  gap: 10px;
+}
+.container1 {
+  height: 50%;
+  background-color: black;
+}
+.mainImage {
+  width: 100%;
+  margin-right: 2px;
+}
+
+.image-gallery {
+  width: 100%;
+  gap: 1.4rem;
+  height: 64.65%;
+  display: grid;
+  grid-template-columns: 3fr 3fr;
+  grid-template-rows: 1fr 1fr;
+  overflow-x: auto; /* Add horizontal scrollbar */
+  white-space: nowrap;
+}
+
+.image-gallery img {
+  width: 100%;
+}
+
+.details {
+  
+  margin-top: -200px;
+}
