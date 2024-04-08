@@ -15,15 +15,18 @@
 
   display: grid;
   grid-template-columns: 50% 50%;
-  max-height: fit-content;
+  height: auto;
   gap: 10px;
+  
 }
 .container1 {
   height: 50%;
   background-color: black;
+
 }
 .mainImage {
   width: 100%;
+  max-height: 410px;
   margin-right: 2px;
 }
 
@@ -31,6 +34,7 @@
   width: 100%;
   gap: 1.4rem;
   height: 64.65%;
+  max-height: 630px;
   display: grid;
   grid-template-columns: 3fr 3fr;
   grid-template-rows: 1fr 1fr;
@@ -42,7 +46,29 @@
   width: 100%;
 }
 
-.details {
-  
-  margin-top: -200px;
+/* @media screen and (max-width: 773px)  {
+  .details {
+    margin-top: 20%;
+    position: static;
+   
+    transform: translateY(-78%);
+  }
 }
+@media screen and (min-width: 774px) and (max-width: 1214px) {
+  .details {
+    margin-top: -20px;
+    position: relative;
+    top: 50%;
+    transform: translateY(-78%);
+  }
+}
+
+
+@media screen and (min-width: 1215px) {
+  .details {
+    margin-top: -80px;
+    position: relative;
+    top: 50%;
+    transform: translateY(-78%);
+  }
+} */

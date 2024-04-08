@@ -10,7 +10,7 @@ function SpotDetails() {
     const { spotId } = useParams();
     const dispatch = useDispatch()
     const spotData = useSelector(state => state.spot.data[0]);
-    console.log(spotData)
+   
     useEffect(() => {
         // Fetch spot details when the component mounts or when spotId changes
         dispatch(fetchSpot(spotId));

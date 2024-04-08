@@ -49,7 +49,7 @@ module.exports = {
           price: "1000",
         },
         {
-          ownerId: "4",
+          ownerId: "1",
           address: "122 Main st",
           city: "Miami",
           state: "Fl",
@@ -61,7 +61,7 @@ module.exports = {
           price: "133",
         },
         {
-          ownerId: "5",
+          ownerId: "2",
           address: "994 Chare St",
           city: "Arlen",
           state: "DC",
