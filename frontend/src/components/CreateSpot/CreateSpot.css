@@ -15,6 +15,7 @@
   .create-spot-form label {
     display: block;
     margin-bottom: 5px;
+    margin-top: 10px;
   }
   
   .create-spot-form input[type="text"],
@@ -22,7 +23,7 @@
   .create-spot-form textarea {
     width: 100%;
     padding: 8px;
-    margin-bottom: 10px;
+
     border: 1px solid #ccc;
     border-radius: 3px;
   }
@@ -40,6 +41,10 @@
   .create-spot-form button[type="submit"]:hover {
     background-color: #0056b3;
   }
-  
-  /* You can add more specific styling for individual inputs or labels as needed */
-  
+ 
+
+  .error {
+    color: red;
+    font-size: smaller;
+ 
+  }

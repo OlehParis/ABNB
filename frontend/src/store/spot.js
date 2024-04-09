@@ -1,3 +1,4 @@
+import { csrfFetch } from "./csrf";
 
 export const fetchSpotsSuccess = (spot) => ({
     type: "FETCH_SPOT_BYID",
@@ -7,8 +8,8 @@ export const fetchSpotsSuccess = (spot) => ({
   export const fetchSpot = (spotId) => {
 
     return async (dispatch) => {
-      const response = await fetch(`/api/spots/${spotId}`);
-      const res2 = await fetch (`/api/spots/${spotId}/reviews`)
+      const response = await csrfFetch(`/api/spots/${spotId}`);
+      const res2 = await csrfFetch (`/api/spots/${spotId}/reviews`)
      
       if (!response.ok) {
         throw new Error("Failed to fetch spots");
