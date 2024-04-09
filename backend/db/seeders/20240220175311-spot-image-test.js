@@ -52,6 +52,9 @@ module.exports = {
     { url: "https://images.pexels.com/photos/206172/pexels-photo-206172.jpeg?auto=compress&cs=tinysrgb&w=800",
     spotId:5,
     preview: true },
+    { url: "https://images.pexels.com/photos/206172/pexels-photo-206172.jpeg?auto=compress&cs=tinysrgb&w=800",
+    spotId:5,
+    preview: true },
     
   ],{ validate: true } );
     },
