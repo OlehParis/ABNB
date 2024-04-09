@@ -3,7 +3,7 @@ import * as sessionActions from '../../store/session';
 import { useDispatch } from 'react-redux';
 import { useModal } from '../../context/Modal';
 import './LoginForm.css';
-// import { demoUser } from '../../../../backend/db/seeders/20240210211714-demo-user';
+
 
 function LoginFormModal() {
   const dispatch = useDispatch();
@@ -26,8 +26,8 @@ function LoginFormModal() {
   };
   const isSubmitDisabled = credential.length < 4 || password.length < 6;
   const handleDemoUserLogin = () => {
-    // setCredential(demoUser.email);
-    // setPassword(demoUser.hashedPassword);
+    setCredential('vvvv');
+    setPassword('vbnhj123');
   };
   return (
     <><div className='modal-login'>
