@@ -2,14 +2,15 @@ import { useState } from 'react';
 import './CreateSpot.css';
 import { fetchNewSpot } from '../../store/createSpot';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
-// import { useHistory } from 'react-router-dom';
 
 const CreateSpot = () => {
   const dispatch = useDispatch()
-  // const history = useHistory();
+  const navigate = useNavigate()
+
   const newSpotId = useSelector(state => state.createSpot.data.id);
-   console.log('new spot id',newSpotId)
+  
  
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
@@ -21,7 +22,8 @@ const CreateSpot = () => {
     price: '',
     description: '',
     lat: '',
-    lng: ''
+    lng: '',
+    url: '',
 
     // imageUrls: [],
   });
@@ -55,6 +57,9 @@ const CreateSpot = () => {
     if(formData.price < 1){
       newErrors.price = "Price is required"
     }
+    if(formData.url.length < 1){
+      newErrors.url = "Url is required"
+    }
 
     if (!(parseFloat(formData.lat) > -90 && parseFloat(formData.lat) < 90)) {
       newErrors.lat = "Latitude must be between -90 and 90"
@@ -79,9 +84,9 @@ const CreateSpot = () => {
     setErrors(formErrors);
 
     if (Object.keys(formErrors).length === 0) { 
-     const response = await dispatch(fetchNewSpot(formData));
-
-    //  history.push('/') 
+    const response = await dispatch(fetchNewSpot(formData));
+    
+      navigate(`/spots/${newSpotId}`)
     }
   };
 
@@ -131,6 +136,11 @@ const CreateSpot = () => {
         <label htmlFor="price">Competitive pricing can help your listing stand out and rank higher in search results</label>
         <input type="number" placeholder='Price per night (USD)' id="price" name="price" value={formData.price} onChange={handleChange} />
         {errors.price && <div className="error">{errors.price}</div>}
+
+        <h4>Liven up your spot with photos</h4> 
+        <label htmlFor="">Submit a link to at least one photo to publish your spot.</label>
+        <input type="text" placeholder='Preview Image URL' id="url" name="url" value={formData.url} onChange={handleChange} />
+        {errors.url && <div className="error">{errors.url}</div>}
       
         <button type="submit">Create Spot</button>
         
