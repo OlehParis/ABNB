@@ -5,7 +5,7 @@ export const fetchCreateSpot = (spot) => ({
   payload: spot,
 });
 
-export const fetchNewSpot = (spot) => {
+export const fetchNewSpot = (spot, history) => {
     return async (dispatch) => {
         spot.lat = 23
         spot.lng = 23
@@ -24,6 +24,7 @@ export const fetchNewSpot = (spot) => {
           const data = await response.json();
           console.log("fetch", data);
           dispatch(fetchCreateSpot(data));
+         
         } catch (error) {
             const data = await error.json()
           console.error('An error occurred while fetching new spot:', data);

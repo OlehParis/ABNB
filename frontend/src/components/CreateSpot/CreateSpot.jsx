@@ -1,10 +1,16 @@
 import { useState } from 'react';
 import './CreateSpot.css';
 import { fetchNewSpot } from '../../store/createSpot';
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux';
+
+// import { useHistory } from 'react-router-dom';
 
 const CreateSpot = () => {
   const dispatch = useDispatch()
+  // const history = useHistory();
+  const newSpotId = useSelector(state => state.createSpot.data.id);
+   console.log('new spot id',newSpotId)
+ 
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     address: '',
@@ -72,8 +78,10 @@ const CreateSpot = () => {
     const formErrors = validateForm();
     setErrors(formErrors);
 
-    if (Object.keys(formErrors).length === 0) {
-      dispatch(fetchNewSpot(formData));
+    if (Object.keys(formErrors).length === 0) { 
+     const response = await dispatch(fetchNewSpot(formData));
+
+    //  history.push('/') 
     }
   };
 
@@ -123,148 +131,12 @@ const CreateSpot = () => {
         <label htmlFor="price">Competitive pricing can help your listing stand out and rank higher in search results</label>
         <input type="number" placeholder='Price per night (USD)' id="price" name="price" value={formData.price} onChange={handleChange} />
         {errors.price && <div className="error">{errors.price}</div>}
+      
         <button type="submit">Create Spot</button>
+        
       </form>
     </div>
   );
 };
 
 export default CreateSpot;
-
-
-
-
-
-////////
-// import { useState } from 'react';
-// import './CreateSpot.css'
-// const CreateSpot = () => {
-//   // const [errors, setErrors] = useState({});
-//   const [formData, setFormData] = useState({
-//     address: '',
-//     city: '',
-//     state: '',
-//     country: '',
-//     name: '',
-//     price: '',
-//     description: '',
-//     title: '',
-//     imageUrls: [],
-//     // latitude: '',
-//     // longitude: ''
-//   });
- 
-//     // const [dragging, setDragging] = useState(false);
-  
-//     // const getCsrfTokenFromCookies = () => {
-      
-//     //   const cookies = document.cookie.split(';');
-//     //   for (let cookie of cookies) {
-      
-//     //     const [name, value] = cookie.trim().split('=');
-        
-//     //     if (name == 'XSRF-TOKEN') {
-//     //       return value;
-          
-//     //     }
-//     //   }
-//     //   return null;
-//     // };
-    
-    
-//     const handleChange = (e) => {
-//       const { name, value } = e.target;
-//       setFormData({ ...formData, [name]: value });
-//     };
-  
-//     const handleSubmit = async (e) => {
-//       e.preventDefault();
-  
-
-      
-//       try {
-//         // const csrfToken = getCsrfTokenFromCookies();
-//         const response = await fetch('/spots', {
-//           method: 'POST',
-//           headers: {
-//             'Content-Type': 'application/json',
-//             // 'XSRF-TOKEN': csrfToken, 
-//           },
-//           body: JSON.stringify(formData),
-//         });
-  
-//         if (!response.ok) {
-//           throw new Error('Failed to create spot');
-//         }
-
-//       } catch (error) {
-//         // Handle errors, e.g., show an error message to the user
-//         console.error('Error creating spot:', error.message);
-//       }
-//     };
-  
-//   // const handleDragStart = (event) => {
-//   //   event.dataTransfer.setData("text/plain", event.target.id);
-//   //   setDragging(true);
-//   // };
-
-//   // const handleDragOver = (event) => {
-//   //   event.preventDefault();
-//   // };
-
-//   // const handleDrop = (event) => {
-//   //   event.preventDefault();
-//   //   const id = event.dataTransfer.getData("text");
-//   //   const draggableElement = document.getElementById(id);
-//   //   const dropzone = event.target;
-//   //   dropzone.appendChild(draggableElement);
-//   //   setDragging(false);
-//   // };
-
-//   return (
-//     <div className="create-spot-form">
-//       <h2>Create a new Spot</h2>
-//       <form onSubmit={handleSubmit}>
-
-//         <label htmlFor="country">Country:</label>
-//         <input type="text"  placeholder='Country' id="country" name="country" value={formData.country}  required onChange={handleChange} />
-// {/* 
-//         <div
-//           id="dropzone"
-//           onDragOver={handleDragOver}
-//           onDrop={handleDrop}
-//           style={{ width: '100%', minHeight: '100px', border: '1px dashed #ccc', marginBottom: '10px' }}
-//         >
-//           Drag Image Here
-//         </div>
-//         <input type="text" id="imageUrls" name="imageUrls" value={formData.imageUrls} onChange={handleChange} /> */}
-//         <label htmlFor="address">Street Address:</label>
-//         <input type="text" placeholder='Address' id="address" name="address" value={formData.address} onChange={handleChange} />
-
-//         <label htmlFor="city">City:</label>
-//         <input type="text" placeholder='City' id="city" name="city" value={formData.city} onChange={handleChange} />
-
-//         <label htmlFor="state">State:</label>
-//         <input type="text"  placeholder='STATE' id="state" name="state" value={formData.state} onChange={handleChange} />
-
-//         <label htmlFor="description">Describe your place to guests:</label>
-//         <textarea id="description" name="description" value={formData.description} onChange={handleChange} />
-
-//         <label htmlFor="title">Create a title for your spot:</label>
-//         <input type="text"  placeholder='Name of your spot' id="title" name="title" value={formData.title} onChange={handleChange} />
-
-//         <label htmlFor="pricePerNight">Competitive pricing can help your listing stand out and rank higher in search results</label>
-//         <input type="number"  placeholder='Price per night (USD)' id="price" name="price" value={formData.price} onChange={handleChange} />
-
-//         {/* <label htmlFor="imageUrls">Submit a link to at least one photo to publish your spot.</label>
-//         <input type="text" id="imageUrls" name="imageUrls" value={formData.imageUrls} onChange={handleChange} /> */}
-
-//         <button type="submit">Create Spot</button>
-//       </form>
-   
-//       {/* {dragging && <p>Dragging...</p>} */}
-//     </div>
-//   );
-// };
-
-// export default CreateSpot;

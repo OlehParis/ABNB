@@ -1,11 +1,11 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
-
+// import {useModal} from '../../context/Modal'
 import { useParams } from 'react-router-dom';
 import { fetchSpot } from '../../store/spot';
 import './SpotDetails.css';
 import { FaStar , FaRegStar} from 'react-icons/fa';
-
+// import ReviewFromModal from '../ReviewFromModal/ReviewFromModal'
 
 
 function StarRating({ stars }) {
@@ -32,10 +32,18 @@ function SpotDetails() {
     const { spotId } = useParams();
     const dispatch = useDispatch()
     const data = useSelector(state => state.spot.data);
+    const session = useSelector(state => state.session)
     const spotData = data[0]
+
+    const omodal = () => {
+  //  return (<OpenModalButton
+  //     buttonText ='Hello'
+  //     modalComponent = {<h2>hello</h2>}
+  //   />)
     
-    
-//  console.log(reviews[0].User.firstName)
+  };
+
+
     useEffect(() => {
         dispatch(fetchSpot(spotId));
       }, [dispatch, spotId]);
@@ -44,7 +52,9 @@ function SpotDetails() {
         return <div>Loading...</div>;
     }
     const reviews = data.reviews.Reviews
-   
+    // const curUserId = session.user.id
+    const spotOwnerId = spotData.ownerId
+    // const reviewOwnerId = data.reviews.Reviews[0].userId
 
     return (
         <div className="spot-details">
@@ -84,6 +94,8 @@ function SpotDetails() {
   {spotData.numReviews ? spotData.numReviews : ' 0'} 
   {spotData.numReviews === 1 ? ' review' : ' reviews'}
 </h3>
+{/* {curUserId && curUserId === reviewOwnerId && curUserId === spotOwnerId ? "" : <button onClick= {omodal} >Post Your Review</button>} */}
+
         <div>
         {reviews.map((review, index) => (
             <div   key={index} >
