@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import './CreateSpot.css';
-import { csrfFetch } from '../../store/csrf';
+import { fetchNewSpot } from '../../store/createSpot';
+import { useDispatch } from 'react-redux'
 
 const CreateSpot = () => {
+  const dispatch = useDispatch()
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     address: '',
@@ -12,8 +14,7 @@ const CreateSpot = () => {
     name: '',
     price: '',
     description: '',
-    title: '',
-    imageUrls: [],
+    // imageUrls: [],
   });
 
   const handleChange = (e) => {
@@ -40,7 +41,7 @@ const CreateSpot = () => {
       newErrors.state = "State is required"
     }
     if(formData.name.length < 1){
-      newErrors.name = "State is required"
+      newErrors.name = "Name is required"
     }
     if(formData.price < 1){
       newErrors.price = "Price is required"
@@ -56,32 +57,14 @@ const CreateSpot = () => {
     setErrors(formErrors);
 
     if (Object.keys(formErrors).length === 0) {
-      try {
-        const response = await csrfFetch('api/spots', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData),
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to create spot');
-        } else (
-          console.log("YEAY!")
-        )
-
-        // If successful, you might want to clear the form or redirect the user
-      } catch (error) {
-        console.error('Error creating spot:', error.message);
-      }
+      dispatch(fetchNewSpot(formData));
     }
   };
 
   return (
     <div className="create-spot-form">
       <h2>Create a new Spot</h2>
-      <h4>Where's your place located?</h4>
+      <h4>Where&apos;s your place located?</h4>
       <p>Guests will only get your exact address once they booked a
 reservation.</p>
       <form onSubmit={handleSubmit}>
@@ -100,13 +83,16 @@ reservation.</p>
         <input type="text" placeholder='STATE' id="state" name="state" value={formData.state} onChange={handleChange} />
         {errors.state && <div className="error">{errors.state}</div>}
         <h4>Describe your place to guests</h4>
+        <p>Mention the best features of your space, any special amentities like fast wif or parking, and what you love about the neighborhood.</p>
 
-        <label htmlFor="description">Describe your place to guests:</label>
-        <textarea id="description" name="description" value={formData.description} onChange={handleChange} />
+        <label htmlFor="description"></label>
+        <textarea id="description"  placeholder="Description"name="description" value={formData.description} onChange={handleChange} />
         {errors.description && <div className="error">{errors.description}</div>}
-
-        <label htmlFor="title">Create a title for your spot:</label>
-        <input type="text" placeholder='Name of your spot' id="title" name="title" value={formData.title} onChange={handleChange} />
+          
+         <h4>Create a title for your spot</h4> 
+         <p>Catch guests`&apos; attention with a spot title that highlights what makes your place special.</p>
+        <label htmlFor="title"></label>
+        <input type="text" placeholder='Name of your spot' id="name" name="name" value={formData.name} onChange={handleChange} />
         {errors.name && <div className="error">{errors.name}</div>}
 
         <label htmlFor="price">Competitive pricing can help your listing stand out and rank higher in search results</label>

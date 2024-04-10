@@ -23,6 +23,7 @@
   .create-spot-form textarea {
     width: 100%;
     padding: 8px;
+    overflow-x:scroll;
 
     border: 1px solid #ccc;
     border-radius: 3px;

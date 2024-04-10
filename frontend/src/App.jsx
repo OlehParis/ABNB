@@ -47,7 +47,7 @@ function App() {
           element:  <SpotDetails spot = {spots} />
         },{
           path: "spots/new",
-          element:  <CreateSpot />
+          element:  <CreateSpot spot = {spots}/>
         },
       ]
     }
