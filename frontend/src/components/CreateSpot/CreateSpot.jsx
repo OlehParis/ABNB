@@ -14,6 +14,9 @@ const CreateSpot = () => {
     name: '',
     price: '',
     description: '',
+    lat: '',
+    lng: ''
+
     // imageUrls: [],
   });
 
@@ -46,6 +49,19 @@ const CreateSpot = () => {
     if(formData.price < 1){
       newErrors.price = "Price is required"
     }
+
+    if (!(parseFloat(formData.lat) > -90 && parseFloat(formData.lat) < 90)) {
+      newErrors.lat = "Latitude must be between -90 and 90"
+    }
+    if (formData.lat.length <1 ) {
+      newErrors.lat2 = "Latitude is required"
+    }
+    if(!(parseFloat(formData.lng) > -180 && parseFloat(formData.lng) < 180)){
+      newErrors.lng = "Longitude must be between -180 and 180"
+    }
+    if (formData.lng.length <1 ) {
+      newErrors.lng2 = "Longitude is required"
+    }
     return newErrors;
   };
  
@@ -65,26 +81,35 @@ const CreateSpot = () => {
     <div className="create-spot-form">
       <h2>Create a new Spot</h2>
       <h4>Where&apos;s your place located?</h4>
-      <p>Guests will only get your exact address once they booked a
-reservation.</p>
+      <p>Guests will only get your exact address once they booked a reservation.</p>
       <form onSubmit={handleSubmit}>
-        <label htmlFor="country">Country:</label>
+        <label htmlFor="country">Country</label>
         <input type="text" placeholder='Country' id="country" name="country" value={formData.country} onChange={handleChange} />
         {errors.country && <div className="error">{errors.country}</div>}
 
-        <label htmlFor="address">Street Address:</label>
+        <label htmlFor="address">Street Address</label>
         <input type="text" placeholder='Address' id="address" name="address" value={formData.address} onChange={handleChange} />
         {errors.address && <div className="error">{errors.address}</div>}
-        <label htmlFor="city">City:</label>
+        <label htmlFor="city">City</label>
         <input type="text" placeholder='City' id="city" name="city" value={formData.city} onChange={handleChange} />
         {errors.city && <div className="error">{errors.city}</div>}
 
-        <label htmlFor="state">State:</label>
+        <label htmlFor="state">State</label>
         <input type="text" placeholder='STATE' id="state" name="state" value={formData.state} onChange={handleChange} />
         {errors.state && <div className="error">{errors.state}</div>}
+        
+        <label htmlFor="state">Latitude</label>
+        <input type="text" placeholder='Latitude' id="lat" name="lat" value={formData.lat} onChange={handleChange} />
+        {errors.lat && <div className="error">{errors.lat}</div>}
+        {errors.lat2 && <div className="error">{errors.lat2}</div>}
+
+        <label htmlFor="state">Longitude</label>
+        <input type="text" placeholder='Longitude' id="lng" name="lng" value={formData.lng} onChange={handleChange} />
+        {errors.lng && <div className="error">{errors.lng}</div>}
+        {errors.lng2 && <div className="error">{errors.lng2}</div>}
+
         <h4>Describe your place to guests</h4>
         <p>Mention the best features of your space, any special amentities like fast wif or parking, and what you love about the neighborhood.</p>
-
         <label htmlFor="description"></label>
         <textarea id="description"  placeholder="Description"name="description" value={formData.description} onChange={handleChange} />
         {errors.description && <div className="error">{errors.description}</div>}
