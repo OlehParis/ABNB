@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import './CreateSpot.css';
-import { fetchNewSpot } from '../../store/createSpot';
+import { fetchNewSpot, fetchAddSpotImage } from '../../store/createSpot';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -9,8 +9,8 @@ const CreateSpot = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const newSpotId = useSelector(state => state.createSpot.data.id);
-  
+  // const spotId = useSelector(state => state.createSpot.data.id);
+  // console.log(spotId)
  
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
@@ -23,18 +23,26 @@ const CreateSpot = () => {
     description: '',
     lat: '',
     lng: '',
-    url: '',
-
-    // imageUrls: [],
+    
   });
+
+  const [ imgData, setImgData ] = useState({
+    url: '',
+  })
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    if (name === "url") {
+      setImgData({ ...imgData, url: value });
+    
+    } else {
+      setFormData({ ...formData, [name]: value });
+     
+    }
   };
 
   const validateForm = () => {
-    const newErrors = {};
+    let newErrors = {};
     // Description validation
     if (formData.description.length < 30) {
       newErrors.description = "Description must be at least 30 characters long.";
@@ -57,9 +65,9 @@ const CreateSpot = () => {
     if(formData.price < 1){
       newErrors.price = "Price is required"
     }
-    if(formData.url.length < 1){
-      newErrors.url = "Url is required"
-    }
+    // if(formData.url.length < 1){
+    //   newErrors.url = "Url is required"
+    // }
 
     if (!(parseFloat(formData.lat) > -90 && parseFloat(formData.lat) < 90)) {
       newErrors.lat = "Latitude must be between -90 and 90"
@@ -73,21 +81,27 @@ const CreateSpot = () => {
     if (formData.lng.length <1 ) {
       newErrors.lng2 = "Longitude is required"
     }
-    return newErrors;
+    return newErrors = {};
   };
+  
  
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const formErrors = validateForm();
     setErrors(formErrors);
-
     if (Object.keys(formErrors).length === 0) { 
+      try {
     const response = await dispatch(fetchNewSpot(formData));
-    
-      navigate(`/spots/${newSpotId}`)
+    console.log('line 94 response', response)
+    // const newSpotId = response.id
+   if (newSpotId) {const response2 = await dispatch(fetchAddSpotImage(spotId, imgData))}
+    // navigate(`/spots/${spotId}`)}
     }
+  catch (error) {
+    console.error('Fail line 101', error) 
+  }
+  }
   };
 
   return (
@@ -140,8 +154,8 @@ const CreateSpot = () => {
         <h4>Liven up your spot with photos</h4> 
         <label htmlFor="">Submit a link to at least one photo to publish your spot.</label>
         <input type="text" placeholder='Preview Image URL' id="url" name="url" value={formData.url} onChange={handleChange} />
-        {errors.url && <div className="error">{errors.url}</div>}
-      
+        {/* {errors.url && <div className="error">{errors.url}</div>}
+       */}
         <button type="submit">Create Spot</button>
         
       </form>

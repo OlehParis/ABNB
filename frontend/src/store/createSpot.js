@@ -5,15 +5,14 @@ export const fetchCreateSpot = (spot) => ({
   payload: spot,
 });
 
-export const fetchAddSpotImage = (spot) => ({
+export const fetchAddSpotImage = (img) => ({
   type:"FETCH_ADD_SPOT_IMAGE",
-  payload: spot,
+  payload: img,
 })
 
 export const fetchNewSpot = (spot) => {
     return async (dispatch) => {
-        spot.lat = 23
-        spot.lng = 23
+
         try {
           const response = await csrfFetch('/api/spots', {
             method: 'POST',
@@ -36,7 +35,7 @@ export const fetchNewSpot = (spot) => {
         }
       };
 };
-export const fetchAddSpotImageThunk = (spotId, image) => {
+export const fetchAddSpotImageThunk = (spotId, imgData) => {
 
 return async (dispatch) => {
 
@@ -46,7 +45,7 @@ return async (dispatch) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(image),
+      body: JSON.stringify(imgData),
     });
 
     if (!response2.ok) {
@@ -78,10 +77,8 @@ const newSpotReducer = (state = initialState, action) => {
     case "FETCH_ADD_SPOT_IMAGE":
       return {
         ...state,
-        // data = {
-        //   data:
-        // }
-      }
+        data: action.payload,
+      };
     default:
       return state;
   }
