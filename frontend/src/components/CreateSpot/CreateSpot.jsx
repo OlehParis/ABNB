@@ -55,9 +55,9 @@ const CreateSpot = () => {
     if(formData.price < 1){
       newErrors.price = "Price is required"
     }
-    // if(formData.url.length < 1){
-    //   newErrors.url = "Url is required"
-    // }
+    if(formData.url.length < 1){
+      newErrors.url = "Url is required"
+    }
 
     if (!(parseFloat(formData.lat) > -90 && parseFloat(formData.lat) < 90)) {
       newErrors.lat = "Latitude must be between -90 and 90"
@@ -80,8 +80,10 @@ const CreateSpot = () => {
     const formErrors = validateForm();
     setErrors(formErrors);
     if (Object.keys(formErrors).length === 0) { 
-    const response =  dispatch(fetchNewSpot(formData));
-    console.log(response, 'ddddddd')
+      dispatch(fetchNewSpot(formData)).then(response => {
+        console.log(response, 'ddddddd')
+    });
+   
     // navigate(`/spots/${spotId}`)
   }
   };

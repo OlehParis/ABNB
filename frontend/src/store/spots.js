@@ -82,7 +82,7 @@ export const fetchNewSpot = (spot) => {
     };
     
     dispatch(fetchCreateSpot(newSpotDataWithImg));
-   
+   return newSpotDataWithImg
   };
 };
 
