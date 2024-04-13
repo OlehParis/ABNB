@@ -8,9 +8,6 @@ import { useNavigate } from 'react-router-dom';
 const CreateSpot = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-
-
- 
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     address: '',
@@ -56,7 +53,7 @@ const CreateSpot = () => {
       newErrors.price = "Price is required"
     }
     if(formData.url.length < 1){
-      newErrors.url = "Url is required"
+      newErrors.url = "Preview Image is required"
     }
 
     if (!(parseFloat(formData.lat) > -90 && parseFloat(formData.lat) < 90)) {
@@ -71,7 +68,7 @@ const CreateSpot = () => {
     if (formData.lng.length <1 ) {
       newErrors.lng2 = "Longitude is required"
     }
-    return newErrors = {};
+    return newErrors;
   };
   
  
@@ -79,12 +76,14 @@ const CreateSpot = () => {
     e.preventDefault();
     const formErrors = validateForm();
     setErrors(formErrors);
+   
     if (Object.keys(formErrors).length === 0) { 
       dispatch(fetchNewSpot(formData)).then(response => {
-        console.log(response, 'ddddddd')
+    navigate(`/spots/${response.id}`)
+       
     });
    
-    // navigate(`/spots/${spotId}`)
+
   }
   };
 

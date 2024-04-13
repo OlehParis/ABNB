@@ -74,7 +74,7 @@ export const fetchNewSpot = (spot) => {
       body: JSON.stringify(spot),
     });
     const images = await responseImages.json();
-    console.log(images.url , 'img url')
+    // console.log(images.url , 'img url')
     const newSpotDataWithImg = {
       ...data,
       previewImage: images.url,
@@ -99,6 +99,7 @@ const spotsReducer = (state = initialState, action) => {
         ...state,
         ...action.payload,
       };
+
     case "FETCH_SPOT_BYID":
       const existingIndex = state.Spots.findIndex(
         (spot) => spot.id === action.payload.id
@@ -123,6 +124,7 @@ const spotsReducer = (state = initialState, action) => {
           Spots: [...state.Spots, action.payload],
         };
       }
+
     case "FETCH_CREATE_SPOT":
       const existingIndex3 = state.Spots.findIndex(
         (spot) => spot.id === action.payload.id
@@ -155,35 +157,4 @@ const spotsReducer = (state = initialState, action) => {
 
 export default spotsReducer;
 
-// export const fetchNewSpot = (spot) => {
-//   return async (dispatch) => {
-//     try {
-//       const response = await csrfFetch("/api/spots", {
-//         method: "POST",
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//         body: JSON.stringify(spot),
-//       });
 
-//       if (!response.ok) {
-//         throw new Error("Failed to create spot");
-//       }
-//       const data = await response.json();
-//       if (data) {
-//         const newSpotId = data.id;
-//         const responseImages = (newSpotId, imgData) => await csrfFetch(`/api/spots/${spotId}/images`, {
-//                 method: 'POST',
-//                 headers: {
-//                   'Content-Type': 'application/json',
-//                 },
-//                 body: JSON.stringify(imgData),
-//               });
-//         dispatch(fetchCreateSpot(data));
-//       }
-//     } catch (error) {
-//       const data = await error.json();
-//       console.error("An error occurred while fetching new spot:", data);
-//     }
-//   };
-// };
