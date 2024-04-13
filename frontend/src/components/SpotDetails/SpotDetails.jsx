@@ -1,12 +1,12 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 // import {useModal} from '../../context/Modal'
 import { useParams } from 'react-router-dom';
 import { fetchSpot } from '../../store/spots';
 import './SpotDetails.css';
 import { FaStar , FaRegStar} from 'react-icons/fa';
 import OpenModalButton from '../OpenModalButton/OpenModalButton'
-// import ReviewFromModal from '../ReviewFromModal/ReviewFromModal'
+import ReviewFromModal from '../ReviewFromModal/ReviewFromModal'
 
 
 function StarRating({ stars }) {
@@ -19,7 +19,6 @@ function StarRating({ stars }) {
     const emptyStars = Array.from({ length: totalStars - stars }, (_, index) => (
       <FaRegStar key={index} color="#e4e5e9" />
     ));
-  
     return (
       <div>
         {filledStars}
@@ -31,18 +30,21 @@ function StarRating({ stars }) {
 function SpotDetails() {
 
     const { spotId } = useParams();
-  
     const dispatch = useDispatch()
     const spotData = useSelector(state => state.spots.Spots[spotId-1]);
     const session = useSelector(state => state.session)
 
+    const [isReviewModalOpen, setIsReviewModalOpen] = useState(false); 
 
-    const omodal = () => {
-   return (<OpenModalButton
-      buttonText ='Hello'
-      modalComponent = {<h2>hello</h2>}
-    />)
-  };
+    const openReviewModal = () => {
+        setIsReviewModalOpen(true);
+    };
+    const closeReviewModal = () => {
+        setIsReviewModalOpen(false); 
+    };
+
+    const reviewModal = isReviewModalOpen ? <ReviewFromModal onClose={closeReviewModal} /> : null;
+
 
 
     useEffect(() => {
@@ -59,7 +61,7 @@ function SpotDetails() {
     const curUserId = session.user?.id ?? null;
     const spotOwnerId = spotData.ownerId
     const reviewMatchCurUserId = reviews.some(review => review.ownerId === curUserId);
-   
+    const dontShowButton = reviewMatchCurUserId && curUserId === spotOwnerId;
     return (
         <div className="spot-details">
         <h2>{spotData.name}</h2>
@@ -97,9 +99,14 @@ function SpotDetails() {
   {spotData.avgStarRating ? spotData.avgStarRating : 'New'}  · 
   {spotData.numReviews ? spotData.numReviews : ' 0'} 
   {spotData.numReviews === 1 ? ' review' : ' reviews'}
-</h3>
-{reviewMatchCurUserId && curUserId === spotOwnerId ? "" : <button onClick= {omodal} >Post Your Review</button>}
-
+</h3> 
+{dontShowButton ? null : (
+          <OpenModalButton
+            buttonText="Post Your Review"
+            modalComponent={<ReviewFromModal spotId={spotId}  onClose={closeReviewModal} />}
+            onButtonClick={openReviewModal}
+          />
+        )}
         <div>
         {reviews.map((review, index) => (
           <div   key={index} >

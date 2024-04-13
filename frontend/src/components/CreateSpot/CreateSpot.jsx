@@ -19,8 +19,11 @@ const CreateSpot = () => {
     description: '',
     lat: '',
     lng: '',
-    url: '',
-    
+    url: '', preview: true,
+    url2: '',
+    url3: '',
+    url4: '',
+    url5: '',
   });
 
 
@@ -138,9 +141,19 @@ const CreateSpot = () => {
         <label htmlFor="">Submit a link to at least one photo to publish your spot.</label>
         <input type="text" placeholder='Preview Image URL' id="url" name="url" value={formData.url} onChange={handleChange} />
         {errors.url && <div className="error">{errors.url}</div>}
-      
-        <button type="submit">Create Spot</button>
         
+<div className='sub-images'>
+    <p></p>
+        <input type="text" placeholder="Image URL " id="url2" name="url2" value={formData.url2} onChange={handleChange} />
+        <p></p>
+        <input type="text" placeholder="Image URL" id="url3" name="url3" value={formData.url3} onChange={handleChange} />
+        <p></p>
+        <input type="text" placeholder="Image URL" id="url4" name="url4" value={formData.url4} onChange={handleChange} />
+        <p></p>
+        <input type="text" placeholder="Image URL" id="url5" name="url5" value={formData.url5} onChange={handleChange} />
+        <p></p>
+        <button type="submit">Create Spot</button>
+    </div>    
       </form>
     </div>
   );
