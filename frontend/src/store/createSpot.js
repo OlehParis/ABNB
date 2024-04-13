@@ -67,21 +67,21 @@
 //   data: [],
 // };
 
-// const newSpotReducer = (state = initialState, action) => {
-//   switch (action.type) {
-//     case "FETCH_CREATE_SPOT":
-//       return {
-//         ...state,
-//         data: action.payload,
-//       };
-//     case "FETCH_ADD_SPOT_IMAGE":
-//       return {
-//         ...state,
-//         data: action.payload,
-//       };
-//     default:
-//       return state;
-//   }
-// };
+const newSpotReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case "FETCH_CREATE_SPOT":
+      return {
+        ...state,
+        data: action.payload,
+      };
+    case "FETCH_ADD_SPOT_IMAGE":
+      return {
+        ...state,
+        data: action.payload,
+      };
+    default:
+      return state;
+  }
+};
 
 // export default newSpotReducer;

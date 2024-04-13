@@ -7,7 +7,7 @@ function SpotCard() {
 
     const navigate = useNavigate();
     const spotsData = useSelector(state => state.spots.Spots);
-    console.log(spotsData, 'spotsData ....')
+    // console.log(spotsData, 'spotsData ....')
     const handleClick = (id) => {
         navigate(`/spots/${id}`); 
       };
