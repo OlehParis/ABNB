@@ -6,14 +6,13 @@ import { FaStar } from 'react-icons/fa';
 function SpotCard() {
 
     const navigate = useNavigate();
-    const spotsData = useSelector(state => state.spots.data.Spots);
- 
+    const spotsData = useSelector(state => state.spots.Spots);
+    console.log(spotsData, 'spotsData ....')
     const handleClick = (id) => {
         navigate(`/spots/${id}`); 
       };
     
    if(spotsData){
-
     return (
         <div className="spot-card" >
         {spotsData.map(spot => (
@@ -28,13 +27,12 @@ function SpotCard() {
                     
                     <div>${spot.price} night</div>
                   
-                  
-               
                 </div>
             </div>
         ))}  
     </div>
-    );}
+    );
+}
 }
 
 export default SpotCard;

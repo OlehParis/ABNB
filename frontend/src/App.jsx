@@ -6,7 +6,7 @@ import SpotCard from './components/Spots/Spots';
 import { fetchSpots } from './store/spots';
 import Navigation from './components/Navigation/Navigation';
 import SpotDetails from './components/SpotDetails/SpotDetails';
-import CreateSpot from './components/CreateSpot/CreateSpot';
+// import CreateSpot from './components/CreateSpot/CreateSpot';
 
 function App() {
   const dispatch = useDispatch();
@@ -45,10 +45,11 @@ function App() {
         {
           path: "spots/:spotId",
           element:  <SpotDetails spot = {spots} />
-        },{
-          path: "spots/new",
-          element:  <CreateSpot spot = {spots}/>
         },
+        // {
+        //   path: "spots/new",
+        //   element:  <CreateSpot spot = {spots}/>
+        // },
       ]
     }
   ]);

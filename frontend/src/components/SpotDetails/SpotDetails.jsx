@@ -2,9 +2,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 // import {useModal} from '../../context/Modal'
 import { useParams } from 'react-router-dom';
-import { fetchSpot } from '../../store/spot';
+import { fetchSpot } from '../../store/spots';
 import './SpotDetails.css';
 import { FaStar , FaRegStar} from 'react-icons/fa';
+import OpenModalButton from '../OpenModalButton/OpenModalButton'
 // import ReviewFromModal from '../ReviewFromModal/ReviewFromModal'
 
 
@@ -30,17 +31,17 @@ function StarRating({ stars }) {
 function SpotDetails() {
 
     const { spotId } = useParams();
+  
     const dispatch = useDispatch()
-    const data = useSelector(state => state.spot.data);
+    const spotData = useSelector(state => state.spots.Spots[spotId-1]);
     const session = useSelector(state => state.session)
-    const spotData = data[0]
+
 
     const omodal = () => {
-  //  return (<OpenModalButton
-  //     buttonText ='Hello'
-  //     modalComponent = {<h2>hello</h2>}
-  //   />)
-    
+   return (<OpenModalButton
+      buttonText ='Hello'
+      modalComponent = {<h2>hello</h2>}
+    />)
   };
 
 
@@ -51,11 +52,14 @@ function SpotDetails() {
     if (!spotData) {
         return <div>Loading...</div>;
     }
-    const reviews = data.reviews.Reviews
-    // const curUserId = session.user.id
+    if (!spotData.reviews) {
+      return <div>Loading...</div>;
+  }
+    const reviews = spotData.reviews.Reviews
+    const curUserId = session.user?.id ?? null;
     const spotOwnerId = spotData.ownerId
-    // const reviewOwnerId = data.reviews.Reviews[0].userId
-
+    const reviewMatchCurUserId = reviews.some(review => review.ownerId === curUserId);
+   
     return (
         <div className="spot-details">
         <h2>{spotData.name}</h2>
@@ -94,11 +98,11 @@ function SpotDetails() {
   {spotData.numReviews ? spotData.numReviews : ' 0'} 
   {spotData.numReviews === 1 ? ' review' : ' reviews'}
 </h3>
-{/* {curUserId && curUserId === reviewOwnerId && curUserId === spotOwnerId ? "" : <button onClick= {omodal} >Post Your Review</button>} */}
+{reviewMatchCurUserId && curUserId === spotOwnerId ? "" : <button onClick= {omodal} >Post Your Review</button>}
 
         <div>
         {reviews.map((review, index) => (
-            <div   key={index} >
+          <div   key={index} >
                 <h3>{review.User.firstName}</h3>
                 <p>{review.updatedAt.split(" ")[0]} </p>
                 <StarRating stars={review.stars} />
