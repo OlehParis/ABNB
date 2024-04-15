@@ -6,7 +6,7 @@ import './SpotDetails.css';
 import { FaStar , FaRegStar} from 'react-icons/fa';
 import OpenModalButton from '../OpenModalButton/OpenModalButton'
 import ReviewFromModal from '../ReviewFromModal/ReviewFromModal'
-
+import DeleteReviewModal from '../DeleteReviewModal/DeleteReviewModal';
 
 function StarRating({ stars }) {
     const totalStars = 5;

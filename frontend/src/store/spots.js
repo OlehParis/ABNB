@@ -104,6 +104,7 @@ export const fetchSpotReview = (spot) => {
       throw new Error("Failed to create spot");}
     const data = await response.json();
     dispatch(fetchCreateRaviewById(data));
+    dispatch(fetchSpotByID(spotId))
     console.log(data , 'data for, 105')
     }}
 
@@ -174,7 +175,7 @@ const spotsReducer = (state = initialState, action) => {
     case "FETCH_CREATE_REVIEW_BYID":
       return {
         ...state,
-        reviews: [...action.payload],
+         reviews: action.payload,
       };
 
 

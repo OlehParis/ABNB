@@ -1,7 +1,10 @@
 import { useSelector } from 'react-redux';
+import { useState } from 'react'; 
 import { useNavigate } from 'react-router-dom'
 import './Spots.css';
 import { FaStar } from 'react-icons/fa';
+// import OpenModalButton from '../OpenModalButton/OpenModalButton'
+
 
 function ManageSpots() {
 
@@ -10,15 +13,20 @@ function ManageSpots() {
     const session = useSelector(state => state.session)
     const curUserId = session.user?.id ?? null;
   
+
+
     const handleClick = (id) => {
         navigate(`/spots/${id}`); 
       };
     
+
+    
+
    if(spotsData){
     return (
        <div className='spots-container'> 
            <h1> Manage Your Spots</h1>
-          {spotsData.length > 1 && <button onClick={()=> navigate('/spots/new')} >Create New Spot</button>}
+          {spotsData.length === 0 && <button onClick={()=> navigate('/spots/new')} >Create New Spot</button>}
         <div className="spot-card" >
         {spotsData.map(spot => (
             spot.ownerId === curUserId &&
@@ -31,15 +39,19 @@ function ManageSpots() {
                     <p><FaStar color="#ffc107"/> {spot.avgRating ? spot.avgRating : 'New'}</p>
                     </div>
                     <div>${spot.price} night</div>
+              
+       
+                </div>
                     <div className='buttons'> 
                 <button> Update </button>
-                <button> Delete </button>
+                 <button>Delete</button>
                </div>
-                </div>
+                   
             </div>
             
         ))}  
     </div>
+    
     </div>
     );
 }
