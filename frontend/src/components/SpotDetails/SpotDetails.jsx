@@ -1,6 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
-// import {useModal} from '../../context/Modal'
 import { useParams } from 'react-router-dom';
 import { fetchSpot } from '../../store/spots';
 import './SpotDetails.css';
@@ -58,10 +57,19 @@ function SpotDetails() {
       return <div>Loading...</div>;
   }
     const reviews = spotData.reviews.Reviews
+    // console.log(spotData)
+    // console.log(reviews.length, 'reviews')
     const curUserId = session.user?.id ?? null;
     const spotOwnerId = spotData.ownerId
-    const reviewMatchCurUserId = reviews.some(review => review.ownerId === curUserId);
-    const dontShowButton = reviewMatchCurUserId && curUserId === spotOwnerId;
+    // console.log(curUserId, 'curUserId')
+    // console.log(spotOwnerId, 'spotowner Id')
+    const reviewMatchCurUserId = reviews.some(review => review.userId === curUserId);
+    const dontShowButton = reviewMatchCurUserId || curUserId === spotOwnerId;
+    const beTheFirst = reviews.length === 0 && curUserId && spotOwnerId !== curUserId 
+    const zeroReviews = reviews.length === 0;
+    const notLogIn = session.user === null;
+    console.log(session.user)
+  console.log(spotData)
     return (
         <div className="spot-details">
         <h2>{spotData.name}</h2>
@@ -75,7 +83,7 @@ function SpotDetails() {
                 ))}
             </div>
         </div>
-        <div className="details">
+      <div className="details">
             <div className='info'>
             <h2> Hosted by {spotData.Owner.firstName} {spotData.Owner.lastName}</h2>
             <p>{spotData.description}</p>
@@ -85,9 +93,9 @@ function SpotDetails() {
                     <div className='container'>
                     <div className='price'><h3>${spotData.price}</h3> <p>night</p></div>
                     <p className='rating'><FaStar color="#ffc107"/> 
-                    {spotData.avgStarRating ? spotData.avgStarRating : ' New'} · 
-                    {spotData.numReviews ? spotData.numReviews : ' 0'} 
-                    {spotData.numReviews === 1 ? ' review' : ' reviews'} </p>
+                    {spotData.avgStarRating ? ` ${spotData.avgStarRating}` : ' New'} 
+                   {!zeroReviews && ( spotData.numReviews ? ` · ${spotData.numReviews}` : '· 0' ) }
+                    {!zeroReviews && (spotData.numReviews === 1 ? ' review' : ' reviews')}</p>
                     </div>
                     <button onClick={()=> alert('Feature Coming Soon...')}>Reserve</button>
                 </div>
@@ -95,18 +103,19 @@ function SpotDetails() {
         </div>
         <div className='reviews'>
         <h3 className='rating2'>
-  <FaStar/> 
-  {spotData.avgStarRating ? spotData.avgStarRating : 'New'}  · 
-  {spotData.numReviews ? spotData.numReviews : ' 0'} 
-  {spotData.numReviews === 1 ? ' review' : ' reviews'}
-</h3> 
-{dontShowButton ? null : (
+  <FaStar color="#ffc107"/> 
+  {spotData.avgStarRating ? ` ${spotData.avgStarRating}` : ' New'}   
+  {!zeroReviews && ( spotData.numReviews ? ` · ${spotData.numReviews}` : '· 0' ) }
+  {!zeroReviews && (spotData.numReviews === 1 ? ' review' : ' reviews')}
+        </h3> 
+        {!dontShowButton && !notLogIn && (
           <OpenModalButton
             buttonText="Post Your Review"
             modalComponent={<ReviewFromModal spotId={spotId}  onClose={closeReviewModal} />}
             onButtonClick={openReviewModal}
           />
         )}
+        
         <div>
         {reviews.map((review, index) => (
           <div   key={index} >
@@ -116,6 +125,7 @@ function SpotDetails() {
                 <p>{review.review}</p>
             </div> ))}
         </div>
+        {beTheFirst  &&  <h2>Be the first to post a review! </h2> }
         </div>
     
     </div>

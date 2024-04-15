@@ -169,7 +169,7 @@ const spotsReducer = (state = initialState, action) => {
           Spots: [...state.Spots, action.payload],
         };
       }
-    case "FETCH_CREATE_REVIEW_BYID":
+    // case "FETCH_CREATE_REVIEW_BYID":
 
 
     default:

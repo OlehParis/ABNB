@@ -17,9 +17,9 @@ function SpotCard() {
         <div className="spot-card" >
         {spotsData.map(spot => (
             <div key={spot.id} className="spot">
-                <div className="tooltip">
+                <div className="tooltip" onClick={() => handleClick(spot.id)} >
                 <span className="tooltiptext">{spot.name}</span>
-                    <img  className='spot-img'  onClick={() => handleClick(spot.id)} src={spot.previewImage} alt={spot.name} />
+                    <img  className='spot-img'  src={spot.previewImage} alt={spot.name} />
                     <div className='addressAvgRating'>
                     <p>{spot.address}  {spot.state}</p>
                     <p><FaStar color="#ffc107"/> {spot.avgRating ? spot.avgRating : 'New'}</p>

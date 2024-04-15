@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { fetchSpotReview } from '../../store/spots';
 import { FaStar , FaRegStar} from 'react-icons/fa';
-
+import { useModal } from '../../context/Modal';
 import './ReviewFromModal.css';
 
 
@@ -54,8 +54,10 @@ function StarRating({ defaultRating, onChange }) {
 
   function ReviewFromModal({ spotId }) {
     const dispatch = useDispatch()
+    const { closeModal } = useModal();
     const [review, setReview] = useState('');
     const [stars, setStars] = useState(0);
+
     const handleReviewChange = (event) => {
       setReview(event.target.value);
     };
@@ -71,7 +73,8 @@ function StarRating({ defaultRating, onChange }) {
         stars
     }
     dispatch(fetchSpotReview(Reviews))
-   
+    .then(() => closeModal())
+    
     };
   
     return (
