@@ -2,6 +2,7 @@ import { useState } from 'react';
 // import * as sessionActions from '../../store/session';
 import { useDispatch } from 'react-redux';
 import { fetchSpotReview } from '../../store/spots';
+import { fetchSpotByID } from '../../store/spots';
 import { FaStar , FaRegStar} from 'react-icons/fa';
 import { useModal } from '../../context/Modal';
 import './ReviewFromModal.css';
@@ -73,6 +74,7 @@ function StarRating({ defaultRating, onChange }) {
         stars
     }
     dispatch(fetchSpotReview(Reviews))
+    .then(()=> dispatch(fetchSpotByID(spotId)))
     .then(() => closeModal())
     
     };

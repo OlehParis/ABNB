@@ -34,6 +34,8 @@ function SpotDetails() {
     const session = useSelector(state => state.session)
 
     const [isReviewModalOpen, setIsReviewModalOpen] = useState(false); 
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [selectedReviewId, setSelectedReviewId] = useState(null);
 
     const openReviewModal = () => {
         setIsReviewModalOpen(true);
@@ -41,6 +43,16 @@ function SpotDetails() {
     const closeReviewModal = () => {
         setIsReviewModalOpen(false); 
     };
+
+    const openDeleteModal = (reviewId) => {
+      setSelectedReviewId(reviewId);
+      setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+      setSelectedReviewId(null);
+      setIsDeleteModalOpen(false);
+  };
 
     const reviewModal = isReviewModalOpen ? <ReviewFromModal onClose={closeReviewModal} /> : null;
 
@@ -123,8 +135,14 @@ function SpotDetails() {
                 <p>{review.updatedAt.split(" ")[0]} </p>
                 <StarRating stars={review.stars} />
                 <p>{review.review}</p>
-               { review.userId === curUserId && <button>Delete</button>}
-            </div> ))}
+                {review.userId === curUserId && (
+                            <OpenModalButton
+                                buttonText="Delete"
+                                modalComponent={<DeleteReviewModal reviewId={review.id} onClose={closeDeleteModal} />}
+                                onButtonClick={() => openDeleteModal(review.id)}
+                            />
+                )}
+          </div> ))}
         </div>
         {beTheFirst  &&  <h2>Be the first to post a review! </h2> }
         </div>
