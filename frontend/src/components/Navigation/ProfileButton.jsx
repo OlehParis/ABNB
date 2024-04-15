@@ -5,12 +5,12 @@ import * as sessionActions from '../../store/session';
 import OpenModalMenuItem from './OpenModalMenuItem';
 import LoginFormModal from '../LoginFormModal/LoginFormModal';
 import SignupFormModal from '../SignupFormModal/SignupFormModal';
+import {  Link } from 'react-router-dom';
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
   const ulRef = useRef();
-
   const toggleMenu = (e) => {
     e.stopPropagation(); // Keep from bubbling up to document and triggering closeMenu
     setShowMenu(!showMenu);
@@ -49,8 +49,10 @@ function ProfileButton({ user }) {
         {user ? (
           <>
             <li> hello,  {user.firstName} {user.lastName}</li>
-            <li>{user.username}</li>
+            {/* <li>{user.username}</li> */}
             <li>{user.email}</li>
+         
+           <li> <Link  className='linkManageSpot' to="/spots/current">Manage Spots</Link></li>
             <li>
               <button onClick={logout}>Log Out</button>
             </li>

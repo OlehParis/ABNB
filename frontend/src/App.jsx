@@ -7,6 +7,7 @@ import { fetchSpots } from './store/spots';
 import Navigation from './components/Navigation/Navigation';
 import SpotDetails from './components/SpotDetails/SpotDetails';
 import CreateSpot from './components/CreateSpot/CreateSpot';
+import ManageSpots from './components/Spots/ManageSpots'
 
 function App() {
   const dispatch = useDispatch();
@@ -49,6 +50,10 @@ function App() {
         {
           path: "spots/new",
           element:  <CreateSpot spot = {spots}/>
+        },
+        {
+          path: "spots/current",
+          element:  <ManageSpots spot = {spots}/>
         },
       ]
     }

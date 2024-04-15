@@ -68,8 +68,8 @@ function SpotDetails() {
     const beTheFirst = reviews.length === 0 && curUserId && spotOwnerId !== curUserId 
     const zeroReviews = reviews.length === 0;
     const notLogIn = session.user === null;
-    console.log(session.user)
-  console.log(spotData)
+  //   console.log(session.user)
+  // console.log(spotData)
     return (
         <div className="spot-details">
         <h2>{spotData.name}</h2>
@@ -115,7 +115,7 @@ function SpotDetails() {
             onButtonClick={openReviewModal}
           />
         )}
-        
+       
         <div>
         {reviews.map((review, index) => (
           <div   key={index} >
@@ -123,6 +123,7 @@ function SpotDetails() {
                 <p>{review.updatedAt.split(" ")[0]} </p>
                 <StarRating stars={review.stars} />
                 <p>{review.review}</p>
+               { review.userId === curUserId && <button>Delete</button>}
             </div> ))}
         </div>
         {beTheFirst  &&  <h2>Be the first to post a review! </h2> }

@@ -93,7 +93,6 @@ export const fetchSpotReview = (spot) => {
  
   return async (dispatch) => {
     const spotId = spot.spotId
-    console.log(spot, 'spot 96')
     const response = await csrfFetch(`/api/spots/${spotId}/reviews`, {
       method: "POST",
       headers: {
@@ -104,8 +103,11 @@ export const fetchSpotReview = (spot) => {
     if (!response.ok) {
       throw new Error("Failed to create spot");}
     const data = await response.json();
+    dispatch(fetchCreateRaviewById(data));
     console.log(data , 'data for, 105')
     }}
+
+
 const initialState = {
   Spots: [],
   page: 1,
@@ -169,7 +171,11 @@ const spotsReducer = (state = initialState, action) => {
           Spots: [...state.Spots, action.payload],
         };
       }
-    // case "FETCH_CREATE_REVIEW_BYID":
+    case "FETCH_CREATE_REVIEW_BYID":
+      return {
+        ...state,
+        reviews: [...action.payload],
+      };
 
 
     default:

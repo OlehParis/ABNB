@@ -58,6 +58,16 @@
     border-radius: 15px;
   }
 
+  .spots-container > h1,
+.spots-container > button {
+ margin-left: 40px;
+}
+.buttons{
+  padding-top: 10px;
+}
+.buttons button {
+  margin-right: 10px;
+}
 /* For screens smaller than 600px */
 
 @media screen and (max-width: 600px) {
@@ -91,28 +101,12 @@
     }
 }
 
-/* For screens larger than 900px */
-@media screen and (min-width: 901px) {
+
+ @media screen and (min-width: 901px) {
     .spot-card {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(30%, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(25%, 0.5fr));
 
-        justify-content: center;
-    }
-
-    .spot {
-        width: 100%;
-        max-width: calc(30% - 20px);
-    }
-}
-
-/* For screens larger than 1200px */
-@media screen and (min-width: 1201px) {
-    .spot-card {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(calc(25% - 20px), 1fr)); /* Maximum of 4 columns */
- 
-        padding: 20px;
         justify-content: center;
     }
 
@@ -121,3 +115,19 @@
         max-width: calc(25% - 20px);
     }
 }
+
+/* For screens larger than 1200px */
+/* @media screen and (min-width: 1201px) {
+    .spot-card {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(calc(18% - 20px), 1fr)); /* Maximum of 4 columns */
+ 
+        /* padding: 20px;
+        justify-content: center;
+    }
+
+    .spot {
+        width: 100%;
+        max-width: calc(25% - 20px);
+    }
+} */ 
