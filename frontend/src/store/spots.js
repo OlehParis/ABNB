@@ -25,9 +25,10 @@ export const fetchDeleteReview = (reviewId) => ({
 });
 
 export const deleteReview = (reviewId) => {
+  console.log(reviewId, 'reviw id line 28')
   return async (dispatch) => {
- 
-    const response = await csrfFetch(`api/reviews/${reviewId}`, {
+
+    const response = await csrfFetch(`/api/reviews/${reviewId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -134,6 +135,7 @@ const initialState = {
   Spots: [],
   page: 1,
   size: 20,
+  
 };
 
 const spotsReducer = (state = initialState, action) => {
@@ -198,13 +200,26 @@ const spotsReducer = (state = initialState, action) => {
         ...state,
         reviews: action.payload,
       };
-    case "FETCH_DELETE_REVIEW":
-     
-        const updatedReviews = state.reviews.filter(review => review.id !== action.payload);
-        return {
-          ...state,
-          reviews: updatedReviews,
-        };
+      case "FETCH_DELETE_REVIEW":
+      const updatedSpots = state.Spots.map((spot) => {
+        // If the current spot contains the review to be deleted, update the reviews array
+        if (spot.reviews && spot.reviews.length > 0) {
+          const updatedReviews = spot.reviews.filter(
+            (review) => review.id !== action.payload
+          );
+          return {
+            ...spot,
+            reviews: updatedReviews,
+          };
+        }
+        return spot;
+      });
+
+      return {
+        ...state,
+        Spots: updatedSpots,
+      };
+
 
     default:
       return state;

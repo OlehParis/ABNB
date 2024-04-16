@@ -18,7 +18,9 @@ function ManageSpots() {
     const handleClick = (id) => {
         navigate(`/spots/${id}`); 
       };
-    
+    const handleUpdate = (id) => {
+        navigate(`/spots/${id}/edit`)
+    }
 
     
 
@@ -43,7 +45,7 @@ function ManageSpots() {
        
                 </div>
                     <div className='buttons'> 
-                <button> Update </button>
+                <button onClick={()=> handleUpdate(spot.id)}> Update </button>
                  <button>Delete</button>
                </div>
                    

@@ -8,6 +8,7 @@ import Navigation from './components/Navigation/Navigation';
 import SpotDetails from './components/SpotDetails/SpotDetails';
 import CreateSpot from './components/CreateSpot/CreateSpot';
 import ManageSpots from './components/Spots/ManageSpots'
+import EditSpot from './components/CreateSpot/EditSpot';
 
 function App() {
   const dispatch = useDispatch();
@@ -55,6 +56,10 @@ function App() {
           path: "spots/current",
           element:  <ManageSpots spot = {spots}/>
         },
+        {
+          path: "spots/:spotId/edit",
+          element:  <EditSpot spot = {spots}/>
+        }
       ]
     }
   ]);

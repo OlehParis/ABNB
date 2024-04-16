@@ -4,12 +4,11 @@ import { deleteReview } from '../../store/spots';
 
 function DeleteReviewModal({ reviewId, onClose }) {
     const dispatch = useDispatch();
-
-    const handleDelete = () => {
+//  console.log(reviewId)
+    const handleDelete = (reviewId) => {
+        console.log(reviewId, 'reviewid from modal')
         dispatch(deleteReview(reviewId))
-        // Dispatch action to delete the review or perform any necessary operations
-        // dispatch(deleteReview(reviewId));
-        // You may also want to handle closing the modal after deletion
+        
         onClose();
     };
 
@@ -24,8 +23,8 @@ function DeleteReviewModal({ reviewId, onClose }) {
                 <h2>Confirm Delete</h2>
                 <p>Are you sure you want to delete this review?</p>
                 <div className="modal-buttons">
-                    <button onClick={handleDelete}>Yes</button>
-                    <button onClick={closeModal}>No</button>
+                <button onClick={() => handleDelete(reviewId)}>Yes</button>
+                    <button  onClick={closeModal}>No</button>
                 </div>
             </div>
         </div>
