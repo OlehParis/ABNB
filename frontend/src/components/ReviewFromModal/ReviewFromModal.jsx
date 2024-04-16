@@ -53,7 +53,7 @@ function StarRating({ defaultRating, onChange }) {
 
 
 
-  function ReviewFromModal({ spotId }) {
+  function ReviewFromModal({ spotId, spot }) {
     const dispatch = useDispatch()
     const { closeModal } = useModal();
     const [review, setReview] = useState('');
@@ -76,7 +76,7 @@ function StarRating({ defaultRating, onChange }) {
     dispatch(fetchSpotReview(Reviews))
     .then(()=> dispatch(fetchSpotByID(spotId)))
     .then(() => closeModal())
-    
+    .then(()=> dispatch(fetchSpotByID(spotId)))
     };
   
     return (

@@ -9,6 +9,7 @@ export const fetchSpotsSuccess = (spots) => ({
   payload: spots,
 });
 
+
 export const fetchCreateSpot = (spot) => ({
   type: "FETCH_CREATE_SPOT",
   payload: spot,
@@ -17,25 +18,45 @@ export const fetchCreateSpot = (spot) => ({
 export const fetchCreateRaviewById = (spot) => ({
   type: "FETCH_CREATE_REVIEW_BYID",
   payload: spot,
-}) 
+});
+export const fetchDeleteReview = (reviewId) => ({
+  type: "FETCH_DELETE_REVIEW",
+  payload: reviewId,
+});
+
+export const deleteReview = (reviewId) => {
+  return async (dispatch) => {
+ 
+    const response = await csrfFetch(`api/reviews/${reviewId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.ok) {
+    
+      dispatch(fetchDeleteReview(reviewId));
+    } 
+
+  };
+};
 
 
 export const fetchSpots = () => {
   return async (dispatch) => {
-    const response = await csrfFetch("/api/spots");
+    const response = await fetch("/api/spots");
     if (!response.ok) {
       throw new Error("Failed to fetch spots");
     }
     const data = await response.json();
-
+    console.log('fetch', data)
     dispatch(fetchSpotsSuccess(data));
   };
-};
 
+};
 export const fetchSpot = (spotId) => {
- 
   return async (dispatch) => {
-    
     const response = await csrfFetch(`/api/spots/${spotId}`);
     const res2 = await csrfFetch(`/api/spots/${spotId}/reviews`);
 
@@ -54,7 +75,6 @@ export const fetchSpot = (spotId) => {
 };
 
 export const fetchNewSpot = (spot) => {
- 
   return async (dispatch) => {
     const response = await csrfFetch("/api/spots", {
       method: "POST",
@@ -64,11 +84,12 @@ export const fetchNewSpot = (spot) => {
       body: JSON.stringify(spot),
     });
     if (!response.ok) {
-      throw new Error("Failed to create spot");}
+      throw new Error("Failed to create spot");
+    }
     const data = await response.json();
 
     const spotId = data.id;
-    console.log(spot)
+    console.log(spot);
     const responseImages = await csrfFetch(`/api/spots/${spotId}/images`, {
       method: "POST",
       headers: {
@@ -77,22 +98,21 @@ export const fetchNewSpot = (spot) => {
       body: JSON.stringify(spot),
     });
     const images = await responseImages.json();
-   
+
     const newSpotDataWithImg = {
       ...data,
       previewImage: images.url,
-      SpotImages: [images]
+      SpotImages: [images],
     };
-    
+
     dispatch(fetchCreateSpot(newSpotDataWithImg));
-   return newSpotDataWithImg
+    return newSpotDataWithImg;
   };
 };
 
 export const fetchSpotReview = (spot) => {
- 
   return async (dispatch) => {
-    const spotId = spot.spotId
+    const spotId = spot.spotId;
     const response = await csrfFetch(`/api/spots/${spotId}/reviews`, {
       method: "POST",
       headers: {
@@ -101,13 +121,14 @@ export const fetchSpotReview = (spot) => {
       body: JSON.stringify(spot),
     });
     if (!response.ok) {
-      throw new Error("Failed to create spot");}
+      throw new Error("Failed to create spot");
+    }
     const data = await response.json();
     dispatch(fetchCreateRaviewById(data));
 
-    console.log(data , 'data for, 105')
-    }}
-
+    console.log(data, "data for, 105");
+  };
+};
 
 const initialState = {
   Spots: [],
@@ -175,9 +196,15 @@ const spotsReducer = (state = initialState, action) => {
     case "FETCH_CREATE_REVIEW_BYID":
       return {
         ...state,
-         reviews: action.payload,
+        reviews: action.payload,
       };
-
+    case "FETCH_DELETE_REVIEW":
+     
+        const updatedReviews = state.reviews.filter(review => review.id !== action.payload);
+        return {
+          ...state,
+          reviews: updatedReviews,
+        };
 
     default:
       return state;
