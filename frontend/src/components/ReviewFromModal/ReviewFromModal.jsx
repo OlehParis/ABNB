@@ -74,7 +74,7 @@ function StarRating({ defaultRating, onChange }) {
         stars
     }
     dispatch(fetchSpotReview(Reviews))
-    .then(()=> dispatch(fetchSpotByID(spotId)))
+    .then(()=> dispatch(fetchSpotByID(spot)))
     .then(() => closeModal())
     .then(()=> dispatch(fetchSpotByID(spotId)))
     };
