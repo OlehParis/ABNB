@@ -341,7 +341,7 @@ router.get("/:spotId", async (req, res, next) => {
       avgStarRating: avgRating,
       SpotImages: spot.SpotImages.length > 0 ? spot.SpotImages : null,
       Owner: spot.User,
-      Reviews: spot.Reviews
+      // Reviews: spot.Reviews
     };
   });
 
