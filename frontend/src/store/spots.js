@@ -25,7 +25,7 @@ export const fetchSpots = () => {
     const page = data.page
     const size = data.size
     const allSpotsData = { ...data.Spots, page, size }
-    // console.log("fetch", allSpotsData);
+    console.log("fetch", allSpotsData);
     dispatch(fetchSpotsSuccess(allSpotsData));
   };
 };
@@ -63,7 +63,7 @@ export const fetchNewSpot = (spot) => {
     const data = await response.json();
 
     const spotId = data.id;
-    console.log(spot);
+   
     const responseImages = await csrfFetch(`/api/spots/${spotId}/images`, {
       method: "POST",
       headers: {
@@ -85,54 +85,41 @@ export const fetchNewSpot = (spot) => {
 };
 
 const initialState = {
+  
 };
 
 const spotsReducer = (state = initialState, action) => {
   switch (action.type) {
     case "FETCH_SPOTS_SUCCESS":
+      // Start the key from 1
+      let nextState = {};
+      Object.entries(action.payload).forEach(([key, value], index) => {
+        if (key !== "page" && key !== "size") {
+          nextState[index + 1] = value;
+        }
+      });
       return {
-        ...state, ...action.payload
-        
+        ...state,
+        ...nextState
       };
 
       case "FETCH_SPOT_BYID":
       const spotId = action.payload.id;
-      console.log("Spot ID from payload:", spotId); // Log the spotId
-      // You can also log the spot object for further verification
-      console.log("Spot from payload:", action.payload);
+    
 
       return {
         ...state,
-          ...state.spots,
-          [spotId-1]: {...action.payload}
+          // [spotId]: { ...action.payload }
+          [spotId]:{ ...state[spotId], ...action.payload}
         
       };
 
-
-    case "FETCH_CREATE_SPOT":
-      const existingIndex3 = state.Spots.findIndex(
-        (spot) => spot.id === action.payload.id
-      );
-      if (existingIndex3 !== -1) {
-        const updatedSpots = state.Spots.map((spot, index) => {
-          if (index === existingIndex3) {
-            return {
-              ...spot,
-              ...action.payload,
-            };
-          }
-          return spot;
-        });
+      case "FETCH_CREATE_SPOT":
+        const newSpotId = action.payload.id;
         return {
           ...state,
-          Spots: updatedSpots,
+          [newSpotId]: { ...action.payload }
         };
-      } else {
-        return {
-          ...state,
-          Spots: [...state.Spots, action.payload],
-        };
-      }
 
     default:
       return state;
