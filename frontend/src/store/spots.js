@@ -14,6 +14,12 @@ export const fetchCreateSpot = (spot) => ({
   type: "FETCH_CREATE_SPOT",
   payload: spot,
 });
+export const fetchEditSpot = (spot) => ({
+  type: "FETCH_EDIT_SPOT",
+  payload: spot,
+});
+
+
 
 export const fetchSpots = () => {
   return async (dispatch) => {
@@ -25,7 +31,7 @@ export const fetchSpots = () => {
     const page = data.page
     const size = data.size
     const allSpotsData = { ...data.Spots, page, size }
-    console.log("fetch", allSpotsData);
+   
     dispatch(fetchSpotsSuccess(allSpotsData));
   };
 };
@@ -84,6 +90,45 @@ export const fetchNewSpot = (spot) => {
   };
 };
 
+
+
+export const fetchEditNewSpot = (spot, spotId) => {
+  return async (dispatch) => {
+    const response = await csrfFetch(`/api/spots/${spotId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(spot),
+    });
+    if (!response.ok) {
+      throw new Error("Failed to create spot");
+    }
+    const data = await response.json();
+
+    // const spotId = data.id;
+    console.log(spotId , 'spotIddddddd')
+   
+    const responseImages = await csrfFetch(`/api/spots/${spotId}/images`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(spot),
+    });
+    const images = await responseImages.json();
+
+    const newSpotDataWithImg = {
+      ...data,
+      previewImage: images.url,
+      SpotImages: [images],
+    };
+
+    dispatch(fetchEditSpot(newSpotDataWithImg));
+    return newSpotDataWithImg;
+  };
+};
+
 const initialState = {
   
 };
@@ -120,7 +165,12 @@ const spotsReducer = (state = initialState, action) => {
           ...state,
           [newSpotId]: { ...action.payload }
         };
-
+        case "FETCH_EDIT_SPOT":
+          const editedSpotId = action.payload.id; 
+          return {
+            ...state,
+            [editedSpotId]: { ...action.payload }
+          };
     default:
       return state;
   }

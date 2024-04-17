@@ -111,12 +111,12 @@ const CreateSpot = () => {
         <input type="text" placeholder='STATE' id="state" name="state" value={formData.state} onChange={handleChange} />
         {errors.state && <div className="error">{errors.state}</div>}
         
-        <label htmlFor="state">Latitude</label>
+        <label htmlFor="Longitude">Latitude</label>
         <input type="text" placeholder='Latitude' id="lat" name="lat" value={formData.lat} onChange={handleChange} />
         {errors.lat && <div className="error">{errors.lat}</div>}
         {errors.lat2 && <div className="error">{errors.lat2}</div>}
 
-        <label htmlFor="state">Longitude</label>
+        <label htmlFor="sLongitude">Longitude</label>
         <input type="text" placeholder='Longitude' id="lng" name="lng" value={formData.lng} onChange={handleChange} />
         {errors.lng && <div className="error">{errors.lng}</div>}
         {errors.lng2 && <div className="error">{errors.lng2}</div>}

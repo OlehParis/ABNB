@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import './CreateSpot.css';
-// import { fetchNewSpot } from '../../store/spots';
+import { fetchEditNewSpot } from '../../store/spots';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
@@ -9,10 +9,11 @@ import { useParams } from 'react-router-dom';
 const EditSpot = () => {
   const dispatch = useDispatch()
   const {spotId} = useParams()
-//   console.log(spotId)
+  console.log(spotId, 'line 12')
+
   const navigate = useNavigate()
   const existingSpotData = useSelector(state => state.spots[spotId])
-//   console.log(existingSpotData)
+
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     address: '',
@@ -24,7 +25,7 @@ const EditSpot = () => {
     description: '',
     lat: '',
     lng: '',
-    url: '', preview: true,
+    previewImage: '', preview: true,
     url2: '',
     url3: '',
     url4: '',
@@ -32,8 +33,9 @@ const EditSpot = () => {
   });
 
   useEffect(() => {
-    // Populate formData with existing spot data when component mounts
+    
     if (existingSpotData) {
+      console.log(existingSpotData)
       setFormData(existingSpotData);
     }
   }, [existingSpotData]);
@@ -45,6 +47,7 @@ const EditSpot = () => {
 
   const validateForm = () => {
     let newErrors = {};
+   
     if (formData.description.length < 30) {
       newErrors.description = "Description must be at least 30 characters long.";
     }
@@ -66,8 +69,8 @@ const EditSpot = () => {
     if(formData.price < 1){
       newErrors.price = "Price is required"
     }
-    if(formData.url.length < 1){
-      newErrors.url = "Preview Image is required"
+    if(formData.previewImage.length < 1){
+      newErrors.previewImage = "Preview Image is required"
     }
 
     if (!(parseFloat(formData.lat) > -90 && parseFloat(formData.lat) < 90)) {
@@ -88,17 +91,17 @@ const EditSpot = () => {
  
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formErrors = validateForm();
-    setErrors(formErrors);
+    const newFormErrors= validateForm();
+    setErrors(newFormErrors);
    
-//     if (Object.keys(formErrors).length === 0) { 
-//       dispatch(fetchNewSpot(formData)).then(response => {
-//     navigate(`/spots/${response.id}`)
+    if (Object.keys(newFormErrors).length === 0) { 
+      dispatch(fetchEditNewSpot(formData, spotId)).then(response => {
+    navigate(`/spots/${response.id}`)
        
-//     });
+    });
    
 
-//   }
+  }
   };
 
   return (
@@ -122,12 +125,12 @@ const EditSpot = () => {
         <input type="text" placeholder='STATE' id="state" name="state" value={formData.state} onChange={handleChange} />
         {errors.state && <div className="error">{errors.state}</div>}
         
-        <label htmlFor="state">Latitude</label>
+        <label htmlFor="Latitude">Latitude</label>
         <input type="text" placeholder='Latitude' id="lat" name="lat" value={formData.lat} onChange={handleChange} />
         {errors.lat && <div className="error">{errors.lat}</div>}
         {errors.lat2 && <div className="error">{errors.lat2}</div>}
 
-        <label htmlFor="state">Longitude</label>
+        <label htmlFor="Longitude">Longitude</label>
         <input type="text" placeholder='Longitude' id="lng" name="lng" value={formData.lng} onChange={handleChange} />
         {errors.lng && <div className="error">{errors.lng}</div>}
         {errors.lng2 && <div className="error">{errors.lng2}</div>}
@@ -150,8 +153,8 @@ const EditSpot = () => {
 
         <h4>Liven up your spot with photos</h4> 
         <label htmlFor="">Submit a link to at least one photo to publish your spot.</label>
-        <input type="text" placeholder='Preview Image URL' id="url" name="url" value={formData.url} onChange={handleChange} />
-        {errors.url && <div className="error">{errors.url}</div>}
+        <input type="text" placeholder='Preview Image URL' id="previewImage" name="previewImage" value={formData.previewImage} onChange={handleChange} />
+        {errors.previewImage && <div className="error">{errors.previewImage}</div>}
         
 <div className='sub-images'>
     <p></p>
@@ -163,7 +166,7 @@ const EditSpot = () => {
         <p></p>
         <input type="text" placeholder="Image URL" id="url5" name="url5" value={formData.url5} onChange={handleChange} />
         <p></p>
-        <button type="submit">Create Spot</button>
+        <button type="submit">Edit Spot</button>
     </div>    
       </form>
     </div>
