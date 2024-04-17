@@ -32,11 +32,10 @@ function SpotDetails() {
     const dispatch = useDispatch()
     const spotData = useSelector(state => state.spots[spotId]);
  
-    
     const session = useSelector(state => state.session)
     const newReview = useSelector(state => state.review)
-
-
+    const reviews = spotData.reviews.Reviews;
+  
     const [isReviewModalOpen, setIsReviewModalOpen] = useState(false); 
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [selectedReviewId, setSelectedReviewId] = useState(null);
@@ -67,7 +66,7 @@ function SpotDetails() {
       if (!spotData || !spotData.reviews) {
         return <div>Loading...</div>;
     }
-    const reviews = spotData.reviews.Reviews;
+
  
  
     const curUserId = session.user?.id ?? null;
