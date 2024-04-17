@@ -34,6 +34,7 @@ function SpotDetails() {
     console.log(spotData)
     
     const session = useSelector(state => state.session)
+    const newReview = useSelector(state => state.reviews)
 
     const [isReviewModalOpen, setIsReviewModalOpen] = useState(false); 
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -62,15 +63,11 @@ function SpotDetails() {
         dispatch(fetchSpot(spotId));
       }, [dispatch, spotId]);
 
-    if (!spotData) {
+      if (!spotData || !spotData.reviews) {
         return <div>Loading...</div>;
     }
-    if (!spotData.reviews) {
-      return <div>Loading...</div>;
-  }
-    const reviews = spotData.reviews.Reviews
-    // if ((spotData.reviews.Reviews).length === 0) {reviews = false;}
-    // console.log(reviews, 'line 71')
+    const reviews = spotData.reviews.Reviews;
+ 
  
     const curUserId = session.user?.id ?? null;
     const spotOwnerId = spotData.ownerId
@@ -86,9 +83,11 @@ function SpotDetails() {
         <p>{spotData.address}, {spotData.state},  {spotData.country}</p>
         <div className='images'>
             
-            <img className='mainImage' src={spotData.SpotImages[0].url} alt={spotData.name} />
+        {spotData && spotData.SpotImages && spotData.SpotImages.length > 0 && (
+    <img className='mainImage' src={spotData.SpotImages[0].url} alt={spotData.name} />
+)}
             <div className="image-gallery">
-                {spotData.SpotImages.map((image, index) => (
+                {spotData.SpotImages && spotData.SpotImages.map((image, index) => (
                     <img key={index} src={image.url} alt={`Image ${index + 1}`} />
                 ))}
             </div>
@@ -127,7 +126,7 @@ function SpotDetails() {
         )}
        
         <div>
-        { reviews.length !== 0 && reviews.map((review, index) => (
+        {reviews && reviews.length !== 0 && reviews.map((review, index) => (
           <div   key={index} >
                 <h3>{review.User.firstName}</h3>
                 <p>{review.updatedAt.split(" ")[0]} </p>

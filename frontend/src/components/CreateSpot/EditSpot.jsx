@@ -11,7 +11,7 @@ const EditSpot = () => {
   const {spotId} = useParams()
 //   console.log(spotId)
   const navigate = useNavigate()
-  const existingSpotData = useSelector(state => state.spots.Spots[spotId-1])
+  const existingSpotData = useSelector(state => state.spots[spotId])
 //   console.log(existingSpotData)
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
