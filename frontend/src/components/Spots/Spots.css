@@ -1,10 +1,11 @@
 .spot-card {
-    display: flex;
-    /* flex-wrap: wrap; */
-
+    display: grid;
+    grid-template-columns: repeat(4, minmax(250px, 1fr));
+    column-count: 4;
     gap: 40px;
+    margin-right: 40px;
     /* row-gap: 40px; */
-    justify-content: center;
+    /* justify-content: center; */
     padding: 20px;
  
   }
@@ -13,8 +14,8 @@
   }
   .addressAvgRating {
     display: flex;
-    justify-content: space-between; /* Address and state on the start, avgRating on the end */
-    margin-top: 10px; /* Add some margin between address/state and avgRating */
+    justify-content: space-between; 
+    margin-top: 10px; 
   }
   svg {
     width: 16px;
@@ -24,6 +25,14 @@
     display: inline-block;
     margin-left: 20px;
   }
+
+  .spot {
+    transition: transform 0.3s ease;
+}
+
+.spot:hover {
+    transform: scale(1.03); 
+}
   
   .tooltip .tooltiptext {
     visibility: hidden;
@@ -68,66 +77,10 @@
 .buttons button {
   margin-right: 10px;
 }
-/* For screens smaller than 600px */
 
-@media screen and (max-width: 600px) {
-    .spot-card {
-        display: flex;
-        flex-direction: column;
-        align-items: center; 
-        justify-content: center; 
-        width: 100%; 
-        padding: 20px;
-    }
 
-    .spot {
-        max-width: 200px;
-        margin-bottom: 20px; /* Add margin between spot cards */
-    }
+@media screen and (max-width: 1200px) {
+  .spot-card {
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
 }
-
-/* For screens between 601px and 900px */
-@media screen and (min-width: 601px) and (max-width: 900px) {
-    .spot-card {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(40%, 1fr));
-    
-        justify-content: center;
-    }
-
-    .spot {
-        width: 100%;
-        max-width: calc(40% - 20px);
-    }
-}
-
-
- @media screen and (min-width: 901px) {
-    .spot-card {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(25%, 0.5fr));
-
-        justify-content: center;
-    }
-
-    .spot {
-        width: 100%;
-        max-width: calc(25% - 20px);
-    }
-}
-
-/* For screens larger than 1200px */
-/* @media screen and (min-width: 1201px) {
-    .spot-card {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(calc(18% - 20px), 1fr)); /* Maximum of 4 columns */
- 
-        /* padding: 20px;
-        justify-content: center;
-    }
-
-    .spot {
-        width: 100%;
-        max-width: calc(25% - 20px);
-    }
-} */ 

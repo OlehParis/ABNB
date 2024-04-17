@@ -13,7 +13,7 @@ function DeleteReviewModal({ reviewId, spotId }) {
         // console.log(reviewId, 'reviewid from modal')
         dispatch(deleteReview(reviewId))
         .then(closeModal)
-        .then(()=>  dispatch(fetchSpot(spotId)))
+        // .then(()=>  dispatch(fetchSpot(spotId)))
       
     };
 
