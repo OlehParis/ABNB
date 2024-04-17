@@ -10,7 +10,7 @@ export const fetchDeleteReview = (reviewId) => ({
 });
 
 export const deleteReview = (reviewId) => {
-  console.log(reviewId, "reviw id line 28");
+ 
   return async (dispatch) => {
     const response = await csrfFetch(`/api/reviews/${reviewId}`, {
       method: "DELETE",
@@ -41,7 +41,7 @@ export const fetchSpotReview = (spot) => {
     const data = await response.json();
     dispatch(fetchCreateRaviewById(data));
 
-    console.log(data, "data for, 105");
+
   };
 };
 

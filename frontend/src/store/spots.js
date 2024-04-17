@@ -7,8 +7,13 @@ export const fetchSpotByID = (spot) => ({
 export const fetchSpotsSuccess = (spots) => ({
   type: "FETCH_SPOTS_SUCCESS",
   payload: spots,
-  
 });
+export const DeleteSpot = (spotId) => {
+  return {
+    type: "FETCH_DELETE_SPOT",
+    payload: spotId,
+  };
+};
 
 export const fetchCreateSpot = (spot) => ({
   type: "FETCH_CREATE_SPOT",
@@ -19,7 +24,15 @@ export const fetchEditSpot = (spot) => ({
   payload: spot,
 });
 
-
+export const fetchDeleteSpot = (spotId) => {
+  return async (dispatch) => {
+    const response = await csrfFetch(`/api/spots/${spotId}`, {
+      method: "DELETE",
+    });
+    dispatch(DeleteSpot(spotId));
+    return response;
+  };
+};
 
 export const fetchSpots = () => {
   return async (dispatch) => {
@@ -28,10 +41,10 @@ export const fetchSpots = () => {
       throw new Error("Failed to fetch spots");
     }
     const data = await response.json();
-    const page = data.page
-    const size = data.size
-    const allSpotsData = { ...data.Spots, page, size }
-   
+    const page = data.page;
+    const size = data.size;
+    const allSpotsData = { ...data.Spots, page, size };
+
     dispatch(fetchSpotsSuccess(allSpotsData));
   };
 };
@@ -49,7 +62,7 @@ export const fetchSpot = (spotId) => {
       ...spotDetails[0],
       reviews,
     };
-//  console.log(spotData, 'line 46')
+    //  console.log(spotData, 'line 46')
     dispatch(fetchSpotByID(spotData));
   };
 };
@@ -69,7 +82,7 @@ export const fetchNewSpot = (spot) => {
     const data = await response.json();
 
     const spotId = data.id;
-   
+
     const responseImages = await csrfFetch(`/api/spots/${spotId}/images`, {
       method: "POST",
       headers: {
@@ -90,8 +103,6 @@ export const fetchNewSpot = (spot) => {
   };
 };
 
-
-
 export const fetchEditNewSpot = (spot, spotId) => {
   return async (dispatch) => {
     const response = await csrfFetch(`/api/spots/${spotId}`, {
@@ -107,8 +118,8 @@ export const fetchEditNewSpot = (spot, spotId) => {
     const data = await response.json();
 
     // const spotId = data.id;
-    console.log(spotId , 'spotIddddddd')
-   
+    console.log(spotId, "spotIddddddd");
+
     const responseImages = await csrfFetch(`/api/spots/${spotId}/images`, {
       method: "POST",
       headers: {
@@ -129,9 +140,7 @@ export const fetchEditNewSpot = (spot, spotId) => {
   };
 };
 
-const initialState = {
-  
-};
+const initialState = {};
 
 const spotsReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -145,32 +154,36 @@ const spotsReducer = (state = initialState, action) => {
       });
       return {
         ...state,
-        ...nextState
+        ...nextState,
       };
 
-      case "FETCH_SPOT_BYID":
+    case "FETCH_SPOT_BYID":
       const spotId = action.payload.id;
-    
 
       return {
         ...state,
-          // [spotId]: { ...action.payload }
-          [spotId]:{ ...state[spotId], ...action.payload}
-        
+        // [spotId]: { ...action.payload }
+        [spotId]: { ...state[spotId], ...action.payload },
       };
 
-      case "FETCH_CREATE_SPOT":
-        const newSpotId = action.payload.id;
-        return {
-          ...state,
-          [newSpotId]: { ...action.payload }
-        };
-        case "FETCH_EDIT_SPOT":
-          const editedSpotId = action.payload.id; 
-          return {
-            ...state,
-            [editedSpotId]: { ...action.payload }
-          };
+    case "FETCH_CREATE_SPOT":
+      const newSpotId = action.payload.id;
+      return {
+        ...state,
+        [newSpotId]: { ...action.payload },
+      };
+    case "FETCH_EDIT_SPOT":
+      const editedSpotId = action.payload.id;
+      return {
+        ...state,
+        [editedSpotId]: { ...action.payload },
+      };
+    case "FETCH_DELETE_SPOT":
+      const spotIdToDelete = action.payload;
+      const newState = { ...state };
+      delete newState[spotIdToDelete];
+      return newState;
+
     default:
       return state;
   }

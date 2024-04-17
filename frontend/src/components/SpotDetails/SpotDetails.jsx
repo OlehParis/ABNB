@@ -34,7 +34,8 @@ function SpotDetails() {
  
     
     const session = useSelector(state => state.session)
-    const newReview = useSelector(state => state.reviews)
+    const newReview = useSelector(state => state.review)
+
 
     const [isReviewModalOpen, setIsReviewModalOpen] = useState(false); 
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -120,7 +121,7 @@ function SpotDetails() {
         {!dontShowButton && !notLogIn && (
           <OpenModalButton
             buttonText="Post Your Review"
-            modalComponent={<ReviewFromModal spotId={spotId}  onClose={closeReviewModal} />}
+            modalComponent={<ReviewFromModal spotId={spotId} newReview={newReview}  onClose={closeReviewModal} />}
             onButtonClick={openReviewModal}
           />
         )}

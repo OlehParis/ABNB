@@ -15,7 +15,7 @@ function SpotCard() {
    if(spotsData){
     return (
         <div className="spot-card" >
-        {Object.values(spotsData).map((spot, index) => (
+        {Object.values(spotsData).map((spot) => (
             <div key={spot.id} className="spot">
                 <div className="tooltip" onClick={() => handleClick(spot.id)} >
                 <span className="tooltiptext">{spot.name}</span>

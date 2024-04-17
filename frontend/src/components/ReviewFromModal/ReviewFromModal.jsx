@@ -1,31 +1,28 @@
-import { useState } from 'react';
-// import * as sessionActions from '../../store/session';
-import { useDispatch } from 'react-redux';
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { fetchSpotReview } from '../../store/reviews';
 import { fetchSpotByID } from '../../store/spots';
-import { FaStar , FaRegStar} from 'react-icons/fa';
+import { FaStar, FaRegStar } from 'react-icons/fa';
 import { useModal } from '../../context/Modal';
 import './ReviewFromModal.css';
 
-
-
 function StarRating({ defaultRating, onChange }) {
-    const totalStars = 5;
-    const [hoverRating, setHoverRating] = useState(0);
-    const [selectedRating, setSelectedRating] = useState(defaultRating);
-    const { closeModal } = useModal();
-    const handleHover = (value) => {
-      setHoverRating(value);
-    };
-  
-    const handleClick = (value) => {
-      setSelectedRating(value === selectedRating ? 0 : value);
-      setHoverRating(0);
-      onChange(value === selectedRating ? 0 : value);
-    };
-  
-    return (
-        <div className='stars-container'>
+  const totalStars = 5;
+  const [hoverRating, setHoverRating] = useState(0);
+  const [selectedRating, setSelectedRating] = useState(defaultRating);
+
+  const handleHover = (value) => {
+    setHoverRating(value);
+  };
+
+  const handleClick = (value) => {
+    setSelectedRating(value === selectedRating ? 0 : value);
+    setHoverRating(0);
+    onChange(value === selectedRating ? 0 : value);
+  };
+
+  return (
+    <div className='stars-container'>
       <div className='stars2'>
         {[...Array(totalStars)].map((_, index) => {
           const starValue = index + 1;
@@ -37,64 +34,72 @@ function StarRating({ defaultRating, onChange }) {
               onClick={() => handleClick(starValue)}
             >
               {starValue <= (hoverRating || selectedRating) ? (
-                <FaStar color="#ffc107"  /> 
+                <FaStar color="#ffc107" />
               ) : (
-                <FaRegStar color="#e4e5e9"  />
+                <FaRegStar color="#e4e5e9" />
               )}
             </span>
-            
           );
         })}
       </div>
-        <span className='stars-text'>Stars</span>
-      </div>
-    );
-  }
+      <span className='stars-text'>Stars</span>
+    </div>
+  );
+}
+
+function ReviewFromModal({ spotId, newReview}) {
+  const dispatch = useDispatch();
+  const { closeModal } = useModal();
+  const [review, setReview] = useState('');
+  const [stars, setStars] = useState(0);
+  const [submitted, setSubmitted] = useState(false);
 
 
+  const spot = useSelector(state => state.spots[spotId]);
+  const handleReviewChange = (event) => {
+    setReview(event.target.value);
+  };
 
-  function ReviewFromModal({ spotId, spot }) {
-    const dispatch = useDispatch()
-    const { closeModal } = useModal();
-    const [review, setReview] = useState('');
-    const [stars, setStars] = useState(0);
+  const handleRatingChange = (value) => {
+    setStars(value);
+  };
 
-    const handleReviewChange = (event) => {
-      setReview(event.target.value);
+  const handleSubmit = () => {
+    const Reviews = {
+      spotId,
+      review,
+      stars
     };
-  
-    const handleRatingChange = (value) => {
-      setStars(value);
-    };
-  
-    const handleSubmit = () => {
-    const Reviews ={
-        spotId,
-        review,
-        stars
-    }
     dispatch(fetchSpotReview(Reviews))
-    .then(()=> dispatch(fetchSpotByID(spot)))
-    .then(() =>(closeModal))
-    // .then(()=> dispatch(fetchSpotByID(spotId)))
-    };
-  
-    return (
-      <div className="field">
-        <h2>How was your stay?</h2>
-        <textarea
-          placeholder="Leave your review here..."
-          value={review}
-          onChange={handleReviewChange}
-        ></textarea>
-        <StarRating defaultRating={stars} className='stars2' onChange={handleRatingChange} /> 
+      .then(() => {
+        setSubmitted(true);
       
-        <button onClick={handleSubmit} disabled={review.length < 10}>
-          Submit Your Review
-        </button>
-      </div>
-    );
-  }
+        closeModal();
+      });
   
-  export default ReviewFromModal;
-  
+  };
+  // useEffect(() => {
+  //   // Fetch spot data if it's not available or not up-to-date
+  //   // if (!spot || (submitted && spotId !== spot.id)) {
+  //     dispatch(fetchSpotByID(spotId));
+  //   // }
+  // }, [dispatch, spotId, submitted, spot, newReview ]);
+
+  return (
+    <div className="field">
+      <h2>How was your stay?</h2>
+      <textarea
+        placeholder="Leave your review here..."
+        value={review}
+        onChange={handleReviewChange}
+      ></textarea>
+      <StarRating defaultRating={stars} className='stars2' onChange={handleRatingChange} />
+
+      <button onClick={handleSubmit} disabled={review.length < 10}>
+        Submit Your Review
+      </button>
+    </div>
+  );
+}
+
+export default ReviewFromModal;

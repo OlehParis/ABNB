@@ -1,10 +1,10 @@
 import { useSelector } from 'react-redux';
-import { useState } from 'react'; 
+
 import { useNavigate } from 'react-router-dom'
 import './Spots.css';
 import { FaStar } from 'react-icons/fa';
-// import OpenModalButton from '../OpenModalButton/OpenModalButton'
-
+import OpenModalButton from '../OpenModalButton/OpenModalButton'
+import DeleteSpotModal from '../DeleteReviewModal/DeleteSpotModal';
 
 function ManageSpots() {
 
@@ -30,7 +30,7 @@ function ManageSpots() {
            <h1> Manage Your Spots</h1>
           {spotsData.length === 0 && <button onClick={()=> navigate('/spots/new')} >Create New Spot</button>}
         <div className="spot-card" >
-        {Object.values(spotsData).map((spot, index) => (
+        {Object.values(spotsData).map((spot) => (
             spot.ownerId === curUserId &&
             <div key={spot.id} className="spot">
                 <div className="tooltip" onClick={() => handleClick(spot.id)} >
@@ -46,7 +46,11 @@ function ManageSpots() {
                 </div>
                     <div className='buttons'> 
                 <button onClick={()=> handleUpdate(spot.id)}> Update </button>
-                 <button>Delete</button>
+                <OpenModalButton
+                                buttonText="Delete"
+                                modalComponent={<DeleteSpotModal spotId={spot.id} />}
+                                // onButtonClick={() => openDeleteModal()}
+                            />
                </div>
                    
             </div>
@@ -60,5 +64,3 @@ function ManageSpots() {
 }
 
 export default ManageSpots;
-
-
