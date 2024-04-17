@@ -6,8 +6,8 @@ import { FaStar } from 'react-icons/fa';
 function SpotCard() {
 
     const navigate = useNavigate();
-    const spotsData = useSelector(state => state.spots.Spots);
-    // console.log(spotsData, 'spotsData ....')
+    const spotsData = useSelector(state => state.spots);
+    console.log(spotsData, 'spotsData ....')
     const handleClick = (id) => {
         navigate(`/spots/${id}`); 
       };
@@ -15,8 +15,8 @@ function SpotCard() {
    if(spotsData){
     return (
         <div className="spot-card" >
-        {spotsData.map(spot => (
-            <div key={spot.id} className="spot">
+        {Object.values(spotsData).map((spot, index) => (
+            <div key={`${spot.id}-${index}`} className="spot">
                 <div className="tooltip" onClick={() => handleClick(spot.id)} >
                 <span className="tooltiptext">{spot.name}</span>
                     <img  className='spot-img'  src={spot.previewImage} alt={spot.name} />

@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux';
 import { useModal } from '../../context/Modal';
-import { deleteReview } from '../../store/spots';
+import { deleteReview } from '../../store/reviews';
 
 function DeleteReviewModal({ reviewId, onClose }) {
     const dispatch = useDispatch();

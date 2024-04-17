@@ -30,7 +30,8 @@ function SpotDetails() {
 
     const { spotId } = useParams();
     const dispatch = useDispatch()
-    const spotData = useSelector(state => state.spots.Spots[spotId-1]);
+    const spotData = useSelector(state => state.spots[spotId-1]);
+    console.log(spotData, 'SPOTDATA')
     const session = useSelector(state => state.session)
 
     const [isReviewModalOpen, setIsReviewModalOpen] = useState(false); 

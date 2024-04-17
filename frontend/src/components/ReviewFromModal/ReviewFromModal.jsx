@@ -1,7 +1,7 @@
 import { useState } from 'react';
 // import * as sessionActions from '../../store/session';
 import { useDispatch } from 'react-redux';
-import { fetchSpotReview } from '../../store/spots';
+import { fetchSpotReview } from '../../store/reviews';
 import { fetchSpotByID } from '../../store/spots';
 import { FaStar , FaRegStar} from 'react-icons/fa';
 import { useModal } from '../../context/Modal';
