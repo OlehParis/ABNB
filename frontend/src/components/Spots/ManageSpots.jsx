@@ -9,7 +9,7 @@ import { FaStar } from 'react-icons/fa';
 function ManageSpots() {
 
     const navigate = useNavigate();
-    const spotsData = useSelector(state => state.spots.Spots);
+    const spotsData = useSelector(state => state.spots);
     const session = useSelector(state => state.session)
     const curUserId = session.user?.id ?? null;
   
@@ -30,7 +30,7 @@ function ManageSpots() {
            <h1> Manage Your Spots</h1>
           {spotsData.length === 0 && <button onClick={()=> navigate('/spots/new')} >Create New Spot</button>}
         <div className="spot-card" >
-        {spotsData.map(spot => (
+        {Object.values(spotsData).map((spot, index) => (
             spot.ownerId === curUserId &&
             <div key={spot.id} className="spot">
                 <div className="tooltip" onClick={() => handleClick(spot.id)} >
@@ -60,3 +60,5 @@ function ManageSpots() {
 }
 
 export default ManageSpots;
+
+

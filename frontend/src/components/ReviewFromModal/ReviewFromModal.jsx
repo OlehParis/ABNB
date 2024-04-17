@@ -13,7 +13,7 @@ function StarRating({ defaultRating, onChange }) {
     const totalStars = 5;
     const [hoverRating, setHoverRating] = useState(0);
     const [selectedRating, setSelectedRating] = useState(defaultRating);
-  
+    const { closeModal } = useModal();
     const handleHover = (value) => {
       setHoverRating(value);
     };
@@ -75,8 +75,8 @@ function StarRating({ defaultRating, onChange }) {
     }
     dispatch(fetchSpotReview(Reviews))
     .then(()=> dispatch(fetchSpotByID(spot)))
-    .then(() => closeModal())
-    .then(()=> dispatch(fetchSpotByID(spotId)))
+    .then(() =>(closeModal))
+    // .then(()=> dispatch(fetchSpotByID(spotId)))
     };
   
     return (

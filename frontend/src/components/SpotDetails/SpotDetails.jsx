@@ -31,6 +31,8 @@ function SpotDetails() {
     const { spotId } = useParams();
     const dispatch = useDispatch()
     const spotData = useSelector(state => state.spots[spotId]);
+    console.log(spotData)
+    
     const session = useSelector(state => state.session)
 
     const [isReviewModalOpen, setIsReviewModalOpen] = useState(false); 
@@ -56,8 +58,6 @@ function SpotDetails() {
 
     const reviewModal = isReviewModalOpen ? <ReviewFromModal onClose={closeReviewModal} /> : null;
 
-
-
     useEffect(() => {
         dispatch(fetchSpot(spotId));
       }, [dispatch, spotId]);
@@ -69,19 +69,17 @@ function SpotDetails() {
       return <div>Loading...</div>;
   }
     const reviews = spotData.reviews.Reviews
-    // console.log(spotData)
-    // console.log(reviews.length, 'reviews')
+    // if ((spotData.reviews.Reviews).length === 0) {reviews = false;}
+    // console.log(reviews, 'line 71')
+ 
     const curUserId = session.user?.id ?? null;
     const spotOwnerId = spotData.ownerId
-    // console.log(curUserId, 'curUserId')
-    // console.log(spotOwnerId, 'spotowner Id')
     const reviewMatchCurUserId = reviews.some(review => review.userId === curUserId);
     const dontShowButton = reviewMatchCurUserId || curUserId === spotOwnerId;
     const beTheFirst = reviews.length === 0 && curUserId && spotOwnerId !== curUserId 
     const zeroReviews = reviews.length === 0;
     const notLogIn = session.user === null;
-  //   console.log(session.user)
-  // console.log(spotData)
+
     return (
         <div className="spot-details">
         <h2>{spotData.name}</h2>
@@ -129,7 +127,7 @@ function SpotDetails() {
         )}
        
         <div>
-        {reviews.map((review, index) => (
+        { reviews.length !== 0 && reviews.map((review, index) => (
           <div   key={index} >
                 <h3>{review.User.firstName}</h3>
                 <p>{review.updatedAt.split(" ")[0]} </p>
@@ -138,7 +136,7 @@ function SpotDetails() {
                 {review.userId === curUserId && (
                             <OpenModalButton
                                 buttonText="Delete"
-                                modalComponent={<DeleteReviewModal reviewId={review.id} onClose={closeDeleteModal} />}
+                                modalComponent={<DeleteReviewModal reviewId={review.id} spotId={spotId} />}
                                 onButtonClick={() => openDeleteModal(review.id)}
                             />
                 )}

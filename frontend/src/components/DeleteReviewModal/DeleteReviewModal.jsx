@@ -1,20 +1,23 @@
 import { useDispatch } from 'react-redux';
 import { useModal } from '../../context/Modal';
 import { deleteReview } from '../../store/reviews';
+import { fetchSpot } from '../../store/spots';
 
-function DeleteReviewModal({ reviewId, onClose }) {
+
+function DeleteReviewModal({ reviewId, spotId }) {
+   console.log(spotId, 'spotId')
     const dispatch = useDispatch();
+    const { closeModal } = useModal();
 //  console.log(reviewId)
-    const handleDelete = (reviewId) => {
-        console.log(reviewId, 'reviewid from modal')
+    const handleDelete = (reviewId, spotId) => {
+        // console.log(reviewId, 'reviewid from modal')
         dispatch(deleteReview(reviewId))
-        
-        onClose();
+        .then(closeModal)
+        .then(()=>  dispatch(fetchSpot(spotId)))
+      
     };
 
-    const closeModal = () => {
-        onClose();
-    };
+   
 
     return (
         <div className="modal">
@@ -24,7 +27,7 @@ function DeleteReviewModal({ reviewId, onClose }) {
                 <p>Are you sure you want to delete this review?</p>
                 <div className="modal-buttons">
                 <button onClick={() => handleDelete(reviewId)}>Yes</button>
-                    <button  onClick={closeModal}>No</button>
+                    <button  onClick={(closeModal)}>No</button>
                 </div>
             </div>
         </div>
