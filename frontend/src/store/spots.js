@@ -1,4 +1,7 @@
 import { csrfFetch } from "./csrf";
+
+import { loadReviewData } from "./reviews";
+
 export const fetchSpotByID = (spot) => ({
   type: "FETCH_SPOT_BYID",
   payload: spot,
@@ -60,10 +63,11 @@ export const fetchSpot = (spotId) => {
     const reviews = await res2.json();
     const spotData = {
       ...spotDetails[0],
-      reviews,
+      // reviews,
     };
-    //  console.log(spotData, 'line 46')
+    
     dispatch(fetchSpotByID(spotData));
+    dispatch(loadReviewData(reviews.Reviews));
   };
 };
 
@@ -118,7 +122,7 @@ export const fetchEditNewSpot = (spot, spotId) => {
     const data = await response.json();
 
     // const spotId = data.id;
-    console.log(spotId, "spotIddddddd");
+ 
 
     const responseImages = await csrfFetch(`/api/spots/${spotId}/images`, {
       method: "POST",

@@ -10,7 +10,7 @@ import reviewReducer from "./reviews";
 const rootReducer = combineReducers({
   session: sessionReducer,
   spots: spotsReducer, 
-  review: reviewReducer,
+  reviews: reviewReducer,
 
 });
 

@@ -1,5 +1,10 @@
 import { csrfFetch } from "./csrf";
 
+export const loadReviewData = (reviewsArr) => ({
+  type: 'LOAD_REVIEW_DATA',
+  payload: reviewsArr,
+})
+
 export const fetchCreateRaviewById = (review) => ({
   type: "FETCH_CREATE_REVIEW_BYID",
   payload: review,
@@ -39,6 +44,7 @@ export const fetchSpotReview = (spot) => {
       throw new Error("Failed to create spot");
     }
     const data = await response.json();
+    console.log(data , 'line')
     dispatch(fetchCreateRaviewById(data));
 
 
@@ -49,16 +55,25 @@ const initialState = {};
 
 const reviewReducer = (state = initialState, action) => {
   switch (action.type) {
-    case "FETCH_CREATE_REVIEW_BYID":
+    case "FETCH_CREATE_REVIEW_BYID": {
       return {
         ...state,
-        ...action.payload,
+        [action.payload.id]: action.payload
       };
-    case "FETCH_DELETE_REVIEW":
+    }
+    case "FETCH_DELETE_REVIEW":{
         const newState = { ...state };
         delete newState[action.payload];
         return newState;
-
+        }
+    case 'LOAD_REVIEW_DATA' :{
+      const newState = {...state};
+      action.payload.map((rev) => {
+        newState[rev.id] = rev
+        
+      })
+      return newState;
+    }
     default:
       return state;
   }
