@@ -79,14 +79,6 @@ function SpotDetails() {
     }  
     
     const dontShowButton = reviewMatchCurUserId || curUserId === spotOwnerId;
-    // const reviewsIsEmpty = Object.keys(reviews).forEach(reviewId => {
-    //   const review = reviews[reviewId];
-    //   if (Number(review.spotId) === Number(spotId)) {
-       
-    //   }
-    // });
-
-    // const beTheFirst =  curUserId && spotOwnerId !== curUserId;
     const notLogIn = session.user === null;
 
     function calculateStarsAndReviews(reviews, spotId) {

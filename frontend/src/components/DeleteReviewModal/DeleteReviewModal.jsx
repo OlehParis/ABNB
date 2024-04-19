@@ -1,7 +1,7 @@
 import { useDispatch } from 'react-redux';
 import { useModal } from '../../context/Modal';
 import { deleteReview } from '../../store/reviews';
-import { fetchSpot } from '../../store/spots';
+// import { fetchSpot } from '../../store/spots';
 import "./DeleteReviewModal.css"
 
 function DeleteReviewModal({ reviewId, spotId }) {
