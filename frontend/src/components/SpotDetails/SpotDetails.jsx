@@ -7,7 +7,7 @@ import { FaStar , FaRegStar} from 'react-icons/fa';
 import OpenModalButton from '../OpenModalButton/OpenModalButton'
 import ReviewFromModal from '../ReviewFromModal/ReviewFromModal'
 import DeleteReviewModal from '../DeleteReviewModal/DeleteReviewModal';
-import { fetchSpotReview } from '../../store/reviews';
+// import { fetchSpotReview } from '../../store/reviews';
 
 function StarRating({ stars }) {
     const totalStars = 5;
@@ -56,7 +56,7 @@ function SpotDetails() {
       setIsDeleteModalOpen(false);
   };
 
-    const reviewModal = isReviewModalOpen ? <ReviewFromModal onClose={closeReviewModal} /> : null;
+    // const reviewModal = isReviewModalOpen ? <ReviewFromModal onClose={closeReviewModal} /> : null;
 
     useEffect(() => {
         dispatch(fetchSpot(spotId));
@@ -72,19 +72,45 @@ function SpotDetails() {
     let reviewMatchCurUserId = false;
       for (let reviewId in reviews) {
     const review = reviews[reviewId];
-    console.log(review)
-    if (review.userId === curUserId || review.User.id === curUserId) {
-      console.log(review.userId === curUserId , 'line76')
+    if (review.userId === curUserId ) {
         reviewMatchCurUserId = true;
         break; 
     }
     }  
     
     const dontShowButton = reviewMatchCurUserId || curUserId === spotOwnerId;
-    const reviewsIsEmpty = Object.keys(reviews).length === 0;
-    const beTheFirst = reviewsIsEmpty && curUserId && spotOwnerId !== curUserId;
+    // const reviewsIsEmpty = Object.keys(reviews).forEach(reviewId => {
+    //   const review = reviews[reviewId];
+    //   if (Number(review.spotId) === Number(spotId)) {
+       
+    //   }
+    // });
+
+    // const beTheFirst =  curUserId && spotOwnerId !== curUserId;
     const notLogIn = session.user === null;
 
+    function calculateStarsAndReviews(reviews, spotId) {
+      let totalStars = 0;
+      let reviewCount = 0;
+    
+      Object.keys(reviews).forEach(reviewId => {
+        const review = reviews[reviewId];
+        if (Number(review.spotId) === Number(spotId)) {
+          totalStars += review.stars;
+          reviewCount++;
+        }
+      });
+
+      const avgStarss = reviewCount > 0 ? totalStars / reviewCount : 0;
+      const avgStars = Math.round(avgStarss * 10) / 10;
+      return {
+        avgStars: avgStars,
+        reviewCount: reviewCount
+      };
+    }
+    
+    const { avgStars, reviewCount } = calculateStarsAndReviews(reviews, spotId);
+    
     return (
         <div className="spot-details">
         <h2>{spotData.name}</h2>
@@ -110,9 +136,9 @@ function SpotDetails() {
                     <div className='container'>
                     <div className='price'><h3>${spotData.price}</h3> <p>night</p></div>
                     <p className='rating'><FaStar color="#ffc107"/> 
-                    {spotData.avgStarRating ? ` ${spotData.avgStarRating}` : ' New'} 
-                   {!reviewsIsEmpty && ( spotData.numReviews ? ` · ${spotData.numReviews}` : '· 0' ) }
-                    {!reviewsIsEmpty && (spotData.numReviews === 1 ? ' review' : ' reviews')}</p>
+                    {avgStars ? ` ${avgStars}` : ' New'}   
+                    {reviewCount !== 0 && ( reviewCount ? ` · ${reviewCount}` : ' · 0' ) }
+                    {reviewCount !== 0 && (reviewCount === 1 ? ' review' : ' reviews')}</p>
                     </div>
                     <button onClick={()=> alert('Feature Coming Soon...')}>Reserve</button>
                 </div>
@@ -121,9 +147,11 @@ function SpotDetails() {
         <div className='reviews'>
         <h3 className='rating2'>
   <FaStar color="#ffc107"/> 
-  {spotData.avgStarRating ? ` ${spotData.avgStarRating}` : ' New'}   
-  {!reviewsIsEmpty && ( spotData.numReviews ? ` · ${spotData.numReviews}` : '· 0' ) }
-  {!reviewsIsEmpty && (spotData.numReviews === 1 ? ' review' : ' reviews')}
+  
+  {avgStars ? ` ${avgStars}` : ' New'}   
+  {reviewCount !== 0 && ( reviewCount ? ` · ${reviewCount}` : ' · 0' ) }
+  {reviewCount !== 0 && (reviewCount === 1 ? ' review' : ' reviews')}
+                                       
         </h3> 
         {!dontShowButton && !notLogIn && (
           <OpenModalButton
@@ -132,36 +160,33 @@ function SpotDetails() {
             onButtonClick={openReviewModal}
           />
         )}
-       
-        <div>
-
-
-{!reviewsIsEmpty && Object.keys(reviews).map(reviewId => {
+        
+{reviewCount !==0 && Object.keys(reviews).map(reviewId => {
     const review = reviews[reviewId];
    
     if (Number(review.spotId) === Number(spotId)) {
         return (
-            <div key={reviewId}>
+            <div key={reviewId} className='wow'>
                 <h3>{review.User?.firstName || session.user.firstName}</h3>
                 <p>{review.updatedAt.split(" ")[0]} </p>
                 <StarRating stars={review.stars} />
                 <p>{review.review}</p>
-                {review.userId === curUserId && (
+                 {review.userId === curUserId && (
                     <OpenModalButton
                         buttonText="Delete"
-                        modalComponent={<DeleteReviewModal reviewId={review.id} spotId={spotId} />}
+                        modalComponent={<DeleteReviewModal reviewId={review.id}  />}
                         onButtonClick={() => openDeleteModal(review.id)}
                     />
-                )}
+                )} 
             </div>
         );
     } else {
-        return null; // If spotId doesn't match, return null to render nothing
+        return null; 
     }
-})}
-
-        </div>
-        {beTheFirst  &&  <h2>Be the first to post a review! </h2> }
+}
+)}
+        
+        {reviewCount == 0 && !notLogIn && !dontShowButton &&  <h2>Be the first to post a review! </h2> }
         </div>
     
     </div>
@@ -169,25 +194,3 @@ function SpotDetails() {
 }
 
 export default SpotDetails;
-
-
-//         {  !reviewsIsEmpty  && Object.keys(reviews).map(reviewId => {
-//           console.log(reviews, 'reviewId 138')
-//     const review = reviews[reviewId];
-   
-//     return (
-//         <div key={reviewId}>
-//            <h3>{review.User?.firstName || session.user.firstName}</h3>
-//             <p>{review.updatedAt.split(" ")[0]} </p>
-//             <StarRating stars={review.stars} />
-//             <p>{review.review}</p>
-//             {review.userId === curUserId && (
-//                 <OpenModalButton
-//                     buttonText="Delete"
-//                     modalComponent={<DeleteReviewModal reviewId={review.id} spotId={spotId} />}
-//                     onButtonClick={() => openDeleteModal(review.id)}
-//                 />
-//             )}
-//         </div>
-//     );
-// })} 

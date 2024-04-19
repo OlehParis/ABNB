@@ -54,7 +54,9 @@
     border: none; 
     gap:10px;
 }
-
+.profile-dropdown button {
+    cursor: pointer;
+}
 .profile-dropdown {
     position: absolute;
     z-index: 1;
@@ -65,9 +67,11 @@
     border-radius: 15px;
     padding: 10px; 
     height: auto;
+      
     box-shadow: 0 3px 4px rgba(0, 0, 0, 0.1); 
 }
   .profile-dropdown li {
+    
     list-style-type: none; 
     text-align: start;
     margin-bottom: 10px;

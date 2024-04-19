@@ -152,7 +152,7 @@ const EditSpot = () => {
         {errors.price && <div className="error">{errors.price}</div>}
 
         <h4>Liven up your spot with photos</h4> 
-        <label htmlFor="">Submit a link to at least one photo to publish your spot.</label>
+        <label htmlFor="previewImage">Submit a link to at least one photo to publish your spot.</label>
         <input type="text" placeholder='Preview Image URL' id="previewImage" name="previewImage" value={formData.previewImage} onChange={handleChange} />
         {errors.previewImage && <div className="error">{errors.previewImage}</div>}
         

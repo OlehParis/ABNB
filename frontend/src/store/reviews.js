@@ -1,4 +1,5 @@
 import { csrfFetch } from "./csrf";
+import { fetchSpotByID } from "./spots";
 
 export const loadReviewData = (reviewsArr) => ({
   type: 'LOAD_REVIEW_DATA',
@@ -14,7 +15,7 @@ export const fetchDeleteReview = (reviewId) => ({
   payload: reviewId,
 });
 
-export const deleteReview = (reviewId) => {
+export const deleteReview = (reviewId , spotId) => {
  
   return async (dispatch) => {
     const response = await csrfFetch(`/api/reviews/${reviewId}`, {
@@ -26,6 +27,7 @@ export const deleteReview = (reviewId) => {
 
     if (response.ok) {
       dispatch(fetchDeleteReview(reviewId));
+
     }
   };
 };
