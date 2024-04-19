@@ -148,7 +148,7 @@ const initialState = {};
 
 const spotsReducer = (state = initialState, action) => {
   switch (action.type) {
-    case "FETCH_SPOTS_SUCCESS":
+    case "FETCH_SPOTS_SUCCESS":{
       // Start the key from 1
       let nextState = {};
       Object.entries(action.payload).forEach(([key, value], index) => {
@@ -159,9 +159,9 @@ const spotsReducer = (state = initialState, action) => {
       return {
         ...state,
         ...nextState,
-      };
+      };}
 
-    case "FETCH_SPOT_BYID":
+    case "FETCH_SPOT_BYID":{
       const spotId = action.payload.id;
 
       return {
@@ -169,25 +169,25 @@ const spotsReducer = (state = initialState, action) => {
         // [spotId]: { ...action.payload }
         [spotId]: { ...state[spotId], ...action.payload },
       };
-
-    case "FETCH_CREATE_SPOT":
+}
+    case "FETCH_CREATE_SPOT":{
       const newSpotId = action.payload.id;
       return {
         ...state,
         [newSpotId]: { ...action.payload },
-      };
-    case "FETCH_EDIT_SPOT":
+      };}
+    case "FETCH_EDIT_SPOT":{
       const editedSpotId = action.payload.id;
       return {
         ...state,
         [editedSpotId]: { ...action.payload },
-      };
-    case "FETCH_DELETE_SPOT":
+      };}
+    case "FETCH_DELETE_SPOT":{
       const spotIdToDelete = action.payload;
       const newState = { ...state };
       delete newState[spotIdToDelete];
       return newState;
-
+}
     default:
       return state;
   }

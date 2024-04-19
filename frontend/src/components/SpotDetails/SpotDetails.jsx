@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchSpot } from '../../store/spots';
 import './SpotDetails.css';
@@ -35,26 +35,26 @@ function SpotDetails() {
     const session = useSelector(state => state.session)
     const reviews = useSelector(state => state.reviews)
   
-    const [isReviewModalOpen, setIsReviewModalOpen] = useState(false); 
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [selectedReviewId, setSelectedReviewId] = useState(null);
+  //   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false); 
+  //   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  //   const [selectedReviewId, setSelectedReviewId] = useState(null);
 
-    const openReviewModal = () => {
-        setIsReviewModalOpen(true);
-    };
-    const closeReviewModal = () => {
-        setIsReviewModalOpen(false); 
-    };
+  //   const openReviewModal = () => {
+  //       setIsReviewModalOpen(true);
+  //   };
+  //   const closeReviewModal = () => {
+  //       setIsReviewModalOpen(false); 
+  //   };
 
-    const openDeleteModal = (reviewId) => {
-      setSelectedReviewId(reviewId);
-      setIsDeleteModalOpen(true);
-  };
+  //   const openDeleteModal = (reviewId) => {
+  //     setSelectedReviewId(reviewId);
+  //     setIsDeleteModalOpen(true);
+  // };
 
-  const closeDeleteModal = () => {
-      setSelectedReviewId(null);
-      setIsDeleteModalOpen(false);
-  };
+  // const closeDeleteModal = () => {
+  //     setSelectedReviewId(null);
+  //     setIsDeleteModalOpen(false);
+  // };
 
     // const reviewModal = isReviewModalOpen ? <ReviewFromModal onClose={closeReviewModal} /> : null;
 
@@ -148,8 +148,8 @@ function SpotDetails() {
         {!dontShowButton && !notLogIn && (
           <OpenModalButton
             buttonText="Post Your Review"
-            modalComponent={<ReviewFromModal spotId={spotId}  onClose={closeReviewModal} />}
-            onButtonClick={openReviewModal}
+            modalComponent={<ReviewFromModal spotId={spotId}   />}
+            // onButtonClick={openReviewModal}
           />
         )}
         
@@ -167,7 +167,7 @@ function SpotDetails() {
                     <OpenModalButton
                         buttonText="Delete"
                         modalComponent={<DeleteReviewModal reviewId={review.id}  />}
-                        onButtonClick={() => openDeleteModal(review.id)}
+                        // onButtonClick={() => openDeleteModal(review.id)}
                     />
                 )} 
             </div>

@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useState } from 'react';
+import { useDispatch, } from 'react-redux';
 import { fetchSpotReview } from '../../store/reviews';
-import { fetchSpotByID } from '../../store/spots';
 import { FaStar, FaRegStar } from 'react-icons/fa';
 import { useModal } from '../../context/Modal';
 import './ReviewFromModal.css';
@@ -47,15 +46,12 @@ function StarRating({ defaultRating, onChange }) {
   );
 }
 
-function ReviewFromModal({ spotId, newReview}) {
+function ReviewFromModal({ spotId}) {
   const dispatch = useDispatch();
   const { closeModal } = useModal();
   const [review, setReview] = useState('');
   const [stars, setStars] = useState(0);
-  const [submitted, setSubmitted] = useState(false);
 
-
-  const spot = useSelector(state => state.spots[spotId]);
   const handleReviewChange = (event) => {
     setReview(event.target.value);
   };
@@ -72,18 +68,11 @@ function ReviewFromModal({ spotId, newReview}) {
     };
     dispatch(fetchSpotReview(Reviews))
       .then(() => {
-        setSubmitted(true);
-      
         closeModal();
       });
   
   };
-  // useEffect(() => {
-  //   // Fetch spot data if it's not available or not up-to-date
-  //   // if (!spot || (submitted && spotId !== spot.id)) {
-  //     dispatch(fetchSpotByID(spotId));
-  //   // }
-  // }, [dispatch, spotId, submitted, spot, newReview ]);
+
 
   return (
     <div className="field">
