@@ -38,6 +38,23 @@
     border-radius: 3px;
     cursor: pointer;
   }
+  .city-state {
+    margin-top: 5px;
+    display: flex;
+  
+  }
+  #lat-con {
+    /* padding-left: 40px; */
+    margin-left: 40px;
+    width: 40%;
+  }
+  #lon-con{
+    width: 80%;
+  }
+
+  .city-state #state2{
+    margin-left: 30px;
+  }
   
   .create-spot-form button[type="submit"]:hover {
     background-color: #0056b3;

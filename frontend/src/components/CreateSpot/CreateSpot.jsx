@@ -26,6 +26,9 @@ const CreateSpot = () => {
     url5: '',
   });
 
+  const hasImageExtension = (str) => {
+    return str.includes('.png') || str.includes('.jpeg') || str.includes('.jpg')
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -58,7 +61,9 @@ const CreateSpot = () => {
     if(formData.url.length < 1){
       newErrors.url = "Preview Image is required"
     }
-
+    if(!hasImageExtension(formData.url)){
+      newErrors.urlFormat = "Preview Image has to be image format"
+    }
     if (!(parseFloat(formData.lat) > -90 && parseFloat(formData.lat) < 90)) {
       newErrors.lat = "Latitude must be between -90 and 90"
     }
@@ -103,23 +108,35 @@ const CreateSpot = () => {
         <label htmlFor="address">Street Address</label>
         <input type="text" placeholder='Address' id="address" name="address" value={formData.address} onChange={handleChange} />
         {errors.address && <div className="error">{errors.address}</div>}
+        
+        <div className="city-state">
+    <div className="input-group" id='state1' style={{width:'100%'}}>
         <label htmlFor="city">City</label>
-        <input type="text" placeholder='City' id="city" name="city" value={formData.city} onChange={handleChange} />
+        <input type="text" style={{width:'100%'}} placeholder='City' id="city" name="city" value={formData.city} onChange={handleChange} />
         {errors.city && <div className="error">{errors.city}</div>}
+    </div>
 
+    <div className="input-group" id="state2">
         <label htmlFor="state">State</label>
         <input type="text" placeholder='STATE' id="state" name="state" value={formData.state} onChange={handleChange} />
         {errors.state && <div className="error">{errors.state}</div>}
-        
+    </div>
+</div>
+ <div className="city-state">
+  <div className="input-group" id='lon-con' >
         <label htmlFor="Latitude">Latitude</label>
         <input type="text" placeholder='Latitude' id="lat" name="lat" value={formData.lat} onChange={handleChange} />
         {errors.lat && <div className="error">{errors.lat}</div>}
         {errors.lat2 && <div className="error">{errors.lat2}</div>}
-
+        </div>
+        <div className="input-group" id = 'lat-con'>
         <label htmlFor="Longitude">Longitude</label>
         <input type="text" placeholder='Longitude' id="lng" name="lng" value={formData.lng} onChange={handleChange} />
         {errors.lng && <div className="error">{errors.lng}</div>}
         {errors.lng2 && <div className="error">{errors.lng2}</div>}
+        </div>
+        </div>
+
 
         <h4>Describe your place to guests</h4>
         <p>Mention the best features of your space, any special amentities like fast wif or parking, and what you love about the neighborhood.</p>
@@ -141,6 +158,7 @@ const CreateSpot = () => {
         <label htmlFor="">Submit a link to at least one photo to publish your spot.</label>
         <input type="text" placeholder='Preview Image URL' id="url" name="url" value={formData.url} onChange={handleChange} />
         {errors.url && <div className="error">{errors.url}</div>}
+        {errors.urlFormat && <div className="error">{errors.urlFormat}</div>}
         
 <div className='sub-images'>
     <p></p>
