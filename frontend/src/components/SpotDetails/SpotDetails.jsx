@@ -7,7 +7,7 @@ import { FaStar , FaRegStar} from 'react-icons/fa';
 import OpenModalButton from '../OpenModalButton/OpenModalButton'
 import ReviewFromModal from '../ReviewFromModal/ReviewFromModal'
 import DeleteReviewModal from '../DeleteReviewModal/DeleteReviewModal';
-// import { fetchSpotReview } from '../../store/reviews';
+
 
 function StarRating({ stars }) {
     const totalStars = 5;
@@ -35,29 +35,6 @@ function SpotDetails() {
     const session = useSelector(state => state.session)
     const reviews = useSelector(state => state.reviews)
   
-  //   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false); 
-  //   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  //   const [selectedReviewId, setSelectedReviewId] = useState(null);
-
-  //   const openReviewModal = () => {
-  //       setIsReviewModalOpen(true);
-  //   };
-  //   const closeReviewModal = () => {
-  //       setIsReviewModalOpen(false); 
-  //   };
-
-  //   const openDeleteModal = (reviewId) => {
-  //     setSelectedReviewId(reviewId);
-  //     setIsDeleteModalOpen(true);
-  // };
-
-  // const closeDeleteModal = () => {
-  //     setSelectedReviewId(null);
-  //     setIsDeleteModalOpen(false);
-  // };
-
-    // const reviewModal = isReviewModalOpen ? <ReviewFromModal onClose={closeReviewModal} /> : null;
-
     useEffect(() => {
         dispatch(fetchSpot(spotId));
       }, [dispatch, spotId]);
@@ -68,15 +45,14 @@ function SpotDetails() {
  
     const curUserId = session.user?.id ?? null;
     const spotOwnerId = spotData.ownerId
-   
     let reviewMatchCurUserId = false;
       for (let reviewId in reviews) {
     const review = reviews[reviewId];
-    if (review.userId === curUserId ) {
+    if ( Number(review.spotId) === Number(spotId) && review.userId === curUserId ) {
         reviewMatchCurUserId = true;
         break; 
     }
-    }  
+  }  
     
     const dontShowButton = reviewMatchCurUserId || curUserId === spotOwnerId;
     const notLogIn = session.user === null;
@@ -145,11 +121,10 @@ function SpotDetails() {
   {reviewCount !== 0 && (reviewCount === 1 ? ' review' : ' reviews')}
                                        
         </h3> 
-        {!dontShowButton && !notLogIn && (
+        {!reviewMatchCurUserId && curUserId !== spotOwnerId && !notLogIn && (
           <OpenModalButton
             buttonText="Post Your Review"
             modalComponent={<ReviewFromModal spotId={spotId}   />}
-            // onButtonClick={openReviewModal}
           />
         )}
         
@@ -167,7 +142,6 @@ function SpotDetails() {
                     <OpenModalButton
                         buttonText="Delete"
                         modalComponent={<DeleteReviewModal reviewId={review.id}  />}
-                        // onButtonClick={() => openDeleteModal(review.id)}
                     />
                 )} 
             </div>
