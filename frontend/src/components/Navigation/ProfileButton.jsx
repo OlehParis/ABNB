@@ -7,6 +7,8 @@ import LoginFormModal from '../LoginFormModal/LoginFormModal';
 import SignupFormModal from '../SignupFormModal/SignupFormModal';
 import {  Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import './Navigation.css'
+
 function ProfileButton({ user }) {
  const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -55,10 +57,11 @@ function ProfileButton({ user }) {
             <li> hello,  {user.firstName} {user.lastName}</li>
             {/* <li>{user.username}</li> */}
             <li>{user.email}</li>
-         
+            <hr />
            <li> <Link  className='linkManageSpot' to="/spots/current">Manage Spots</Link></li>
+           <hr />
             <li>
-              <button onClick={logout}>Log Out</button>
+              <button id='logoutButton'onClick={logout}>Log Out</button>
             </li>
           </>
         ) : (

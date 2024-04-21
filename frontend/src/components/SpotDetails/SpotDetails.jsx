@@ -149,29 +149,26 @@ function SpotDetails() {
           />
         )}
         </div>
-{reviewCount !==0 && Object.keys(reviews).map(reviewId => {
-    const review = reviews[reviewId];
-   
+{reviewCount !==0 && sortedR.map(review => {
     if (Number(review.spotId) === Number(spotId)) {
         return (
-            <div key={reviewId} className='wow'>
+            <div key={review.id} className='wow'>
                 <h3>{review.User?.firstName || session.user.firstName}</h3>
-                <p>{formatDate(review.updatedAt.split(" ")[0])} </p>
+                <p>{formatDate(review.updatedAt.split(" ")[0])}</p>
                 <StarRating stars={review.stars} />
                 <p>{review.review}</p>
-                 {review.userId === curUserId && (
+                {review.userId === curUserId && (
                     <OpenModalButton
                         buttonText="Delete"
-                        modalComponent={<DeleteReviewModal reviewId={review.id}  />}
+                        modalComponent={<DeleteReviewModal reviewId={review.id} />}
                     />
-                )} 
+                )}
             </div>
         );
     } else {
-        return null; 
+        return null;
     }
-}
-)}
+})}
         
         {reviewCount == 0 && !notLogIn && !dontShowButton &&  <h2>Be the first to post a review! </h2> }
         </div>

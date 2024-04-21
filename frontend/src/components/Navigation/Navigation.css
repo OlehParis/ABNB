@@ -84,3 +84,22 @@
     text-decoration: none;
     color: black;
 }
+
+
+#logoutButton  {
+    padding-top: 7px;
+    padding-bottom: 7px;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: #d41f40;
+    color: white;
+    border:medium;
+    border-radius: 15px;
+    cursor: pointer;
+    margin-left: 28px;
+  }
+  #logoutButton:hover{
+    background-color: #ba406d;
+    cursor: pointer;
+  }
+  
