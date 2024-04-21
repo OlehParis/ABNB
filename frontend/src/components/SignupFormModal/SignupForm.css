@@ -11,25 +11,18 @@
     align-content: center;
     justify-content: center;
   }
-  #password-container {
-    position: fixed;
-    z-index: 1;
-    height: auto; 
-    width: 318px;
-    top: 20%; /* Adjust position from top */
-    left: 50%; /* Adjust position from left */
-    transform: translate(-50%, -50%); /* Center horizontally and vertically */
-  }
+
   #passwordErrors {
     width: 318px;
+    height: 32px;
     color: red;
-    margin-top: 5px;
+    /* margin-top: 5px; */
     font-size: 0.9rem;
   }
 
   .modal-signup h1 {
     font-size: 1.5rem;
-  margin-bottom: 40px;
+  /* margin-bottom: 40px; */
     text-align: center;
   }
 

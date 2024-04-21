@@ -17,7 +17,10 @@
     min-height: 100px;
 }
 
-
+#description textarea{
+  max-width: 400px;
+  max-height: 10px;
+}
   .field button:disabled {
     opacity: 0.7;
     cursor: not-allowed;

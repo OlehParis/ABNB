@@ -1,7 +1,7 @@
 .create-spot-form {
     max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
+    margin: 10px 100px 15px 100px ;
+    padding: 20px 40px 20px 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
     background-color: #f9f9f9;
@@ -30,13 +30,17 @@
   }
   
   .create-spot-form button[type="submit"] {
-    width: 100%;
-    padding: 10px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
+  margin-left: 33%;
+  margin-right: 20%;
+  padding-left:10%;
+  padding-right:10%;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  background-color: #d41f40;
+  color: white;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
   }
   .city-state {
     margin-top: 5px;
@@ -56,9 +60,9 @@
     margin-left: 30px;
   }
   
-  .create-spot-form button[type="submit"]:hover {
-    background-color: #0056b3;
-  }
+  /* .create-spot-form button[type="submit"]:hover {
+    background-color: #ba406d;
+  } */
  
 
   .error {
@@ -68,6 +72,10 @@
   }
 .sub-images {
   margin-top: 15px;
-
-
+}
+#description {
+  min-width: 150px;
+  max-width: 533px;
+  min-height: 50px;
+  max-height: 200px;
 }

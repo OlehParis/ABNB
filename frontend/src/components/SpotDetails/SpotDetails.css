@@ -101,6 +101,12 @@
   cursor: pointer;
   /* margin-bottom: 10px; */
 }
+
+.container-inner button:hover {
+  background-color: #ba406d;
+  cursor: pointer;
+}
+
 #postReviewButton button{
   padding-top: 6px;
   padding-bottom: 6px;
@@ -108,5 +114,9 @@
   color: white;
   border:medium;
   border-radius: 15px;
+  cursor: pointer;
+}
+#postReviewButton button:hover{
+  background-color: #ba406d;
   cursor: pointer;
 }

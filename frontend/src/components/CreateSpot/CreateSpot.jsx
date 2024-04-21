@@ -141,7 +141,7 @@ const CreateSpot = () => {
         <h4>Describe your place to guests</h4>
         <p>Mention the best features of your space, any special amentities like fast wif or parking, and what you love about the neighborhood.</p>
         <label htmlFor="description"></label>
-        <textarea id="description"  placeholder="Description"name="description" value={formData.description} onChange={handleChange} />
+        <textarea id="description"  placeholder="Please write at least 30 characters"name="description" value={formData.description} onChange={handleChange} />
         {errors.description && <div className="error">{errors.description}</div>}
           
          <h4>Create a title for your spot</h4> 

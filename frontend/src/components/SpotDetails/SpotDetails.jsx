@@ -35,6 +35,16 @@ function SpotDetails() {
     const session = useSelector(state => state.session)
     const reviews = useSelector(state => state.reviews)
   
+
+
+    const sortedReviews = Object.keys(reviews).map(reviewId => {
+      return reviews[reviewId];
+  });
+  
+  const sortedR = sortedReviews.slice().sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+  console.log(sortedR);
+     
+   
     useEffect(() => {
         dispatch(fetchSpot(spotId));
       }, [dispatch, spotId]);
@@ -53,6 +63,16 @@ function SpotDetails() {
         break; 
     }
   }  
+
+  function formatDate(dateString) {
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const date = new Date(dateString);
+    
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
+  
+    return `${month} ${year}`;
+  }
     
     const dontShowButton = reviewMatchCurUserId || curUserId === spotOwnerId;
     const notLogIn = session.user === null;
@@ -136,7 +156,7 @@ function SpotDetails() {
         return (
             <div key={reviewId} className='wow'>
                 <h3>{review.User?.firstName || session.user.firstName}</h3>
-                <p>{review.updatedAt.split(" ")[0]} </p>
+                <p>{formatDate(review.updatedAt.split(" ")[0])} </p>
                 <StarRating stars={review.stars} />
                 <p>{review.review}</p>
                  {review.userId === curUserId && (
