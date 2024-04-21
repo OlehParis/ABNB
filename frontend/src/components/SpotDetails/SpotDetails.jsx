@@ -72,7 +72,7 @@ function SpotDetails() {
       const avgStarss = reviewCount > 0 ? totalStars / reviewCount : 0;
       const avgStars = Math.round(avgStarss * 10) / 10;
       return {
-        avgStars: avgStars,
+        avgStars: avgStars.toFixed(1),
         reviewCount: reviewCount
       };
     }
@@ -104,7 +104,7 @@ function SpotDetails() {
                     <div className='container'>
                     <div className='price'><h3>${spotData.price}</h3> <p>night</p></div>
                     <p className='rating'><FaStar color="#ffc107"/> 
-                    {avgStars ? ` ${avgStars}` : ' New'}   
+                    {Number(avgStars) ? ` ${Number(avgStars)}` : ' New'}   
                     {reviewCount !== 0 && ( reviewCount ? ` · ${reviewCount}` : ' · 0' ) }
                     {reviewCount !== 0 && (reviewCount === 1 ? ' review' : ' reviews')}</p>
                     </div>
@@ -116,18 +116,19 @@ function SpotDetails() {
         <h3 className='rating2'>
   <FaStar color="#ffc107"/> 
   
-  {avgStars ? ` ${avgStars}` : ' New'}   
+  {Number(avgStars) ? ` ${Number(avgStars)}` : ' New'}  
   {reviewCount !== 0 && ( reviewCount ? ` · ${reviewCount}` : ' · 0' ) }
   {reviewCount !== 0 && (reviewCount === 1 ? ' review' : ' reviews')}
                                        
         </h3> 
+        <div id='postReviewButton'>
         {!reviewMatchCurUserId && curUserId !== spotOwnerId && !notLogIn && (
           <OpenModalButton
-            buttonText="Post Your Review"
+            buttonText="Post Your Review" 
             modalComponent={<ReviewFromModal spotId={spotId}   />}
           />
         )}
-        
+        </div>
 {reviewCount !==0 && Object.keys(reviews).map(reviewId => {
     const review = reviews[reviewId];
    

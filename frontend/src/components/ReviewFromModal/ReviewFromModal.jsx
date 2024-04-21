@@ -73,7 +73,8 @@ function ReviewFromModal({ spotId}) {
   
   };
 
-
+  let buttonCheck = stars === 0 || review.length < 10;
+  console.log(buttonCheck)
   return (
     <div className="field">
       <h2>How was your stay?</h2>
@@ -84,7 +85,7 @@ function ReviewFromModal({ spotId}) {
       ></textarea>
       <StarRating defaultRating={stars} className='stars2' onChange={handleRatingChange} />
 
-      <button onClick={handleSubmit} disabled={review.length < 10}>
+      <button onClick={handleSubmit} disabled={buttonCheck }>
         Submit Your Review
       </button>
     </div>

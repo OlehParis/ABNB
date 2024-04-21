@@ -7,7 +7,6 @@ function SpotCard() {
 
     const navigate = useNavigate();
     const spotsData = useSelector(state => state.spots);
-    
     const handleClick = (id) => {
         navigate(`/spots/${id}`); 
       };
@@ -22,7 +21,7 @@ function SpotCard() {
                     <img  className='spot-img'  src={spot.previewImage} alt={spot.name} />
                     <div className='addressAvgRating'>
                     <p>{spot.city}, {spot.state}</p>
-                    <p><FaStar color="#ffc107"/> {spot.avgRating ? spot.avgRating : 'New'}</p>
+                    <p><FaStar color="#ffc107"/> {spot.avgRating ? spot.avgRating.toFixed(1) : 'New'}</p>
                     </div>
                     <div>${spot.price} night</div>
               

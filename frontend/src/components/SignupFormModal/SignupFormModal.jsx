@@ -44,14 +44,17 @@ function SignupFormModal() {
   
   return (
    <div className='modal-signup'>
-      <h1>Sign Up</h1>
+     <h1>Sign Up</h1> 
+     <div id="error-placeholder"></div>
+     {errors.confirmPassword && (
+          <p id='passwordErrors'>{errors.confirmPassword}</p>
+        )}
+      
       {errors.email && <p>{errors.email}</p>}
       {errors.username && <p>{errors.username}</p>}
       {errors.firstName && <p>{errors.firstName}</p>}
       {errors.lastName && <p>{errors.lastName}</p>}
-      {errors.confirmPassword && (
-          <p>{errors.confirmPassword}</p>
-        )}
+      
       
       <form onSubmit={handleSubmit}>
         <label>
