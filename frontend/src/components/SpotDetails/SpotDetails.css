@@ -1,5 +1,5 @@
 .spot-details {
-  padding: 20px; /* Adjust padding as needed */
+  padding: 20px; 
 }
 
 .spot-details h2 {
@@ -41,7 +41,7 @@
 .image-gallery img {
   width: 100%;
   height: auto;
-  max-height: 100%; /* Ensure the image does not overflow its container */
+  max-height: 100%; 
 }
 
 
@@ -49,7 +49,7 @@
  display: flex;
 }
 .info {
-  flex: 1; /* Allow to grow and take remaining space */
+  flex: 1; 
 }
 
 .container-price {
