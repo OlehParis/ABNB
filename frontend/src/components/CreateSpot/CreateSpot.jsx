@@ -96,6 +96,7 @@ const CreateSpot = () => {
   };
 
   return (
+    <div className='createspot-container'>
     <div className="create-spot-form">
       <h2>Create a new Spot</h2>
       <h4>Where&apos;s your place located?</h4>
@@ -173,6 +174,7 @@ const CreateSpot = () => {
         <button type="submit">Create Spot</button>
     </div>    
       </form>
+    </div>
     </div>
   );
 };

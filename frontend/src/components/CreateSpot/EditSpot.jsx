@@ -25,12 +25,16 @@ const EditSpot = () => {
     description: '',
     lat: '',
     lng: '',
-    previewImage: '', preview: true,
+    url: '', preview: true,
     url2: '',
     url3: '',
     url4: '',
     url5: '',
   });
+
+  const hasImageExtension = (str) => {
+    return str.includes('.png') || str.includes('.jpeg') || str.includes('.jpg')
+  };
 
   useEffect(() => {
     
@@ -69,10 +73,12 @@ const EditSpot = () => {
     if(formData.price < 1){
       newErrors.price = "Price is required"
     }
-    if(formData.previewImage.length < 1){
-      newErrors.previewImage = "Preview Image is required"
+    if(formData.url.length < 1){
+      newErrors.url = "Preview Image is required"
     }
-
+    if(!hasImageExtension(formData.url)){
+      newErrors.urlFormat = "Preview Image has to be image format"
+    }
     if (!(parseFloat(formData.lat) > -90 && parseFloat(formData.lat) < 90)) {
       newErrors.lat = "Latitude must be between -90 and 90"
     }
@@ -105,6 +111,7 @@ const EditSpot = () => {
   };
 
   return (
+    <div className='createspot-container'>
     <div className="create-spot-form">
       <h2>Update your Spot</h2>
       <h4>Where&apos;s your place located?</h4>
@@ -162,9 +169,10 @@ const EditSpot = () => {
         {errors.price && <div className="error">{errors.price}</div>}
 
         <h4>Liven up your spot with photos</h4> 
-        <label htmlFor="previewImage">Submit a link to at least one photo to publish your spot.</label>
-        <input type="text" placeholder='Preview Image URL' id="previewImage" name="previewImage" value={formData.previewImage} onChange={handleChange} />
-        {errors.previewImage && <div className="error">{errors.previewImage}</div>}
+        <label htmlFor="">Submit a link to at least one photo to publish your spot.</label>
+        <input type="text" placeholder='Preview Image URL' id="url" name="url" value={formData.url} onChange={handleChange} />
+        {errors.url && <div className="error">{errors.url}</div>}
+        {errors.urlFormat && <div className="error">{errors.urlFormat}</div>}
         
 <div className='sub-images'>
     <p></p>
@@ -179,6 +187,7 @@ const EditSpot = () => {
         <button type="submit">Edit Spot</button>
     </div>    
       </form>
+    </div>
     </div>
   );
 };

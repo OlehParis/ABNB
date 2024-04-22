@@ -77,3 +77,8 @@
   min-height: 50px;
   max-height: 200px;
 }
+.createspot-container {
+  display: flex;
+  justify-content: center;
+  
+}
