@@ -46,7 +46,7 @@ export const fetchSpotReview = (spot) => {
       throw new Error("Failed to create spot");
     }
     const data = await response.json();
-    console.log(data , 'line')
+    
     dispatch(fetchCreateRaviewById(data));
 
 

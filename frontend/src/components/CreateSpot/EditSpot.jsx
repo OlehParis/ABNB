@@ -9,7 +9,7 @@ import { useParams } from 'react-router-dom';
 const EditSpot = () => {
   const dispatch = useDispatch()
   const {spotId} = useParams()
-  console.log(spotId, 'line 12')
+  
 
   const navigate = useNavigate()
   const existingSpotData = useSelector(state => state.spots[spotId])
@@ -35,7 +35,7 @@ const EditSpot = () => {
   useEffect(() => {
     
     if (existingSpotData) {
-      console.log(existingSpotData)
+     
       setFormData(existingSpotData);
     }
   }, [existingSpotData]);

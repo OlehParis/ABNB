@@ -42,7 +42,7 @@ function SpotDetails() {
   });
   
   const sortedR = sortedReviews.slice().sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
-  console.log(sortedR);
+ 
      
    
     useEffect(() => {
