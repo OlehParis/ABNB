@@ -9,11 +9,12 @@ import SpotDetails from './components/SpotDetails/SpotDetails';
 import CreateSpot from './components/CreateSpot/CreateSpot';
 import ManageSpots from './components/Spots/ManageSpots'
 import EditSpot from './components/CreateSpot/EditSpot';
+import ManageReviews from './components/SpotDetails/ManageReviews';
 
 function App() {
   const dispatch = useDispatch();
   const spots = useSelector(state => state.spots.data);
-
+  const reviews = useSelector(state => state.reviews.data)
   const [isLoaded, setIsLoaded] = useState(false);
   
 
@@ -59,7 +60,12 @@ function App() {
         {
           path: "spots/:spotId/edit",
           element:  <EditSpot spot = {spots}/>
-        }
+        },
+         {
+          path: "reviews/current",
+          element:  <ManageReviews review = {reviews}/>
+        },
+
       ]
     }
   ]);

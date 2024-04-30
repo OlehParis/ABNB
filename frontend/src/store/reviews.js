@@ -14,6 +14,30 @@ export const fetchDeleteReview = (reviewId) => ({
   type: "FETCH_DELETE_REVIEW",
   payload: reviewId,
 });
+export const fetchAllReviews = (reviews) => ({
+  type: "FETCH_ALL_REVIEWs",
+  payload: reviews,
+});
+
+
+
+export const allReviews = () => {
+  return async (dispatch) => {
+    const response = await fetch("/api/reviews/current");
+    if (!response.ok) {
+      throw new Error("Failed to fetch reviews");
+    }
+    const data = await response.json();
+    const normalizedData = {};
+    data.Reviews.forEach(review => {
+      normalizedData[review.id] = review;
+    });
+
+
+    dispatch(fetchAllReviews(normalizedData));
+  };
+};
+
 
 export const deleteReview = (reviewId ) => {
  
@@ -75,6 +99,12 @@ const reviewReducer = (state = initialState, action) => {
         
       })
       return newState;
+    }
+    case "FETCH_ALL_REVIEWS": {
+      return {
+        ...state,
+        ...action.payload
+      };
     }
     default:
       return state;
