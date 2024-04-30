@@ -6,6 +6,7 @@ import OpenModalButton from '../OpenModalButton/OpenModalButton';
 import DeleteSpotModal from '../DeleteReviewModal/DeleteSpotModal';
 
 function ManageSpots() {
+  
   const navigate = useNavigate();
   const spotsData = useSelector(state => state.spots);
   const session = useSelector(state => state.session);
@@ -18,6 +19,9 @@ function ManageSpots() {
   const handleUpdate = (id) => {
     navigate(`/spots/${id}/edit`);
   };
+
+
+
 
   const userHasSpots = Object.values(spotsData).some(spot => spot.ownerId === curUserId);
 
@@ -34,12 +38,12 @@ function ManageSpots() {
                 <img className='spot-img'  src={spot.previewImage} alt={spot.name} />
                 <div className='addressAvgRating'>
                   <p>{spot.city}, {spot.state}</p>
-                  <p><FaStar color="#ffc107"/> {spot.avgRating ? spot.avgRating : 'New'}</p>
+                  <p><FaStar color="#ffc107"/> {Number(spot.avgRating).toFixed(1) ? Number(spot.avgRating).toFixed(1) : 'New'}</p>
                 </div>
                 <div>${spot.price} night</div>
               </div>
               <div className='buttons'> 
-                <button onClick={()=> handleUpdate(spot.id)}> Update </button>
+                <button className='hey' onClick={()=> handleUpdate(spot.id)}> Update </button>
                 <OpenModalButton
                   buttonText="Delete"
                   modalComponent={<DeleteSpotModal spotId={spot.id} />}
@@ -56,7 +60,7 @@ function ManageSpots() {
       <div className='spots-container'> 
         <h1> Manage Your Spots</h1>
       
-        <button onClick={()=> navigate('/spots/new')} >Create New Spot</button>
+        <button className='hey' onClick={()=> navigate('/spots/new')} >Create New Spot</button>
       </div>
     );
   }

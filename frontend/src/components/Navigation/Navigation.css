@@ -34,9 +34,7 @@
 }
 
 .newSpot{
-    /* display: flex;
-    justify-content: flex-end; */
-    /* margin-right: 25px; */
+  
     margin-left: 50px;
     margin-top: 5px;
 }
@@ -60,8 +58,8 @@
 .profile-dropdown {
     position: absolute;
     z-index: 1;
-    margin-left: 60px;
-     margin-top: 50px;
+    margin-left: 145px;
+     margin-top: 40px;
     border: 1px solid #ccc;
     background-color: white; 
     border-radius: 15px;
@@ -103,3 +101,14 @@
     cursor: pointer;
   }
   
+  .newSpotLink {
+  
+    border: none;
+    color: rgb(60, 85, 168); 
+    font-size: larger;
+    margin-right: 15px;
+    border-radius: 5px;
+    text-decoration: none;
+
+    transition: background-color 0.3s ease; 
+}

@@ -8,11 +8,11 @@ function DeleteSpotModal( {spotId} ) {
 
     const dispatch = useDispatch();
     const { closeModal } = useModal();
-//  console.log(reviewId)
+
     const handleDeleteSpot = () => {
         dispatch(fetchDeleteSpot(spotId))
         .then(closeModal)
-        // .then(()=>  dispatch(fetchSpot(spotId)))
+       
     };
 
     return (
@@ -20,10 +20,10 @@ function DeleteSpotModal( {spotId} ) {
             <div className="modal-content">
                 <span className="close" onClick={closeModal}>&times;</span>
                 <h2>Confirm Delete</h2>
-                <p>Are you sure you want to delete this spot?</p>
+                <p>Are you sure you want to remove this spot?</p>
                 <div className="modal-buttons">
-                <button id='yes' onClick={() => handleDeleteSpot()}>Yes</button>
-                    <button id='no' onClick={(closeModal)}>No</button>
+                <button id='yes' onClick={() => handleDeleteSpot()}>Yes (Delete Spot)</button>
+                    <button id='no' onClick={(closeModal)}>No (Keep Spot)</button>
                 </div>
             </div>
         </div>

@@ -33,7 +33,7 @@ if(!sessionUser) {
       {isLoaded && (
         <div className='profile'>
             <div className='newSpot'>
-               <NavLink to='/spots/new'>
+               <NavLink to='/spots/new' className='newSpotLink'>
                 Create a New Spot
                 </NavLink>
             </div>

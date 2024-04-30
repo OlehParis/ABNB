@@ -23,8 +23,8 @@ function DeleteReviewModal({ reviewId, spotId }) {
                 <h2>Confirm Delete</h2>
                 <p>Are you sure you want to delete this review?</p>
                 <div className="modal-buttons">
-                <button id='yes' onClick={() => handleDelete(reviewId, spotId)}>Yes</button>
-                    <button id='no' onClick={(closeModal)}>No</button>
+                <button id='yes' onClick={() => handleDelete(reviewId, spotId)}>Yes (Delete Review)</button>
+                    <button id='no' onClick={(closeModal)}>No (Keep Review)</button>
                 </div>
             </div>
         </div>

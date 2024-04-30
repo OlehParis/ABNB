@@ -64,7 +64,7 @@ function SpotDetails() {
     }
   }  
 
-  function formatDate(dateString) {
+ function formatDate(dateString) {
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     const date = new Date(dateString);
     
@@ -124,7 +124,7 @@ function SpotDetails() {
                     <div className='container'>
                     <div className='price'><h3>${spotData.price}</h3> <p>night</p></div>
                     <p className='rating'><FaStar color="#ffc107"/> 
-                    {Number(avgStars) ? ` ${Number(avgStars)}` : ' New'}   
+                    {Number(avgStars).toFixed(1) ? ` ${Number(avgStars).toFixed(1)}` : ' New'}   
                     {reviewCount !== 0 && ( reviewCount ? ` · ${reviewCount}` : ' · 0' ) }
                     {reviewCount !== 0 && (reviewCount === 1 ? ' review' : ' reviews')}</p>
                     </div>
@@ -136,7 +136,7 @@ function SpotDetails() {
         <h3 className='rating2'>
   <FaStar color="#ffc107"/> 
   
-  {Number(avgStars) ? ` ${Number(avgStars)}` : ' New'}  
+  {Number(avgStars).toFixed(1) ? ` ${Number(avgStars).toFixed(1)}` : ' New'}  
   {reviewCount !== 0 && ( reviewCount ? ` · ${reviewCount}` : ' · 0' ) }
   {reviewCount !== 0 && (reviewCount === 1 ? ' review' : ' reviews')}
                                        

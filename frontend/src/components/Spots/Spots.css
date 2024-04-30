@@ -84,3 +84,16 @@
       grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   }
 }
+
+
+.buttonAction {
+  background-color: red;
+}
+
+.deleteButton {
+  /* Your styling properties */
+  background-color: red;
+  color: white;
+  border: none;
+  /* Add more styles as needed */
+}

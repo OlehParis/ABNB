@@ -185,7 +185,7 @@ const EditSpot = () => {
         <p></p>
         <input type="text" placeholder="Image URL" id="url5" name="url5" value={formData.url5} onChange={handleChange} />
         <p></p>
-        <button type="submit">Edit Spot</button>
+        <button  type="submit">Edit Spot</button>
     </div>    
       </form>
     </div>
