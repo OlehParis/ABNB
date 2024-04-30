@@ -38,7 +38,7 @@ function ManageSpots() {
                 <img className='spot-img'  src={spot.previewImage} alt={spot.name} />
                 <div className='addressAvgRating'>
                   <p>{spot.city}, {spot.state}</p>
-                  <p><FaStar color="#ffc107"/> {Number(spot.avgRating).toFixed(1) ? Number(spot.avgRating).toFixed(1) : 'New'}</p>
+                  <p><FaStar color="#ffc107"/> {(spot.avgRating) ? spot.avgRating : 'New'}</p>
                 </div>
                 <div>${spot.price} night</div>
               </div>
