@@ -27,7 +27,7 @@ function ManageSpots() {
 
   if (spotsData && userHasSpots) {
     return (
-      <div className='spots-container'> 
+     <div className='spots-container'>
         <h1> Manage Your Spots</h1>
         <div className="spot-card" >
           {Object.values(spotsData).map((spot) => (
@@ -41,7 +41,7 @@ function ManageSpots() {
                   <p><FaStar color="#ffc107"/> {(spot.avgRating) ? spot.avgRating : 'New'}</p>
                 </div>
                 <div>${spot.price} night</div>
-              </div>
+              
               <div className='buttons'> 
                 <button className='hey' onClick={()=> handleUpdate(spot.id)}> Update </button>
                 <OpenModalButton
@@ -49,12 +49,13 @@ function ManageSpots() {
                   modalComponent={<DeleteSpotModal spotId={spot.id} />}
                 />
               </div>
+              </div>
             </div>
           ))}  
         </div>
-        
-      </div>
-    );
+        </div>
+    
+        );
   } else {
     return (
       <div className='spots-container'> 
