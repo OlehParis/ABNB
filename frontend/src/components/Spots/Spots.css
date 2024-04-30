@@ -2,12 +2,13 @@
     display: grid;
     grid-template-columns: repeat(4, minmax(250px, 1fr));
     column-count: 4;
-    gap: 40px;
-    margin-right: 40px;
+    gap: 45px;
+    /* margin-right: 50px; */
     /* row-gap: 40px; */
     /* justify-content: center; */
     padding: 20px;
- 
+  justify-content: center;
+  align-content: center;
   }
   .tooltip {
     display: inline-block;
@@ -22,8 +23,10 @@
   }
   .spot {
     position: relative;
-    display: inline-block;
-    margin-left: 20px;
+    display: flex;
+    /* margin-left: 20px; */
+    justify-content: center;
+  align-content: center;
   }
 
   .spot {

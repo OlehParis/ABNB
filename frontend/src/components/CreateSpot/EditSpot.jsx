@@ -32,6 +32,7 @@ const EditSpot = () => {
     url5: '',
   });
 
+
   const hasImageExtension = (str) => {
     return str.includes('.png') || str.includes('.jpeg') || str.includes('.jpg')
   };
@@ -52,7 +53,7 @@ const EditSpot = () => {
 
   const validateForm = () => {
     let newErrors = {};
-   
+   console.log(formData, 'formData')
     if (formData.description.length < 30) {
       newErrors.description = "Description must be at least 30 characters long.";
     }
@@ -74,10 +75,10 @@ const EditSpot = () => {
     if(formData.price < 1){
       newErrors.price = "Price is required"
     }
-    if(formData.url.length < 1){
+    if(formData.url && formData.url.length < 1){
       newErrors.url = "Preview Image is required"
     }
-    if(!hasImageExtension(formData.url)){
+    if(formData.url && !hasImageExtension(formData.url)){
       newErrors.urlFormat = "Preview Image has to be image format"
     }
     if (!(parseFloat(formData.lat) > -90 && parseFloat(formData.lat) < 90)) {
@@ -101,14 +102,15 @@ const EditSpot = () => {
     const newFormErrors= validateForm();
     setErrors(newFormErrors);
    
-    if (Object.keys(newFormErrors).length === 0) { 
-      dispatch(fetchEditNewSpot(formData, spotId)).then(response => {
-    navigate(`/spots/${response.id}`)
-       
-    });
-   
-
-  }
+    if (Object.keys(newFormErrors).length === 0) {
+      try {
+        const response = await dispatch(fetchEditNewSpot(formData, spotId));
+        navigate(`/spots/${response.id}`);
+      } catch (error) {
+        console.error('Error editing spot:', error);
+        // Handle error (e.g., display a generic error message to the user)
+      }
+    }
   };
 
   return (
@@ -170,11 +172,11 @@ const EditSpot = () => {
         {errors.price && <div className="error">{errors.price}</div>}
 
         <h4>Liven up your spot with photos</h4> 
-        <label htmlFor="">Submit a link to at least one photo to publish your spot.</label>
+        <label htmlFor="url">Submit a link to at least one photo to publish your spot.</label>
         <input type="text" placeholder='Preview Image URL' id="url" name="url" value={formData.url} onChange={handleChange} />
         {errors.url && <div className="error">{errors.url}</div>}
         {errors.urlFormat && <div className="error">{errors.urlFormat}</div>}
-        
+
 <div className='sub-images'>
     <p></p>
         <input type="text" placeholder="Image URL " id="url2" name="url2" value={formData.url2} onChange={handleChange} />

@@ -156,7 +156,7 @@ const CreateSpot = () => {
         {errors.price && <div className="error">{errors.price}</div>}
 
         <h4>Liven up your spot with photos</h4> 
-        <label htmlFor="">Submit a link to at least one photo to publish your spot.</label>
+        <label htmlFor="url">Submit a link to at least one photo to publish your spot.</label>
         <input type="text" placeholder='Preview Image URL' id="url" name="url" value={formData.url} onChange={handleChange} />
         {errors.url && <div className="error">{errors.url}</div>}
         {errors.urlFormat && <div className="error">{errors.urlFormat}</div>}
