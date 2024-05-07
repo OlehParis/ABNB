@@ -103,13 +103,9 @@ const EditSpot = () => {
     setErrors(newFormErrors);
    
     if (Object.keys(newFormErrors).length === 0) {
-      try {
+      
         const response = await dispatch(fetchEditNewSpot(formData, spotId));
         navigate(`/spots/${response.id}`);
-      } catch (error) {
-        console.error('Error editing spot:', error);
-        // Handle error (e.g., display a generic error message to the user)
-      }
     }
   };
 

@@ -35,7 +35,7 @@ function ManageReviews() {
                     if (review.userId === curUserId) {
                     return (
                         <div key={reviewId} >
-                            <p>{formatDate(review.updatedAt.split(" ")[0])}</p>
+                            <p style={{ color: 'gray' }}>{formatDate(review.updatedAt.split(" ")[0])} </p>
                             <p>{review.review}</p>
                               <OpenModalButton
                                   buttonText="Delete"

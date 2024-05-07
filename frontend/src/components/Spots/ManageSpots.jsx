@@ -13,10 +13,13 @@ function ManageSpots() {
   const curUserId = session.user?.id ?? null;
 
   const handleClick = (id) => {
+   
     navigate(`/spots/${id}`);
+
   };
 
   const handleUpdate = (id) => {
+
     navigate(`/spots/${id}/edit`);
   };
 
@@ -33,9 +36,9 @@ function ManageSpots() {
           {Object.values(spotsData).map((spot) => (
             spot.ownerId === curUserId &&
             <div key={spot.id} className="spot">
-              <div className="tooltip" onClick={() => handleClick(spot.id)} >
+              <div className="tooltip"  >
                 <span className="tooltiptext">{spot.name}</span>
-                <img className='spot-img'  src={spot.previewImage} alt={spot.name} />
+                <img className='spot-img'  src={spot.previewImage} alt={spot.name} onClick={() => handleClick(spot.id)} />
                 <div className='addressAvgRating'>
                   <p>{spot.city}, {spot.state}</p>
                   <p><FaStar color="#ffc107"/> {(spot.avgRating) ? spot.avgRating : 'New'}</p>

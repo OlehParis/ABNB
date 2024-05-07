@@ -155,7 +155,7 @@ function SpotDetails() {
         return (
             <div key={review.id} className='wow'>
                 <h3>{review.User?.firstName || session.user.firstName}</h3>
-                <p>{formatDate(review.updatedAt.split(" ")[0])}</p>
+                <p style={{ color: 'gray' }}>{formatDate(review.updatedAt.split(" ")[0])}</p>
                 <StarRating stars={review.stars} />
                 <p>{review.review}</p>
                 {review.userId === curUserId && (
