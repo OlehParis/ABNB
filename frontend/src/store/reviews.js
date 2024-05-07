@@ -10,12 +10,17 @@ export const fetchCreateRaviewById = (review) => ({
   type: "FETCH_CREATE_REVIEW_BYID",
   payload: review,
 });
+
+export const UpdateReviewById = (review) => ({
+  type: "UPDATE_REVIEW_BYID",
+  payload: review,
+});
 export const fetchDeleteReview = (reviewId) => ({
   type: "FETCH_DELETE_REVIEW",
   payload: reviewId,
 });
 export const fetchAllReviews = (reviews) => ({
-  type: "FETCH_ALL_REVIEWs",
+  type: "FETCH_ALL_REVIEWS",
   payload: reviews,
 });
 
@@ -23,7 +28,7 @@ export const fetchAllReviews = (reviews) => ({
 
 export const allReviews = () => {
   return async (dispatch) => {
-    const response = await fetch("/api/reviews/current");
+    const response = await csrfFetch("/api/reviews/current");
     if (!response.ok) {
       throw new Error("Failed to fetch reviews");
     }
@@ -33,7 +38,7 @@ export const allReviews = () => {
       normalizedData[review.id] = review;
     });
 
-
+  console.log(normalizedData)
     dispatch(fetchAllReviews(normalizedData));
   };
 };
@@ -67,7 +72,7 @@ export const fetchSpotReview = (spot) => {
       body: JSON.stringify(spot),
     });
     if (!response.ok) {
-      throw new Error("Failed to create spot");
+      throw new Error("Failed to create review");
     }
     const data = await response.json();
     
@@ -77,11 +82,38 @@ export const fetchSpotReview = (spot) => {
   };
 };
 
+export const fetchUpdateSpotReview = (review) => {
+  return async (dispatch) => {
+    console.log(review)
+    const {reviewId} = review;
+    const response = await csrfFetch(`/api/reviews/${reviewId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(review),
+    });
+    if (!response.ok) {
+      throw new Error("Failed to update review");
+    }
+    const data = await response.json();
+    dispatch(UpdateReviewById(data));
+
+  };
+};
+
+
 const initialState = {};
 
 const reviewReducer = (state = initialState, action) => {
   switch (action.type) {
     case "FETCH_CREATE_REVIEW_BYID": {
+      return {
+        ...state,
+        [action.payload.id]: action.payload
+      };
+    }
+    case "UPDATE_REVIEW_BYID": {
       return {
         ...state,
         [action.payload.id]: action.payload

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDispatch, } from 'react-redux';
-import { fetchSpotReview } from '../../store/reviews';
+import { fetchUpdateSpotReview } from '../../store/reviews';
 import { FaStar, FaRegStar } from 'react-icons/fa';
 import { useModal } from '../../context/Modal';
 import './ReviewFromModal.css';
@@ -46,7 +46,7 @@ function StarRating({ defaultRating, onChange }) {
   );
 }
 
-function ReviewFromModal({ spotId}) {
+function UpdateReviewFromModal({ reviewId}) {
   const dispatch = useDispatch();
   const { closeModal } = useModal();
   const [review, setReview] = useState('');
@@ -61,12 +61,13 @@ function ReviewFromModal({ spotId}) {
   };
 
   const handleSubmit = () => {
+   
     const Reviews = {
-      spotId,
+      reviewId,
       review,
       stars
     };
-    dispatch(fetchSpotReview(Reviews))
+    dispatch(fetchUpdateSpotReview(Reviews))
       .then(() => {
         closeModal();
       });
@@ -92,4 +93,4 @@ function ReviewFromModal({ spotId}) {
   );
 }
 
-export default ReviewFromModal;
+export default UpdateReviewFromModal;

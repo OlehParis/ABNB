@@ -55,11 +55,14 @@ function ProfileButton({ user }) {
         {user ? (
           <>
             <li> hello,  {user.firstName} </li>
-            {/* <li>{user.username}</li> */}
-            <li>{user.email}</li>
+            <li>{user.username}</li>
+            {/* <li>{user.email}</li> */}
             <hr />
            <li> <Link  className='linkManageSpot' to="/spots/current">Manage Spots</Link></li>
-           <hr />
+       
+          
+           <li> <Link  className='linkManageSpot' to="/reviews/current">Manage Reviews</Link></li>
+          
             <li>
               <button id='logoutButton'onClick={logout}>Log Out</button>
             </li>
