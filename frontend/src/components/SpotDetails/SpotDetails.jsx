@@ -41,10 +41,10 @@ function SpotDetails() {
     const [checkIn, setCheckIn] = useState(null);
     const [checkOut, setCheckOut] = useState(null);
  
-    const handleDatesSelected = (checkInDate, checkOutDate) => {
-      setCheckIn(checkInDate);
-      setCheckOut(checkOutDate);
-  };
+  //  let handleDatesSelected = (checkInDate, checkOutDate) => {
+  //     setCheckIn(checkInDate);
+  //     setCheckOut(checkOutDate);
+  // };
     const sortedReviews = Object.keys(reviews).map(reviewId => {
       return reviews[reviewId];
   });
@@ -81,13 +81,13 @@ function SpotDetails() {
     return `${month} ${year}`;
   }
 
-  function formatDateBooking(dateBookings) {
-    const year = dateBookings.getFullYear();
-    const month = String(dateBookings.getMonth() + 1).padStart(2, '0'); // Adding 1 because months are zero-based
-    const day = String(dateBookings.getDate()).padStart(2, '0');
+  // function formatDateBooking(dateBookings) {
+  //   const year = dateBookings.getFullYear();
+  //   const month = String(dateBookings.getMonth() + 1).padStart(2, '0'); // Adding 1 because months are zero-based
+  //   const day = String(dateBookings.getDate()).padStart(2, '0');
   
-    return `${year}-${month}-${day}`;
-  }
+  //   return `${year}-${month}-${day}`;
+  // }
     
     const dontShowButton = reviewMatchCurUserId || curUserId === spotOwnerId;
     const notLogIn = session.user === null;
