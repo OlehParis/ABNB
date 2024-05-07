@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchSpot } from '../../store/spots';
 import './SpotDetails.css';
@@ -7,6 +7,9 @@ import { FaStar , FaRegStar} from 'react-icons/fa';
 import OpenModalButton from '../OpenModalButton/OpenModalButton'
 import ReviewFromModal from '../ReviewFromModal/ReviewFromModal'
 import DeleteReviewModal from '../DeleteReviewModal/DeleteReviewModal';
+// import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css'
+import CalendarModal from './ModalCalendar';
 
 
 function StarRating({ stars }) {
@@ -34,17 +37,21 @@ function SpotDetails() {
     const spotData = useSelector(state => state.spots[spotId]);
     const session = useSelector(state => state.session)
     const reviews = useSelector(state => state.reviews)
-  
-
-
+    // const [date, setDate] = useState(new Date());
+    const [checkIn, setCheckIn] = useState(null);
+    const [checkOut, setCheckOut] = useState(null);
+ 
+    const handleDatesSelected = (checkInDate, checkOutDate) => {
+      setCheckIn(checkInDate);
+      setCheckOut(checkOutDate);
+  };
     const sortedReviews = Object.keys(reviews).map(reviewId => {
       return reviews[reviewId];
   });
   
   const sortedR = sortedReviews.slice().sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
- 
-     
-   
+
+   console.log(checkIn , 'lime 54444444')
     useEffect(() => {
         dispatch(fetchSpot(spotId));
       }, [dispatch, spotId]);
@@ -72,6 +79,14 @@ function SpotDetails() {
     const year = date.getFullYear();
   
     return `${month} ${year}`;
+  }
+
+  function formatDateBooking(dateBookings) {
+    const year = dateBookings.getFullYear();
+    const month = String(dateBookings.getMonth() + 1).padStart(2, '0'); // Adding 1 because months are zero-based
+    const day = String(dateBookings.getDate()).padStart(2, '0');
+  
+    return `${year}-${month}-${day}`;
   }
     
     const dontShowButton = reviewMatchCurUserId || curUserId === spotOwnerId;
@@ -101,7 +116,9 @@ function SpotDetails() {
     const { avgStars, reviewCount } = calculateStarsAndReviews(reviews, spotId);
     
     return (
+      
         <div className="spot-details">
+        
         <h2>{spotData.name}</h2>
         <p>{spotData.address}, {spotData.state},  {spotData.country}</p>
         <div className='images'>
@@ -129,7 +146,40 @@ function SpotDetails() {
                     {reviewCount !== 0 && ( reviewCount ? ` · ${reviewCount}` : ' · 0' ) }
                     {reviewCount !== 0 && (reviewCount === 1 ? ' review' : ' reviews')}</p>
                     </div>
-                    <button onClick={()=> alert('Feature Coming Soon...')}>Reserve</button>
+                    <div className='bookingContainer'>
+                    <div>check-in<OpenModalButton 
+                        buttonText={    <input
+                          type="text"
+                          placeholder={checkIn ? checkIn.toLocaleDateString() : new Date().toLocaleDateString()}
+                          readOnly/>}
+                        modalComponent={<CalendarModal 
+                        onCheckInDateChange={setCheckIn}
+                       
+                        onCheckOutDateChange={setCheckOut} />}
+                    />
+                    </div>
+                    <div>check-out<OpenModalButton 
+                        buttonText={    <input
+                          type="text"
+                          placeholder={checkOut ? checkOut.toLocaleDateString() : 'Add date'}
+                          readOnly/>}
+                        modalComponent={<CalendarModal 
+                        onCheckInDateChange={setCheckIn}
+                       
+                        onCheckOutDateChange={setCheckOut} />}
+                    />
+                    </div>
+                    </div>
+                    <button 
+                  style={{
+  paddingTop: '6px',
+  paddingBottom: '6px',
+  backgroundColor: '#d41f40',
+  color: 'white',
+  border: 'medium',
+  borderRadius: '15px',
+  cursor: 'pointer'
+}}  onClick={()=> alert('Feature Coming Soon...')}>Reserve</button>
                 </div>
            </div>
         </div>
@@ -176,6 +226,7 @@ function SpotDetails() {
     
     </div>
 );
+
 }
 
 export default SpotDetails;
