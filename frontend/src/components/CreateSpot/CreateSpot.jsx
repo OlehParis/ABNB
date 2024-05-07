@@ -27,7 +27,7 @@ const CreateSpot = () => {
   });
 
   const hasImageExtension = (str) => {
-    return str.includes('.png') || str.includes('.jpeg') || str.includes('.jpg')
+    return str.includes('png') || str.includes('jpeg') || str.includes('jpg')
   };
 
   const handleChange = (e) => {

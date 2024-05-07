@@ -81,6 +81,23 @@
 .buttons button {
   margin-right: 10px;
 }
+.spotDbuttons {
+  background: #f0f0f0;
+  box-shadow: 5px 5px 10px #c4c4c4, -5px -5px 10px #ffffff;
+  border: none;
+  color: #333;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+
+
+
+
+.spotDbuttons:hover {
+  transform:scale(1.1)
+} 
 
 
 @media screen and (max-width: 1200px) {
