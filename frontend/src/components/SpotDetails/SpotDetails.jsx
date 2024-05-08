@@ -10,6 +10,7 @@ import DeleteReviewModal from '../DeleteReviewModal/DeleteReviewModal';
 // import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css'
 import CalendarModal from './ModalCalendar';
+import { fetchBooking,fetchBookings } from '../../store/bookings';
 
 
 function StarRating({ stars }) {
@@ -40,18 +41,37 @@ function SpotDetails() {
     // const [date, setDate] = useState(new Date());
     const [checkIn, setCheckIn] = useState(null);
     const [checkOut, setCheckOut] = useState(null);
- 
-  //  let handleDatesSelected = (checkInDate, checkOutDate) => {
-  //     setCheckIn(checkInDate);
-  //     setCheckOut(checkOutDate);
-  // };
+    // const [errorMessage, setErrorMessage] = useState('');
+
+  const handleReserveClick = async () => {
+    try {
+      const bookings = { spotId, startDate:checkIn, endDate:checkOut };
+      await dispatch(fetchBooking(bookings));
+
+      alert('Booking successful!');
+    } catch (error) {
+      console.log(error)
+     
+      // if (error) {
+      //   setErrorMessage(error.message);
+      // } else {
+      //   setErrorMessage('Failed to create booking');
+      // }
+      console.error(error);
+    }
+  };
+const handleGetBookings = async () => {
+  // console.log(spotId)
+     dispatch(fetchBookings(spotId))
+  
+}
+
     const sortedReviews = Object.keys(reviews).map(reviewId => {
       return reviews[reviewId];
   });
   
   const sortedR = sortedReviews.slice().sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
-   console.log(checkIn , 'lime 54444444')
     useEffect(() => {
         dispatch(fetchSpot(spotId));
       }, [dispatch, spotId]);
@@ -148,6 +168,7 @@ function SpotDetails() {
                     </div>
                     <div className='bookingContainer'>
                     <div>check-in<OpenModalButton 
+                    onButtonClick={handleGetBookings}
                         buttonText={    <input
                           type="text"
                           placeholder={checkIn ? checkIn.toLocaleDateString() : new Date().toLocaleDateString()}
@@ -170,7 +191,7 @@ function SpotDetails() {
                     />
                     </div>
                     </div>
-                    <button 
+                    {/* <button 
                   style={{
   paddingTop: '6px',
   paddingBottom: '6px',
@@ -179,7 +200,17 @@ function SpotDetails() {
   border: 'medium',
   borderRadius: '15px',
   cursor: 'pointer'
-}}  onClick={()=> alert('Feature Coming Soon...')}>Reserve</button>
+}}  onClick={()=> alert('Feature Coming Soon...')}>Reserve</button> */}
+      <button 
+                  style={{
+  paddingTop: '6px',
+  paddingBottom: '6px',
+  backgroundColor: '#d41f40',
+  color: 'white',
+  border: 'medium',
+  borderRadius: '15px',
+  cursor: 'pointer'
+}}  onClick={handleReserveClick}>Reserve</button>
                 </div>
            </div>
         </div>

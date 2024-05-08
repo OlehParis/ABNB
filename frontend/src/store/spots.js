@@ -11,6 +11,7 @@ export const fetchSpotsSuccess = (spots) => ({
   type: "FETCH_SPOTS_SUCCESS",
   payload: spots,
 });
+
 export const DeleteSpot = (spotId) => {
   return {
     type: "FETCH_DELETE_SPOT",

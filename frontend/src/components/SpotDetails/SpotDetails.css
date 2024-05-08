@@ -92,7 +92,7 @@
   background-color: rgba(0,1,1, 0.0);
   border: 2px solid #ccc; 
   border-radius: 15px; 
-  box-shadow: 0 3px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 5px 10px 10px rgba(0, 0, 0, 0.1);
   
 }
 .price {
@@ -173,4 +173,13 @@
  }
 .bookingContainer input{
   width: 60px;
+}
+.bookingContainer {
+  display: flex;
+  
+}
+.bookingContainer div {
+margin-left: 25px;
+font-size: larger;
+box-sizing:border-box;
 }
