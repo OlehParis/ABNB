@@ -106,6 +106,7 @@
   margin-top: 21px;
 }
 .container{
+  max-height: 35px;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -182,4 +183,18 @@
 margin-left: 25px;
 font-size: larger;
 box-sizing:border-box;
+}
+.check-in {
+  background-color: green;
+  color: white; 
+}
+
+.newError {
+  width: 230px;
+  height: 36px;
+}
+.newError p{
+  margin-bottom: 0px;
+  margin-top: 0px;
+  color: red;
 }

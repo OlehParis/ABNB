@@ -11,25 +11,19 @@ export const getBookings = (bookings) => ({
 });
 
 export const fetchBookings = (bookings) => {
-    return async (dispatch) => {
-        const response = await csrfFetch(`/api/spots/${bookings}/bookings`);
-        const { Bookings } = await response.json(); // Destructure the Bookings array
-      
-     
-        if (!response.ok) {
-            throw new Error("Failed to fetch bookings");
-        }
-
-        // Normalize the bookings array into an object indexed by booking ID
-        const normalizedBookings = Bookings.reduce((acc, booking) => {
-            acc[booking.id] = booking; // Use booking.id as the key
-            return acc;
-        }, {});
-        console.log(normalizedBookings)
-        dispatch(getBookings(normalizedBookings));
-    };
+  return async (dispatch) => {
+    const response = await csrfFetch(`/api/spots/${bookings}/bookings`);
+    const { Bookings } = await response.json();
+    if (!response.ok) {
+      throw new Error("Failed to fetch bookings");
+    }
+    const normalizedBookings = Bookings.reduce((acc, booking) => {
+      acc[booking.id] = booking;
+      return acc;
+    }, {});
+    dispatch(getBookings(normalizedBookings));
+  };
 };
-
 
 export const fetchBooking = (bookings) => {
   return async (dispatch) => {
@@ -41,24 +35,7 @@ export const fetchBooking = (bookings) => {
       },
       body: JSON.stringify(bookings),
     });
-    if (!response.ok) {
-      // Extract error message from response body if available
-      let errorMessage = "Failed to create booking";
-      let conflictDetails = null; // Initialize conflict details
-
-      // Await response.json() to get the actual response body
-      const errorData = await response.json();
-      console.error("Error data from backend:", errorData);
-
-      if (errorData.message) {
-        errorMessage = errorData.message;
-      }
-      if (errorData.errors) {
-        conflictDetails = errorData.errors;
-      }
-
-      throw new Error(errorMessage, conflictDetails);
-    }
+    
 
     const data = await response.json();
 
@@ -77,11 +54,11 @@ const bookingsReducer = (state = initialState, action) => {
       };
     }
     case "GET_BOOKINGS": {
-        return {
-          ...state,
-          ...action.payload,
-        };
-      }
+      return {
+        ...state,
+        ...action.payload,
+      };
+    }
     default:
       return state;
   }

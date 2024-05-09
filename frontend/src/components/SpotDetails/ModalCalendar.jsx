@@ -1,22 +1,17 @@
 import './SpotDetails.css';
-// import { useDispatch } from 'react-redux';
 import { useState } from 'react';
 import { useModal } from '../../context/Modal';
 import Calendar from 'react-calendar';
+import { useSelector} from 'react-redux';
 import 'react-calendar/dist/Calendar.css';
 
-function CalendarModal({ onCheckInDateChange, onCheckOutDateChange }) {
-    // const dispatch = useDispatch();
+
+function CalendarModal({ onCheckInDateChange, spotId, onCheckOutDateChange }) {
     const { closeModal } = useModal();
+    const bookings = useSelector(state => state.bookings)
     const [checkInDate, setCheckInDate] = useState(null);
     const [checkOutDate, setCheckOutDate] = useState(null);
-    const [disabledDates, setDisabledDates] = useState([
-        new Date(2024, 4, 10), // May 10, 2024
-        new Date(2024, 4, 15), // May 15, 2024
-        // Add more disabled dates as needed
-    ]);
-
-
+  
     const handleDateChange = (date) => {
         if (!checkInDate) {
             setCheckInDate(date);
@@ -27,44 +22,51 @@ function CalendarModal({ onCheckInDateChange, onCheckOutDateChange }) {
             onCheckOutDateChange(date)
         }
     };
+
     const handleClearDates = () => {
         setCheckInDate(null);
         setCheckOutDate(null);
     };
-          // Function to check if a date is booked
-          const handleTileDisabled = ({ date, view }) => {
-            // Disable dates only for the month view
-            if (view === 'month') {
-                return disabledDates.some(disabledDate =>
-                    date.getDate() === disabledDate.getDate() &&
-                    date.getMonth() === disabledDate.getMonth() &&
-                    date.getFullYear() === disabledDate.getFullYear()
-                );
+
+    const handleTileDisabled = ({ date }) => {
+        const bookingKeys = Object.keys(bookings);
+        const dateString = date.toISOString().split('T')[0]; // Convert date to string in 'YYYY-MM-DD' format
+        for (const bookingKey of bookingKeys) {
+            const booking = bookings[bookingKey];
+            const newId = booking.spotId;
+            if (Number(spotId) === Number(newId)) {
+                const startDate = booking.startDate.split(' ')[0]; 
+                const endDate = booking.endDate.split(' ')[0]; 
+                if (dateString >= startDate && dateString <= endDate) {
+                    return true;
+                }
             }
-            return false;
-        };
- 
-        // const today = new Date();
-        // const datesToCheck = [];
-        
-        // for (let i = 1; i <= 10; i++) {
-        //     const nextDate = new Date(today);
-        //     nextDate.setDate(today.getDate() + i);
-        //     datesToCheck.push(nextDate);
-        // }
-        
-        // console.log(datesToCheck);
-        
+        }
+        return false; // Enable the date
+    };
+
+    const tileClassName = ({ date }) => {
+        if (checkInDate && date.getTime() === checkInDate.getTime()) {
+            return 'check-in';
+        } else if (checkOutDate && date.getTime() === checkOutDate.getTime()) {
+            return 'check-out';
+        } else if (checkInDate && checkOutDate && date > checkInDate && date < checkOutDate) {
+            return 'selected-range';
+        }
+        return null;
+    };
+    
 
     return (
         <div className="modal-calendar">
             <h3>Select check-in date</h3>
+         
             <Calendar
                 onChange={handleDateChange}
                 value={checkInDate || checkOutDate } 
-                selectRange={false}
-                // selectRangeEnd={checkOutDate !== null} 
                tileDisabled={handleTileDisabled}
+               tileClassName={tileClassName}
+               
             />
             <button onClick={handleClearDates}>Clear Dates</button>
             <button onClick={closeModal}>Close</button>

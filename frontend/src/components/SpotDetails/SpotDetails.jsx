@@ -32,39 +32,34 @@ function StarRating({ stars }) {
   }
 
 function SpotDetails() {
-
     const { spotId } = useParams();
     const dispatch = useDispatch()
     const spotData = useSelector(state => state.spots[spotId]);
     const session = useSelector(state => state.session)
     const reviews = useSelector(state => state.reviews)
-    // const [date, setDate] = useState(new Date());
+    // const [loadingBookings, setLoadingBookings] = useState(true);
+    const [beError, setBeError] = useState(null);
     const [checkIn, setCheckIn] = useState(null);
     const [checkOut, setCheckOut] = useState(null);
-    // const [errorMessage, setErrorMessage] = useState('');
-
-  const handleReserveClick = async () => {
-    try {
-      const bookings = { spotId, startDate:checkIn, endDate:checkOut };
-      await dispatch(fetchBooking(bookings));
-
-      alert('Booking successful!');
-    } catch (error) {
-      console.log(error)
-     
-      // if (error) {
-      //   setErrorMessage(error.message);
-      // } else {
-      //   setErrorMessage('Failed to create booking');
-      // }
-      console.error(error);
-    }
-  };
-const handleGetBookings = async () => {
-  // console.log(spotId)
-     dispatch(fetchBookings(spotId))
   
-}
+const handleReserveClick = () => {
+  const bookingsPost = { spotId, startDate: checkIn, endDate: checkOut };
+
+  dispatch(fetchBooking(bookingsPost))
+    .then(() => {
+      alert('Booking successful!');
+    })
+    .catch(error => {
+      error.json().then(data => {
+        const errorMessage = data.message;
+        console.error(errorMessage);
+        setBeError(errorMessage);
+      });
+    });
+};
+// const handleGetBookings = async () => {
+//      dispatch(fetchBookings(spotId))
+// }
 
     const sortedReviews = Object.keys(reviews).map(reviewId => {
       return reviews[reviewId];
@@ -74,6 +69,18 @@ const handleGetBookings = async () => {
 
     useEffect(() => {
         dispatch(fetchSpot(spotId));
+      }, [dispatch, spotId]);
+
+      useEffect(() => {
+        async function fetchBookingsData() {
+          try {
+            await dispatch(fetchBookings(spotId));
+            // setLoadingBookings(false);
+          } catch (error) {
+            console.error('Error fetching bookings:', error);
+          }
+        }
+        fetchBookingsData();
       }, [dispatch, spotId]);
 
       if (!spotData ) {
@@ -101,14 +108,6 @@ const handleGetBookings = async () => {
     return `${month} ${year}`;
   }
 
-  // function formatDateBooking(dateBookings) {
-  //   const year = dateBookings.getFullYear();
-  //   const month = String(dateBookings.getMonth() + 1).padStart(2, '0'); // Adding 1 because months are zero-based
-  //   const day = String(dateBookings.getDate()).padStart(2, '0');
-  
-  //   return `${year}-${month}-${day}`;
-  // }
-    
     const dontShowButton = reviewMatchCurUserId || curUserId === spotOwnerId;
     const notLogIn = session.user === null;
 
@@ -134,7 +133,7 @@ const handleGetBookings = async () => {
     }
     
     const { avgStars, reviewCount } = calculateStarsAndReviews(reviews, spotId);
-    
+     
     return (
       
         <div className="spot-details">
@@ -159,6 +158,7 @@ const handleGetBookings = async () => {
             </div>
             <div className='container-price'>
                 <div className='container-inner'>
+                  
                     <div className='container'>
                     <div className='price'><h3>${spotData.price}</h3> <p>night</p></div>
                     <p className='rating'><FaStar color="#ffc107"/> 
@@ -166,16 +166,19 @@ const handleGetBookings = async () => {
                     {reviewCount !== 0 && ( reviewCount ? ` · ${reviewCount}` : ' · 0' ) }
                     {reviewCount !== 0 && (reviewCount === 1 ? ' review' : ' reviews')}</p>
                     </div>
-                    <div className='bookingContainer'>
+                    <div className='newError'>
+                    {beError && <p >{beError}</p>}
+                    </div>
+                    <div className='bookingContainer'> 
                     <div>check-in<OpenModalButton 
-                    onButtonClick={handleGetBookings}
+                   onButtonClick={() => {setBeError(null)}}
                         buttonText={    <input
                           type="text"
                           placeholder={checkIn ? checkIn.toLocaleDateString() : new Date().toLocaleDateString()}
                           readOnly/>}
                         modalComponent={<CalendarModal 
                         onCheckInDateChange={setCheckIn}
-                       
+                        spotId={spotId}
                         onCheckOutDateChange={setCheckOut} />}
                     />
                     </div>
@@ -184,9 +187,9 @@ const handleGetBookings = async () => {
                           type="text"
                           placeholder={checkOut ? checkOut.toLocaleDateString() : 'Add date'}
                           readOnly/>}
-                        modalComponent={<CalendarModal 
+                        modalComponent={<CalendarModal
+                        beError={beError}  
                         onCheckInDateChange={setCheckIn}
-                       
                         onCheckOutDateChange={setCheckOut} />}
                     />
                     </div>
