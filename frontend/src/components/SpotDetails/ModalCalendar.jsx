@@ -15,11 +15,19 @@ function CalendarModal({ onCheckInDateChange, spotId, onCheckOutDateChange }) {
     const handleDateChange = (date) => {
         if (!checkInDate) {
             setCheckInDate(date);
-            onCheckInDateChange(date)
-        } else  {
-
-            setCheckOutDate(date);
-            onCheckOutDateChange(date)
+            onCheckInDateChange(date);
+        } else {
+            // If check-in date is after check-out date, swap them
+            if (checkInDate > date) {
+                setCheckOutDate(checkInDate);
+                setCheckInDate(date);
+                onCheckOutDateChange(checkInDate);
+                onCheckInDateChange(date);
+            } else {
+                setCheckOutDate(date);
+                onCheckOutDateChange(date);
+            }
+            closeModal();
         }
     };
 

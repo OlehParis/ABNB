@@ -1,6 +1,7 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { fetchSpot } from '../../store/spots';
 import './SpotDetails.css';
 import { FaStar , FaRegStar} from 'react-icons/fa';
@@ -10,7 +11,7 @@ import DeleteReviewModal from '../DeleteReviewModal/DeleteReviewModal';
 // import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css'
 import CalendarModal from './ModalCalendar';
-import { fetchBooking,fetchBookings } from '../../store/bookings';
+import { fetchBookings } from '../../store/bookings';
 
 
 function StarRating({ stars }) {
@@ -37,29 +38,24 @@ function SpotDetails() {
     const spotData = useSelector(state => state.spots[spotId]);
     const session = useSelector(state => state.session)
     const reviews = useSelector(state => state.reviews)
+    const bookings = useSelector(state => state.bookings)
     // const [loadingBookings, setLoadingBookings] = useState(true);
     const [beError, setBeError] = useState(null);
     const [checkIn, setCheckIn] = useState(null);
     const [checkOut, setCheckOut] = useState(null);
-  
-const handleReserveClick = () => {
-  const bookingsPost = { spotId, startDate: checkIn, endDate: checkOut };
 
-  dispatch(fetchBooking(bookingsPost))
-    .then(() => {
-      alert('Booking successful!');
-    })
-    .catch(error => {
-      error.json().then(data => {
-        const errorMessage = data.message;
-        console.error(errorMessage);
-        setBeError(errorMessage);
-      });
-    });
+    const navigate = useNavigate();
+  
+  
+
+
+const handleReserveClick = () => {
+  
+ 
+  navigate('./booking',  { state: {checkIn, checkOut } });
+
 };
-// const handleGetBookings = async () => {
-//      dispatch(fetchBookings(spotId))
-// }
+
 
     const sortedReviews = Object.keys(reviews).map(reviewId => {
       return reviews[reviewId];
@@ -82,6 +78,27 @@ const handleReserveClick = () => {
         }
         fetchBookingsData();
       }, [dispatch, spotId]);
+
+      const isReservationDisabled = () => {
+        if (!checkIn || !checkOut) return true; // If check-in or check-out dates are not selected, disable reservation
+        const bookingKeys = Object.keys(bookings);
+       { for (const bookingKey of bookingKeys) {
+            const booking = bookings[bookingKey];
+            const newId = booking.spotId;
+            if (Number(spotId) === Number(newId)) {
+              const startDate = booking.startDate;
+              const endDate = booking.endDate;
+              if(checkIn && checkOut){
+              const newCheckIn = checkIn.toISOString().split('T')[0];
+              const newCheckOut = checkOut.toISOString().split('T')[0];
+
+                if ((newCheckIn <= startDate ) && ( newCheckOut >= endDate)) {
+                    return true; // Disable reservation if selected dates are within the blocked range
+                }}
+            }
+        }}
+        return false; // Enable reservation if selected dates are not within the blocked range
+    };
 
       if (!spotData ) {
         return <div>Loading...</div>;
@@ -137,7 +154,8 @@ const handleReserveClick = () => {
     return (
       
         <div className="spot-details">
-        
+    
+
         <h2>{spotData.name}</h2>
         <p>{spotData.address}, {spotData.state},  {spotData.country}</p>
         <div className='images'>
@@ -166,9 +184,7 @@ const handleReserveClick = () => {
                     {reviewCount !== 0 && ( reviewCount ? ` · ${reviewCount}` : ' · 0' ) }
                     {reviewCount !== 0 && (reviewCount === 1 ? ' review' : ' reviews')}</p>
                     </div>
-                    <div className='newError'>
-                    {beError && <p >{beError}</p>}
-                    </div>
+              
                     <div className='bookingContainer'> 
                     <div>check-in<OpenModalButton 
                    onButtonClick={() => {setBeError(null)}}
@@ -192,28 +208,13 @@ const handleReserveClick = () => {
                         onCheckInDateChange={setCheckIn}
                         onCheckOutDateChange={setCheckOut} />}
                     />
+                    
                     </div>
                     </div>
-                    {/* <button 
-                  style={{
-  paddingTop: '6px',
-  paddingBottom: '6px',
-  backgroundColor: '#d41f40',
-  color: 'white',
-  border: 'medium',
-  borderRadius: '15px',
-  cursor: 'pointer'
-}}  onClick={()=> alert('Feature Coming Soon...')}>Reserve</button> */}
-      <button 
-                  style={{
-  paddingTop: '6px',
-  paddingBottom: '6px',
-  backgroundColor: '#d41f40',
-  color: 'white',
-  border: 'medium',
-  borderRadius: '15px',
-  cursor: 'pointer'
-}}  onClick={handleReserveClick}>Reserve</button>
+                  
+              <button 
+               onClick={handleReserveClick}
+               disabled={isReservationDisabled()}>Reserve</button>
                 </div>
            </div>
         </div>

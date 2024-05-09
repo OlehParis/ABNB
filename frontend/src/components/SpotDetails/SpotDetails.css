@@ -135,6 +135,11 @@
   margin-bottom: 10px;
 }
 
+.container-price button[disabled] {
+  background-color: #ccc; /* Change the background color */
+  color: #999; /* Change the text color */
+  cursor: not-allowed; /* Change the cursor to indicate the button is not clickable */
+}
 
 
 #postReviewButton button{
@@ -172,17 +177,20 @@
   transform:scale(1)
  
  }
-.bookingContainer input{
-  width: 60px;
-}
+
 .bookingContainer {
   display: flex;
   
 }
 .bookingContainer div {
-margin-left: 25px;
+margin-left: 20px;
 font-size: larger;
 box-sizing:border-box;
+}
+.bookingContainer input{
+height: 23px;
+width: 70px;
+font-size: larger;
 }
 .check-in {
   background-color: green;
@@ -197,4 +205,13 @@ box-sizing:border-box;
   margin-bottom: 0px;
   margin-top: 0px;
   color: red;
+}
+
+.price-cal {
+  display: block;
+}
+.fee-price{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
 }

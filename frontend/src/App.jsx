@@ -10,6 +10,7 @@ import CreateSpot from './components/CreateSpot/CreateSpot';
 import ManageSpots from './components/Spots/ManageSpots'
 import EditSpot from './components/CreateSpot/EditSpot';
 import ManageReviews from './components/SpotDetails/ManageReviews';
+import RequestToBook from './components/SpotDetails/RequestToBook';
 
 function App() {
   const dispatch = useDispatch();
@@ -65,6 +66,11 @@ function App() {
           path: "reviews/current",
           element:  <ManageReviews review = {reviews}/>
         },
+        {
+          path: "spots/:spotId/booking",
+          element:  <RequestToBook review = {reviews}/>
+        },
+
 
       ]
     }
