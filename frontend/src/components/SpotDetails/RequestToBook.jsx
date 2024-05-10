@@ -3,16 +3,15 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useState} from 'react';
 import { useParams } from 'react-router-dom';
 import './SpotDetails.css';
-import { FaStar , FaRegStar} from 'react-icons/fa';
+import { FaStar } from 'react-icons/fa';
 import { fetchSpot } from '../../store/spots';
 import { useLocation } from 'react-router-dom';
-import SpotDetails from './SpotDetails';
 import { fetchBooking} from '../../store/bookings';
-// import OpenModalButton from '../OpenModalButton/OpenModalButton'
+import { useNavigate } from 'react-router-dom'
 
 
 function RequestToBook ()  {
-
+  const navigate = useNavigate();
     const { spotId } = useParams();
     const location = useLocation();
     const { checkIn, checkOut } = location.state;
@@ -26,36 +25,10 @@ function RequestToBook ()  {
     }, [dispatch, spotId]);
     
  
-    const session = useSelector(state => state.session)
     const reviews = useSelector(state => state.reviews)
     
    
-    function StarRating({ stars }) {
-        const totalStars = 5;
-      
-        const filledStars = Array.from({ length: stars }, (_, index) => (
-          <FaStar key={index} color="#ffc107" />
-        ));
-      
-        const emptyStars = Array.from({ length: totalStars - stars }, (_, index) => (
-          <FaRegStar key={index} color="#e4e5e9" />
-        ));
-        return (
-          <div>
-            {filledStars}
-            {emptyStars}
-          </div>
-        );
-      }
-      function formatDate(dateString) {
-        const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-        const date = new Date(dateString);
-        
-        const month = months[date.getMonth()];
-        const year = date.getFullYear();
-      
-        return `${month} ${year}`;
-      }
+    
 
       function calculateStarsAndReviews(reviews, spotId) {
         let totalStars = 0;
@@ -94,11 +67,11 @@ function RequestToBook ()  {
        
       const handleReserveClick = () => {
   
-        const bookingsPost = { spotId, startDate: checkIn, endDate: checkOut };
+        const bookingsPost = { spotId, startDate: checkIn, endDate: checkOut , totalPrice };
         dispatch(fetchBooking(bookingsPost))
           .then(() => {
             
-            alert('Booking successful!');
+            navigate(`/bookings/manage`);
           })
         //   .catch(error => {
         //     error.json().then(data => {
@@ -110,6 +83,8 @@ function RequestToBook ()  {
       };
       if (!spotData ) {
         return <div>Loading...</div>;}
+       let totalPrice= (spotData.price*selectedDays+150+(spotData.price*selectedDays*0.07)).toFixed(2)
+       
 return ( <>
 
     <h1>Request to book</h1>
@@ -171,7 +146,7 @@ return ( <>
                    Total(USD)
                 </div>
                 <div>
-                ${(spotData.price*selectedDays+150+(spotData.price*selectedDays*0.07)).toFixed(2)}
+                ${totalPrice}
                 </div>
             </div>
            

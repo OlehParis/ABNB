@@ -11,6 +11,7 @@ import ManageSpots from './components/Spots/ManageSpots'
 import EditSpot from './components/CreateSpot/EditSpot';
 import ManageReviews from './components/SpotDetails/ManageReviews';
 import RequestToBook from './components/SpotDetails/RequestToBook';
+import YourBookings from './components/Spots/YourBookings';
 
 function App() {
   const dispatch = useDispatch();
@@ -70,7 +71,10 @@ function App() {
           path: "spots/:spotId/booking",
           element:  <RequestToBook review = {reviews}/>
         },
-
+        {
+          path: "bookings/manage",
+          element:  <YourBookings spot = {spots}/>
+        },
 
       ]
     }

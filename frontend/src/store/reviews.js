@@ -15,10 +15,12 @@ export const UpdateReviewById = (review) => ({
   type: "UPDATE_REVIEW_BYID",
   payload: review,
 });
+
 export const fetchDeleteReview = (reviewId) => ({
   type: "FETCH_DELETE_REVIEW",
   payload: reviewId,
 });
+
 export const fetchAllReviews = (reviews) => ({
   type: "FETCH_ALL_REVIEWS",
   payload: reviews,

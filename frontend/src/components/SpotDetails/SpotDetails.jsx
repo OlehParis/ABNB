@@ -8,8 +8,6 @@ import { FaStar , FaRegStar} from 'react-icons/fa';
 import OpenModalButton from '../OpenModalButton/OpenModalButton'
 import ReviewFromModal from '../ReviewFromModal/ReviewFromModal'
 import DeleteReviewModal from '../DeleteReviewModal/DeleteReviewModal';
-// import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css'
 import CalendarModal from './ModalCalendar';
 import { fetchBookings } from '../../store/bookings';
 
@@ -39,17 +37,11 @@ function SpotDetails() {
     const session = useSelector(state => state.session)
     const reviews = useSelector(state => state.reviews)
     const bookings = useSelector(state => state.bookings)
-    // const [loadingBookings, setLoadingBookings] = useState(true);
     const [beError, setBeError] = useState(null);
     const [checkIn, setCheckIn] = useState(null);
     const [checkOut, setCheckOut] = useState(null);
-
     const navigate = useNavigate();
-  
-  
-
-
-const handleReserveClick = () => {
+    const handleReserveClick = () => {
   
  
   navigate('./booking',  { state: {checkIn, checkOut } });
@@ -126,6 +118,7 @@ const handleReserveClick = () => {
   }
 
     const dontShowButton = reviewMatchCurUserId || curUserId === spotOwnerId;
+    const onwerOfSpot = curUserId === spotOwnerId;
     const notLogIn = session.user === null;
 
     function calculateStarsAndReviews(reviews, spotId) {
@@ -185,7 +178,7 @@ const handleReserveClick = () => {
                     {reviewCount !== 0 && (reviewCount === 1 ? ' review' : ' reviews')}</p>
                     </div>
               
-                    <div className='bookingContainer'> 
+                 {!notLogIn && !onwerOfSpot &&  < div className='bookingContainer'> 
                     <div>check-in<OpenModalButton 
                    onButtonClick={() => {setBeError(null)}}
                         buttonText={    <input
@@ -210,11 +203,11 @@ const handleReserveClick = () => {
                     />
                     
                     </div>
-                    </div>
+                    </div>}
                   
-              <button 
+             {!notLogIn && !onwerOfSpot && <button 
                onClick={handleReserveClick}
-               disabled={isReservationDisabled()}>Reserve</button>
+               disabled={isReservationDisabled()}>Reserve</button> }
                 </div>
            </div>
         </div>

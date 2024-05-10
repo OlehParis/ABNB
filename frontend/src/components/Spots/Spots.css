@@ -118,3 +118,9 @@
   border: none;
   /* Add more styles as needed */
 }
+.address-price{
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
