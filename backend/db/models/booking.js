@@ -35,6 +35,9 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
+      totalPrice: {
+        type: Sequelize.STRING
+      },
       spotId: DataTypes.INTEGER,
     },
     {

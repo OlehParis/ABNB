@@ -16,11 +16,13 @@ module.exports = {
         startDate:"2025-11-19",
         endDate:"2025-11-23",
         spotId:3,
+        totalPrice: "560.00"
       },{
         userId:4,
         startDate:"2025-11-19",
         endDate:"2025-11-23",
         spotId:1,
+        totalPrice: "560.00"
       }
     ],{ validate: true })
   },

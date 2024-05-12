@@ -27,6 +27,10 @@ module.exports = {
       spotId: {
         type: Sequelize.INTEGER
       },
+      totalPrice: {
+        type: Sequelize.STRING,
+        
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

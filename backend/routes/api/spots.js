@@ -666,7 +666,7 @@ router.post(
   validateBooking,
   async (req, res, next) => {
     const curUserId = req.user.id;
-    const { startDate, endDate } = req.body;
+    const { startDate, endDate, totalPrice } = req.body;
     const { spotId } = req.params;
 
     // Retrieve spot information along with associated bookings
@@ -723,13 +723,15 @@ router.post(
     const newBooking = await Booking.create({
       spotId: spotId,
       userId: curUserId,
+      totalPrice: totalPrice,
       startDate: startDate,
       endDate: endDate,
     });
     const resBooking = {
       id: newBooking.id,
-      spotId: newBooking.spotId,
+      spotId: Number(newBooking.spotId),
       userId: newBooking.userId,
+      totalPrice: newBooking,totalPrice,
       startDate: formatDate(newBooking.startDate),
       endDate: formatDate(newBooking.endDate),
       createdAt: formatWithTime(newBooking.createdAt),
@@ -739,7 +741,7 @@ router.post(
   }
 );
 
-//Get all Bookings for a Spot based on the Spot's id (Auth require)
+//  all Bookings for a Spot based on the Spot's id (Auth require)
 router.get("/:spotId/bookings", requireAuth, async (req, res, next) => {
   const curUserId = req.user.id;
   const { spotId } = req.params;
@@ -790,6 +792,7 @@ router.get("/:spotId/bookings", requireAuth, async (req, res, next) => {
     spotId: booking.spotId,
     startDate: formatDate(booking.startDate),
     endDate: formatDate(booking.endDate),
+    id: booking.id
   }));
 
   return res.json({ Bookings: notOwnerBookings });

@@ -39,6 +39,7 @@ router.get("/current", requireAuth, async (req, res, next) => {
       
       id: booking.id,
       spotId: booking.Spot.id,
+      totalPrice: booking.totalPrice,
       Spot: {
         id: booking.Spot.id,
         ownerId: booking.Spot.ownerId,
