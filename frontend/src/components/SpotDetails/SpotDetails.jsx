@@ -10,7 +10,8 @@ import ReviewFromModal from '../ReviewFromModal/ReviewFromModal'
 import DeleteReviewModal from '../DeleteReviewModal/DeleteReviewModal';
 import CalendarModal from './ModalCalendar';
 import { fetchBookings } from '../../store/bookings';
-
+// import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import MapComponent from './Map';
 
 function StarRating({ stars }) {
     const totalStars = 5;
@@ -47,7 +48,6 @@ function SpotDetails() {
   navigate('./booking',  { state: {checkIn, checkOut } });
 
 };
-
 
     const sortedReviews = Object.keys(reviews).map(reviewId => {
       return reviews[reviewId];
@@ -95,7 +95,8 @@ function SpotDetails() {
       if (!spotData ) {
         return <div>Loading...</div>;
     }
- 
+
+
     const curUserId = session.user?.id ?? null;
     const spotOwnerId = spotData.ownerId
     let reviewMatchCurUserId = false;
@@ -106,6 +107,7 @@ function SpotDetails() {
         break; 
     }
   }  
+ 
 
   function formatDate(dateString) {
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -148,7 +150,7 @@ function SpotDetails() {
       
         <div className="spot-details">
     
-
+      <MapComponent lat={spotData.lat} lng ={spotData.lng}></MapComponent>
         <h2>{spotData.name}</h2>
         <p>{spotData.address}, {spotData.state},  {spotData.country}</p>
         <div className='images'>
@@ -251,7 +253,9 @@ function SpotDetails() {
         
         {reviewCount == 0 && !notLogIn && !dontShowButton &&  <h2>Be the first to post a review! </h2> }
         </div>
-    
+
+        <div id="map" className="spot-map"></div>
+
     </div>
 );
 

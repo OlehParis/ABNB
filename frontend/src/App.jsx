@@ -13,12 +13,14 @@ import ManageReviews from './components/SpotDetails/ManageReviews';
 import RequestToBook from './components/SpotDetails/RequestToBook';
 import YourBookings from './components/Spots/YourBookings';
 
+
 function App() {
   const dispatch = useDispatch();
   const spots = useSelector(state => state.spots.data);
   const reviews = useSelector(state => state.reviews.data)
   const [isLoaded, setIsLoaded] = useState(false);
-  
+ 
+ 
 
   useEffect(() => {
     dispatch(sessionActions.restoreUser()).then(() => {

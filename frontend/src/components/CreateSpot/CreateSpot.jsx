@@ -1,14 +1,21 @@
-import { useState } from 'react';
+// import { GooglePlacesAutocomplete } from 'react-google-autocomplete';
+// import Autocomplete from "react-google-autocomplete";
+import { useState} from 'react';
 import './CreateSpot.css';
 import { fetchNewSpot } from '../../store/spots';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import useGoogle from 'react-google-autocomplete/lib/usePlacesAutocompleteService';
 
 
 const CreateSpot = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const [errors, setErrors] = useState({});
+
+  
+  const [placeSelected, setPlaceSelected] = useState(false);
+  // const apiKey = process.env.REACT_APP_GOOGLE_PLACES_API_KEY;
   const [formData, setFormData] = useState({
     address: '',
     city: '',
@@ -34,6 +41,58 @@ const CreateSpot = () => {
     const { name, value } = e.target;
       setFormData({ ...formData, [name]: value });
   };
+
+  const {
+    placesService,
+    placePredictions,
+    getPlacePredictions,
+    isPlacePredictionsLoading
+  } = useGoogle({
+    debounce: 200,
+    language: 'en',
+    apiKey: process.env.REACT_APP_GOOGLE_PLACES_API_KEY
+  });
+
+
+  const handlePlaceSelected = (place) => {
+    // Extracting place details
+   
+    const { formatted_address, address_components, geometry } = place;
+    const { lat, lng } = geometry.location;
+ 
+    // Initialize city, state, and country
+    let city = '';
+    let state = '';
+    let country = '';
+  
+    // Loop through address components to find city, state, and country
+    address_components.forEach(component => {
+      if (component.types.includes('locality')) {
+        city = component.long_name;
+    
+      }
+      if (component.types.includes('administrative_area_level_1')) {
+        state = component.long_name;
+      }
+      if (component.types.includes('country')) {
+        country = component.long_name;
+      }
+    });
+  
+    // Update formData with the extracted data
+    setFormData({
+      ...formData,
+      address: formatted_address.split(',')[0],
+      city: city,
+      state: state,
+      country: country,
+      lat: lat(),
+      lng: lng(),
+    });
+    document.getElementById('address').value = formatted_address.split(',')[0];
+    setPlaceSelected(true)
+};
+
 
   const validateForm = () => {
     let newErrors = {};
@@ -99,6 +158,8 @@ const CreateSpot = () => {
     <div className='createspot-container'>
     <div className="create-spot-form">
       <h2>Create a new Spot</h2>
+     
+     
       <h4>Where&apos;s your place located?</h4>
       <p>Guests will only get your exact address once they booked a reservation.</p>
       <form onSubmit={handleSubmit}>
@@ -107,8 +168,42 @@ const CreateSpot = () => {
         {errors.country && <div className="error">{errors.country}</div>}
 
         <label htmlFor="address">Street Address</label>
-        <input type="text" placeholder='Address' id="address" name="address" value={formData.address} onChange={handleChange} />
+        <div className="eag-mb-20">
+        <input
+        id="address" name="address" 
+          type="text"
+          placeholder="Address"
+          onChange={(e) => {
+            getPlacePredictions({
+              input: e.target.value
+            });
+          
+          }}
+        />
+
+        {!isPlacePredictionsLoading &&
+          placePredictions.map((item) => (
+            <div
+            key={item.place_id}
+              onClick={() => {
+                placesService?.getDetails(
+                  { placeId: item.place_id },
+                  (placeDetails) => handlePlaceSelected(placeDetails) 
+                );
+              }}>
+            {!placeSelected && item.description}
+            </div>
+          ))}
+      </div>
         {errors.address && <div className="error">{errors.address}</div>}
+        {/* <Autocomplete
+            style={{ width: '100%' , padding: '10px ' }}
+            apiKey='AIzaSyA8tSt88OJLJVwahVNRbDaAC35KNsFKGsw'
+            onPlaceSelected={handlePlaceSelected}
+            // componentRestrictions={{ country: "us" }}
+            types={['geocode','establishment']}
+          /> */}
+   
         
         <div className="city-state">
     <div className="input-group" id='state1' style={{width:'100%'}}>
@@ -146,7 +241,7 @@ const CreateSpot = () => {
         {errors.description && <div className="error">{errors.description}</div>}
           
          <h4>Create a title for your spot</h4> 
-         <p>Catch guests`&apos; attention with a spot title that highlights what makes your place special.</p>
+         <p>Catch guest&apos;s attention with a spot title that highlights what makes your place special.</p>
         <label htmlFor="title"></label>
         <input type="text" placeholder='Name of your spot' id="name" name="name" value={formData.name} onChange={handleChange} />
         {errors.name && <div className="error">{errors.name}</div>}
