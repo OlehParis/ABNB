@@ -40,7 +40,7 @@ function SignupFormModal() {
       confirmPassword: "Confirm Password field must be the same as the Password field"
     });
   };
-  const isDisabled = email.trim() === "" || username.trim().length < 4 || firstName.trim() === "" || lastName.trim() === "" || password.trim().length < 6 || confirmPassword.trim() === "";
+  const isDisabled = email.trim() === "" || username.trim().length < 4 || firstName.trim() === "" || lastName.trim() === "" || password.trim().length < 6 || confirmPassword.trim() === "" || confirmPassword.trim() != password.trim();
   
   return (
    <div className='modal-signup'>

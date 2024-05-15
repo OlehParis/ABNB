@@ -37,7 +37,7 @@ function ManageSpots() {
             spot.ownerId === curUserId &&
             <div key={spot.id} className="spot">
               <div className="tooltip"  >
-                <span className="tooltiptext">{spot.name}</span>
+                <span className="tooltiptext" >{spot.name} </span>
                 <img className='spot-img'  src={spot.previewImage} alt={spot.name} onClick={() => handleClick(spot.id)} />
                 <div className='addressAvgRating'>
                   <p>{spot.city}, {spot.state}</p>

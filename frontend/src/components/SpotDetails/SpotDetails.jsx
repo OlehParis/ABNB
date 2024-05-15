@@ -51,7 +51,7 @@ function SpotDetails() {
   
   const sortedR = sortedReviews.slice().sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
-   console.log(checkIn , 'lime 54444444')
+
     useEffect(() => {
         dispatch(fetchSpot(spotId));
       }, [dispatch, spotId]);
@@ -144,7 +144,7 @@ function SpotDetails() {
                     <p className='rating'><FaStar color="#ffc107"/> 
                     {Number(avgStars) ? ` ${avgStars}` : ' New'}   
                     {reviewCount !== 0 && ( reviewCount ? ` · ${reviewCount}` : ' · 0' ) }
-                    {reviewCount !== 0 && (reviewCount === 1 ? ' review' : ' reviews')}</p>
+                    {reviewCount !== 0 && (reviewCount === 1 ? ' Review' : ' Reviews')}</p>
                     </div>
                     <div className='bookingContainer'>
                     <div>check-in<OpenModalButton 
@@ -189,7 +189,7 @@ function SpotDetails() {
   
   {Number(avgStars) ? ` ${avgStars}` : ' New'}  
   {reviewCount !== 0 && ( reviewCount ? ` · ${reviewCount}` : ' · 0' ) }
-  {reviewCount !== 0 && (reviewCount === 1 ? ' review' : ' reviews')}
+  {reviewCount !== 0 && (reviewCount === 1 ? ' Review' : ' Reviews')}
                                        
         </h3> 
         <div id='postReviewButton'>
