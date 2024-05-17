@@ -10,7 +10,7 @@ import DeleteReviewModal from '../DeleteReviewModal/DeleteReviewModal';
 // import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css'
 import CalendarModal from './ModalCalendar';
-
+import { calculateStarsAndReviews } from '../../../utilities/utils';
 
 function StarRating({ stars }) {
     const totalStars = 5;
@@ -81,37 +81,31 @@ function SpotDetails() {
     return `${month} ${year}`;
   }
 
-  // function formatDateBooking(dateBookings) {
-  //   const year = dateBookings.getFullYear();
-  //   const month = String(dateBookings.getMonth() + 1).padStart(2, '0'); // Adding 1 because months are zero-based
-  //   const day = String(dateBookings.getDate()).padStart(2, '0');
-  
-  //   return `${year}-${month}-${day}`;
-  // }
+
     
     const dontShowButton = reviewMatchCurUserId || curUserId === spotOwnerId;
     const notLogIn = session.user === null;
 
-    function calculateStarsAndReviews(reviews, spotId) {
-      let totalStars = 0;
-      let reviewCount = 0;
+// function calculateStarsAndReviews(reviews, spotId) {
+//       let totalStars = 0;
+//       let reviewCount = 0;
     
-      Object.keys(reviews).forEach(reviewId => {
-        const review = reviews[reviewId];
-        if (Number(review.spotId) === Number(spotId)) {
-          totalStars += review.stars;
-          reviewCount++;
-        }
-      });
+//       Object.keys(reviews).forEach(reviewId => {
+//         const review = reviews[reviewId];
+//         if (Number(review.spotId) === Number(spotId)) {
+//           totalStars += review.stars;
+//           reviewCount++;
+//         }
+//       });
 
-      const avgStarss = reviewCount > 0 ? totalStars / reviewCount : 0;
-      const avgStars = (Math.round(avgStarss * 10) / 10).toFixed(1);
+//       const avgStarss = reviewCount > 0 ? totalStars / reviewCount : 0;
+//       const avgStars = (Math.round(avgStarss * 10) / 10).toFixed(1);
       
-      return {
-        avgStars: avgStars,
-        reviewCount: reviewCount
-      };
-    }
+//       return {
+//         avgStars: avgStars,
+//         reviewCount: reviewCount
+//       };
+//     }
     
     const { avgStars, reviewCount } = calculateStarsAndReviews(reviews, spotId);
     
