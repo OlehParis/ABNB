@@ -151,9 +151,9 @@ const spotsReducer = (state = initialState, action) => {
     case "FETCH_SPOTS_SUCCESS":{
       // Start the key from 1
       let nextState = {};
-      Object.entries(action.payload).forEach(([key, value], index) => {
+      Object.entries(action.payload).forEach(([key, value]) => {
         if (key !== "page" && key !== "size") {
-          nextState[index + 1] = value;
+          nextState[value.id] = value;
         }
       });
       return {
