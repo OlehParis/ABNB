@@ -46,15 +46,6 @@ module.exports = {
     { url: "https://images.pexels.com/photos/221540/pexels-photo-221540.jpeg?auto=compress&cs=tinysrgb&w=800",
     spotId:3,
     preview: true},
-    { url: "https://images.pexels.com/photos/280222/pexels-photo-280222.jpeg?auto=compress&cs=tinysrgb&w=600",
-    spotId:4,
-    preview: true },
-    { url: "https://images.pexels.com/photos/206172/pexels-photo-206172.jpeg?auto=compress&cs=tinysrgb&w=800",
-    spotId:5,
-    preview: true },
-    { url: "https://images.pexels.com/photos/1396132/pexels-photo-1396132.jpeg?auto=compress&cs=tinysrgb&w=600",
-    spotId:5,
-    preview: false },
     
   ],{ validate: true } );
     },

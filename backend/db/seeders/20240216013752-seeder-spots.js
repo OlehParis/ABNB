@@ -36,18 +36,7 @@ module.exports = {
           description: "Step outside to the private balcony and bask in the sights and sounds of the city below. Sip your morning coffee as you watch the sunrise over the skyline or unwind with a glass of wine ",
           price: "343",
         },
-        {
-          ownerId: "3",
-          address: "122 Late st",
-          city: "Miami",
-          state: "Florida",
-          country: "USA",
-          lat: "37.7645358",
-          lng: "-7.7645358",
-          name: "Villa Billagio",
-          description: "Welcome to your stylish urban retreat nestled in the vibrant heart of the city! ",
-          price: "1000",
-        },
+      
         {
           ownerId: "1",
           address: "122 Main st",
@@ -60,18 +49,7 @@ module.exports = {
           description: "The open-concept layout seamlessly transitions into the gourmet kitchen, where culinary enthusiasts will delight ",
           price: "133",
         },
-        {
-          ownerId: "2",
-          address: "994 Chare St",
-          city: "Arlen",
-          state: "DC",
-          country: "USA",
-          lat: "37.7645358",
-          lng: "-37.7645358",
-          name: "Big House",
-          description: "Retreat to the tranquil bedroom sanctuary, featuring a luxurious king-sized bed dressed in premium linens and sumptuous bedding.",
-          price: "140",
-        },
+     
       ],
       { validate: true }
     );
