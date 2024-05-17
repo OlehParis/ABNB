@@ -132,6 +132,7 @@ const reviewReducer = (state = initialState, action) => {
       })
       return newState;
     }
+    
     case "FETCH_ALL_REVIEWS": {
       return {
         ...state,
