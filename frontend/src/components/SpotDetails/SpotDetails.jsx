@@ -4,32 +4,16 @@ import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { fetchSpot } from '../../store/spots';
 import './SpotDetails.css';
-import { FaStar , FaRegStar} from 'react-icons/fa';
+import { FaStar } from 'react-icons/fa';
 import OpenModalButton from '../OpenModalButton/OpenModalButton'
 import ReviewFromModal from '../ReviewFromModal/ReviewFromModal'
 import DeleteReviewModal from '../DeleteReviewModal/DeleteReviewModal';
 import CalendarModal from './ModalCalendar';
 import { fetchBookings } from '../../store/bookings';
-// import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { calculateStarsAndReviews, formatDate , StarRating} from '../../../utilities/utils';
 import MapComponent from './Map';
 
-function StarRating({ stars }) {
-    const totalStars = 5;
-  
-    const filledStars = Array.from({ length: stars }, (_, index) => (
-      <FaStar key={index} color="#ffc107" />
-    ));
-  
-    const emptyStars = Array.from({ length: totalStars - stars }, (_, index) => (
-      <FaRegStar key={index} color="#e4e5e9" />
-    ));
-    return (
-      <div>
-        {filledStars}
-        {emptyStars}
-      </div>
-    );
-  }
+
 
 function SpotDetails() {
     const { spotId } = useParams();
@@ -102,48 +86,15 @@ function SpotDetails() {
     let reviewMatchCurUserId = false;
       for (let reviewId in reviews) {
     const review = reviews[reviewId];
-    if ( Number(review.spotId) === Number(spotId) && review.userId === curUserId ) {
+       if ( Number(review.spotId) === Number(spotId) && review.userId === curUserId ) {
         reviewMatchCurUserId = true;
         break; 
-    }
-  }  
- 
-
-  function formatDate(dateString) {
-    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    const date = new Date(dateString);
-    
-    const month = months[date.getMonth()];
-    const year = date.getFullYear();
-  
-    return `${month} ${year}`;
-  }
+       }
+      }  
 
     const dontShowButton = reviewMatchCurUserId || curUserId === spotOwnerId;
     const onwerOfSpot = curUserId === spotOwnerId;
     const notLogIn = session.user === null;
-
-    function calculateStarsAndReviews(reviews, spotId) {
-      let totalStars = 0;
-      let reviewCount = 0;
-    
-      Object.keys(reviews).forEach(reviewId => {
-        const review = reviews[reviewId];
-        if (Number(review.spotId) === Number(spotId)) {
-          totalStars += review.stars;
-          reviewCount++;
-        }
-      });
-
-      const avgStarss = reviewCount > 0 ? totalStars / reviewCount : 0;
-      const avgStars = (Math.round(avgStarss * 10) / 10).toFixed(1);
-      
-      return {
-        avgStars: avgStars,
-        reviewCount: reviewCount
-      };
-    }
-    
     const { avgStars, reviewCount } = calculateStarsAndReviews(reviews, spotId);
      
     return (

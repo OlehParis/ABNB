@@ -1,16 +1,27 @@
-import { useSelector } from 'react-redux';
+
+import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom'
+import { useEffect } from 'react';
 import './Spots.css';
 import { FaStar } from 'react-icons/fa';
+import { fetchSpots } from '../../store/spots';
+
 
 function SpotCard() {
-
+    const dispatch = useDispatch()
     const navigate = useNavigate();
     const spotsData = useSelector(state => state.spots);
+    const reviews = useSelector(state => state.reviews)
+
+    useEffect(() => {
+       dispatch(fetchSpots())
+    }, [dispatch, reviews]); 
+
     const handleClick = (id) => {
         navigate(`/spots/${id}`); 
       };
-    
+
+
    if(spotsData){
     return (
         <div className="spot-card" >
