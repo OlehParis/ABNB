@@ -93,51 +93,24 @@ const CreateSpot = () => {
     setPlaceSelected(true)
 };
 
+const validateForm = () => {
+  const newErrors = {};
+  if (formData.description.length < 30) newErrors.description = "Description must be at least 30 characters long.";
+  if (formData.country.length < 1) newErrors.country = "Country is required";
+  if (formData.address.length < 1) newErrors.address = "Address is required";
+  if (formData.city.length < 1) newErrors.city = "City is required";
+  if (formData.state.length < 1) newErrors.state = "State is required";
+  if (formData.name.length < 1) newErrors.name = "Name is required";
+  if (formData.price < 1) newErrors.price = "Price is required";
+  if (formData.url.length < 1) newErrors.url = "Preview Image is required";
+  if (!hasImageExtension(formData.url)) newErrors.urlFormat = "Preview Image has to be image format";
+  if (!(parseFloat(formData.lat) > -90 && parseFloat(formData.lat) < 90)) newErrors.lat = "Latitude must be between -90 and 90";
+  if (formData.lat.length < 1) newErrors.lat2 = "Latitude is required";
+  if (!(parseFloat(formData.lng) > -180 && parseFloat(formData.lng) < 180)) newErrors.lng = "Longitude must be between -180 and 180";
+  if (formData.lng.length < 1) newErrors.lng2 = "Longitude is required";
 
-  const validateForm = () => {
-    let newErrors = {};
-    if (formData.description.length < 30) {
-      newErrors.description = "Description must be at least 30 characters long.";
-    }
-    if(formData.country.length < 1){
-      newErrors.country = "Country is required"
-    }
-    if(formData.address.length < 1){
-      newErrors.address = "Address is required"
-    }
-    if(formData.city.length < 1){
-      newErrors.city = "City is required"
-    }
-    if(formData.state.length < 1){
-      newErrors.state = "State is required"
-    }
-    if(formData.name.length < 1){
-      newErrors.name = "Name is required"
-    }
-    if(formData.price < 1){
-      newErrors.price = "Price is required"
-    }
-    if(formData.url.length < 1){
-      newErrors.url = "Preview Image is required"
-    }
-    if(!hasImageExtension(formData.url)){
-      newErrors.urlFormat = "Preview Image has to be image format"
-    }
-    if (!(parseFloat(formData.lat) > -90 && parseFloat(formData.lat) < 90)) {
-      newErrors.lat = "Latitude must be between -90 and 90"
-    }
-    if (formData.lat.length <1 ) {
-      newErrors.lat2 = "Latitude is required"
-    }
-    if(!(parseFloat(formData.lng) > -180 && parseFloat(formData.lng) < 180)){
-      newErrors.lng = "Longitude must be between -180 and 180"
-    }
-    if (formData.lng.length <1 ) {
-      newErrors.lng2 = "Longitude is required"
-    }
-    return newErrors;
-  };
-  
+  return newErrors;
+};
  
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -196,13 +169,7 @@ const CreateSpot = () => {
           ))}
       </div>
         {errors.address && <div className="error">{errors.address}</div>}
-        {/* <Autocomplete
-            style={{ width: '100%' , padding: '10px ' }}
-            apiKey='AIzaSyA8tSt88OJLJVwahVNRbDaAC35KNsFKGsw'
-            onPlaceSelected={handlePlaceSelected}
-            // componentRestrictions={{ country: "us" }}
-            types={['geocode','establishment']}
-          /> */}
+  
    
         
         <div className="city-state">
