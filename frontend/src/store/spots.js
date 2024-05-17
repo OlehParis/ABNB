@@ -154,7 +154,7 @@ const spotsReducer = (state = initialState, action) => {
       let nextState = {};
       Object.entries(action.payload).forEach(([key, value], index) => {
         if (key !== "page" && key !== "size") {
-          nextState[index + 1] = value;
+          nextState[value.id] = value;
         }
       });
       return {
