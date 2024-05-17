@@ -3,48 +3,25 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchSpot } from '../../store/spots';
 import './SpotDetails.css';
-import { FaStar , FaRegStar} from 'react-icons/fa';
+import { FaStar } from 'react-icons/fa';
 import OpenModalButton from '../OpenModalButton/OpenModalButton'
 import ReviewFromModal from '../ReviewFromModal/ReviewFromModal'
 import DeleteReviewModal from '../DeleteReviewModal/DeleteReviewModal';
-// import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css'
 import CalendarModal from './ModalCalendar';
-import { calculateStarsAndReviews } from '../../../utilities/utils';
+import { calculateStarsAndReviews, formatDate , StarRating} from '../../../utilities/utils';
 
-function StarRating({ stars }) {
-    const totalStars = 5;
-  
-    const filledStars = Array.from({ length: stars }, (_, index) => (
-      <FaStar key={index} color="#ffc107" />
-    ));
-  
-    const emptyStars = Array.from({ length: totalStars - stars }, (_, index) => (
-      <FaRegStar key={index} color="#e4e5e9" />
-    ));
-    return (
-      <div>
-        {filledStars}
-        {emptyStars}
-      </div>
-    );
-  }
 
 function SpotDetails() {
-
     const { spotId } = useParams();
     const dispatch = useDispatch()
     const spotData = useSelector(state => state.spots[spotId]);
     const session = useSelector(state => state.session)
     const reviews = useSelector(state => state.reviews)
-    // const [date, setDate] = useState(new Date());
     const [checkIn, setCheckIn] = useState(null);
     const [checkOut, setCheckOut] = useState(null);
  
-  //  let handleDatesSelected = (checkInDate, checkOutDate) => {
-  //     setCheckIn(checkInDate);
-  //     setCheckOut(checkOutDate);
-  // };
+
     const sortedReviews = Object.keys(reviews).map(reviewId => {
       return reviews[reviewId];
   });
@@ -71,42 +48,8 @@ function SpotDetails() {
     }
   }  
 
-  function formatDate(dateString) {
-    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    const date = new Date(dateString);
-    
-    const month = months[date.getMonth()];
-    const year = date.getFullYear();
-  
-    return `${month} ${year}`;
-  }
-
-
-    
     const dontShowButton = reviewMatchCurUserId || curUserId === spotOwnerId;
     const notLogIn = session.user === null;
-
-// function calculateStarsAndReviews(reviews, spotId) {
-//       let totalStars = 0;
-//       let reviewCount = 0;
-    
-//       Object.keys(reviews).forEach(reviewId => {
-//         const review = reviews[reviewId];
-//         if (Number(review.spotId) === Number(spotId)) {
-//           totalStars += review.stars;
-//           reviewCount++;
-//         }
-//       });
-
-//       const avgStarss = reviewCount > 0 ? totalStars / reviewCount : 0;
-//       const avgStars = (Math.round(avgStarss * 10) / 10).toFixed(1);
-      
-//       return {
-//         avgStars: avgStars,
-//         reviewCount: reviewCount
-//       };
-//     }
-    
     const { avgStars, reviewCount } = calculateStarsAndReviews(reviews, spotId);
     
     return (
