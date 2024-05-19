@@ -35,6 +35,11 @@
   justify-self: flex-end;
   align-self: flex-end;
   margin: 0px 0px 10px 10px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 15px;
+}
+.imagesButton:hover {
+  transform: scale(1.1);
 }
 
 .reviewButtons button:hover {
