@@ -41,15 +41,5 @@ router.delete("/:imageId", requireAuth, async (req, res, next) => {
   });
 });
 
-//test route get Image with associated Spot by imageId
-// router.get("/:imageId", async (req, res, next) => {
-//   const { imageId } = req.params;
-//   const imageByPk = await SpotImage.findAll({
-//     where: { id: imageId },
-//     include: [Spot],
-//   });
-//   console.log(imageByPk);
 
-//   res.json(imageByPk);
-// });
 module.exports = router;

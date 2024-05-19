@@ -228,7 +228,7 @@ router.get("/current", requireAuth, async (req, res, next) => {
   const getSpotsRes = allSpots.map((spot) => {
     let totalStars = 0;
     let avgRating = null;
-    console.log(spot);
+
     if (spot.Reviews && spot.Reviews.length > 0) {
       spot.Reviews.forEach((review) => {
         totalStars += review.stars;
@@ -519,6 +519,23 @@ router.post("/:spotId/images", requireAuth, async (req, res, next) => {
   }
   return res.status(403).json({ message: "Forbidden" });
 });
+//Get All images of the Spot's id
+
+router.get("/:spotId/images",  async (req, res, next) => {
+
+  const { spotId } = req.params;
+  
+  const spot = await SpotImage.findAll({
+    where: { spotId: spotId }});
+  if (!spot) {
+    res.status(404).json({
+      message: "Spot couldn't be found",
+    });
+  }
+
+
+  return res.json(spot);
+});
 
 // Get all Reviews by a Spot's id
 // Returns all the reviews that belong to a spot specified by id.
@@ -595,7 +612,7 @@ router.post(
 
     //Check if the Spot exists
     const findSpot = await Spot.findByPk(spotId);
-    console.log(findSpot);
+  
     if (!findSpot) {
       return res.status(404).json({
         message: "Spot couldn't be found",
@@ -701,7 +718,7 @@ router.post(
       if ((s <= be && e > bs) || (bs <= e && be > s)) {
         hasConflict = true;
         if ((s >= bs && s <= be) || (s < bs && e > be)) {
-          console.log(s === bs);
+       
           conflicts.startDate = "Start date conflicts with an existing booking";
         }
         if ((e >= bs && e <= be) || (e > be && s < bs)) {
@@ -717,7 +734,7 @@ router.post(
       });
     }
 
-    // console.log(formattedStartDate);
+
 
     // Create new booking
     const newBooking = await Booking.create({

@@ -11,6 +11,7 @@ import DeleteReviewModal from '../DeleteReviewModal/DeleteReviewModal';
 import CalendarModal from './ModalCalendar';
 import { fetchBookings } from '../../store/bookings';
 import { calculateStarsAndReviews, formatDate , StarRating} from '../../../utilities/utils';
+
 import MapComponent from './Map';
 
 
@@ -26,13 +27,13 @@ function SpotDetails() {
     const [checkIn, setCheckIn] = useState(null);
     const [checkOut, setCheckOut] = useState(null);
     const navigate = useNavigate();
+
     const handleReserveClick = () => {
-  
- 
-  navigate('./booking',  { state: {checkIn, checkOut } });
-
+        navigate('./booking',  { state: {checkIn, checkOut } });
 };
-
+  const handleShowAllPhotos = () => {
+        navigate('./gallery');
+    };
     const sortedReviews = Object.keys(reviews).map(reviewId => {
       return reviews[reviewId];
   });
@@ -97,7 +98,7 @@ function SpotDetails() {
     const notLogIn = session.user === null;
     const { avgStars, reviewCount } = calculateStarsAndReviews(reviews, spotId);
      
-    return (
+    return ( 
       
         <div className="spot-details">
     
@@ -105,15 +106,15 @@ function SpotDetails() {
         <h2>{spotData.name}</h2>
         <p>{spotData.address}, {spotData.state},  {spotData.country}</p>
         <div className='images'>
-            
-        {spotData && spotData.SpotImages && spotData.SpotImages.length > 0 && (
-    <img className='mainImage' src={spotData.SpotImages[0].url} alt={spotData.name} />
-)}
-            <div className="image-gallery">
-                {spotData.SpotImages && spotData.SpotImages.map((image, index) => (
-                    <img key={index} src={image.url} alt={`Image ${index + 1}`} />
-                ))}
-            </div>
+          {spotData.SpotImages && Object.values(spotData.SpotImages).map(spot => (
+            spot.preview ? <img key={spot.id} className='mainImage' src={spot.url} alt={`Spot ${spot.id}`} /> : null
+              ))}
+          <div className="image-gallery">
+    {spotData.SpotImages && Object.entries(spotData.SpotImages).filter(([, image]) => image.preview === false).slice(0, 4).map(([, image], index) => (
+        <img key={index} className='gridImg' src={image.url} alt={`Image ${index + 1}`} />
+    ))}
+</div>
+            <button className='imagesButton' onClick={handleShowAllPhotos} >Show all photos</button>
         </div>
       <div className="details">
             <div className='info'>

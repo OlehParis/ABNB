@@ -6,6 +6,7 @@ import { fetchUserBookings } from '../../store/bookings';
 import OpenModalButton from '../OpenModalButton/OpenModalButton';
 import ModalCalendar from '../SpotDetails/ModalCalendar'
 import DeleteReservation from '../DeleteReviewModal/DeleteReservation';
+
 function YourBookings() {
     const dispatch = useDispatch();
     // const navigate = useNavigate();
@@ -16,6 +17,7 @@ function YourBookings() {
     
     const spotsData = useSelector(state => state.bookings)
 
+    
     // const handleClick = (id) => {
     //     navigate(`/spots/${id}`); 
     //   };
@@ -27,51 +29,50 @@ function YourBookings() {
         return formattedDate;
     }
  
-    
-   if(spotsData ){
-    return (
-        <>
-            <h1>Your Bookings</h1>
-            <div className="spot-card">
-                {Object.values(spotsData).map((spot) => {
-                    if (spot.Spot) {
-                        return (
-                            <div key={spot.id} className="spot">
-                                <div className="tooltip" >
-                                    <span className="tooltiptext">{spot.Spot.name}</span>
-                                    <img className='spot-img' src={spot.Spot.previewImage} alt={spot.name}/>
-                                    <div className='address-price'>
-                                        <div>{spot.Spot.city}, {spot.Spot.state}</div>
-                                    <div >${spot.Spot.price} night</div>
-                                    </div>
-                                    <div className='address-price'>
-                                    <div>Dates: {formatDate(spot.startDate)} - {formatDate(spot.endDate)}</div>
-                                    <div>Total: ${spot.totalPrice}</div>
-                                    </div>
-                                    <div className='address-price'>
-                                    
-                                    <OpenModalButton
-                                  buttonText="Change Reservation"
-                                  modalComponent={<ModalCalendar />}
-                              />
-                              <OpenModalButton
-                                  buttonText="Cancel"
-                                  modalComponent={<DeleteReservation bookingId = {spot.id} 
-                                  
-                                  />}
-                              />
+   
+    if (spotsData && Object.keys(spotsData).length > 0) {
+        return (
+            <>
+                <h1>Your Bookings</h1>
+                <div className="spot-card">
+                    {Object.values(spotsData).map((spot) => {
+                        if (spot.Spot) {
+                            return (
+                                <div key={spot.id} className="spot">
+                                    <div className="tooltip">
+                                        <span className="tooltiptext">{spot.Spot.name}</span>
+                                        <img className="spot-img" src={spot.Spot.previewImage} alt={spot.Spot.name} />
+                                        <div className="address-price">
+                                            <div>{spot.Spot.city}, {spot.Spot.state}</div>
+                                            <div>${spot.Spot.price} per night</div>
+                                        </div>
+                                        <div className="address-price">
+                                            <div>Dates: {formatDate(spot.startDate)} - {formatDate(spot.endDate)}</div>
+                                            <div>Total: ${spot.totalPrice}</div>
+                                        </div>
+                                        <div className="address-price">
+                                            <OpenModalButton
+                                                buttonText="Change Reservation"
+                                                modalComponent={<ModalCalendar />}
+                                            />
+                                            <OpenModalButton
+                                                buttonText="Cancel"
+                                                modalComponent={<DeleteReservation bookingId={spot.id} />}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        );
-                    } else {
-                        return null; 
-                    }
-                })}
-            </div>
-        </>
-    );
-}
+                            );
+                        } else {
+                            return null;
+                        }
+                    })}
+                </div>
+            </>
+        );
+    } else {
+        return <h2>You currently don&apos;t have any bookings</h2>;
+    }
 }
 
 export default YourBookings;

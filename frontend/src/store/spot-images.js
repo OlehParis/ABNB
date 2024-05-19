@@ -1,37 +1,41 @@
-// import { csrfFetch } from "./csrf";
+import { csrfFetch } from "./csrf";
 
-// export const getSpotImages = (spotId) => ({
-//   type: "FETCH_SPOT_BYID",
-//   payload: spotId,
-// });
+export const getSpotImages = (spotId) => ({
+  type: "FETCH_IMAGES",
+  payload: spotId,
+});
 
-// export const fetchImages = (spotId) => {
-//   return async (dispatch) => {
-//     const res = await csrfFetch(`/api/spot-images/${spotId}`)
-//     if (!res.ok) {
-//       throw new Error("Failed to fetch spots");
-//     }
+export const fetchImages = (spotId) => {
+  return async (dispatch) => {
+    const res = await csrfFetch(`/api/spots/${spotId}/images`)
+    if (!res.ok) {
+      throw new Error("Failed to fetch spots");
+    }
+   
+    const imagesObj = await res.json();
+    console.log(imagesObj)
+    return  dispatch(getSpotImages({ id: spotId, images: imagesObj }));
+  }
+}
+
+const initialState = {};
+
+const imagesReducer = (state = initialState, action) => {
+    switch(action.type) {
+      case "FETCH_IMAGES": {
+        const {  images } = action.payload;
+        const newState = { ...state }
+        images.map((img)=> {
+            newState[img.id] = img
+        })
+        return newState
+      }
+      default:
+        return state; // Return the unchanged state for other action types
+    }
+  }
+  
+  export default imagesReducer;
+
+
  
-//     const imagesObj = await response.json();
-//     return dispatch(getSpotImages(imagesObj)); // Corrected dispatch
-//   }
-// }
-
-// const initialState = {};
-
-// const imagesReducer = (state = initialState, action ) => {
-//   switch(action.type) {
-//     case "FETCH_SPOT_BYID": {
-//       const spotId = action.payload.id;
-
-//       return {
-//         ...state,
-//         [spotId]: { ...state[spotId], ...action.payload },
-//       };
-//     }
-//     default:
-//       return state; // Need to handle other action types or return the state unchanged
-//   }
-// }
-
-// export default imagesReducer;

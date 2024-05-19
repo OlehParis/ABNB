@@ -12,7 +12,7 @@ import EditSpot from './components/CreateSpot/EditSpot';
 import ManageReviews from './components/SpotDetails/ManageReviews';
 import RequestToBook from './components/SpotDetails/RequestToBook';
 import YourBookings from './components/Spots/YourBookings';
-
+import ImageGallery from './components/SpotDetails/ImageGallery';
 
 function App() {
   const dispatch = useDispatch();
@@ -76,6 +76,10 @@ function App() {
         {
           path: "bookings/manage",
           element:  <YourBookings spot = {spots}/>
+        },
+        {
+          path: "spots/:spotId/gallery",
+          element:  <ImageGallery  />
         },
 
       ]

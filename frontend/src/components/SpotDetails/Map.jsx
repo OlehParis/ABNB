@@ -13,8 +13,7 @@ const MapComponent = ({ lat, lng }) => {
   const longitude = parseFloat(lng);
 
   const center = { lat: latitude, lng: longitude };
-  console.log(center)
-  console.log(typeof lat)
+
   if (isNaN(latitude) || isNaN(longitude)) {
     console.error('Invalid latitude or longitude');
     return <div>Invalid location data</div>;
