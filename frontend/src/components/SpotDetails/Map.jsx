@@ -1,40 +1,51 @@
-
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
-
+// MapComponent.js
+import { useEffect, useState } from 'react';
+import { GoogleMap, Marker } from '@react-google-maps/api';
+import { loadScript } from '../../../utilities/utils';
 
 const containerStyle = {
   width: '100%',
   height: '400px'
 };
 
-
 const MapComponent = ({ lat, lng }) => {
+  const [mapLoaded, setMapLoaded] = useState(false);
+  const [error, setError] = useState(null);
+
   const latitude = parseFloat(lat);
   const longitude = parseFloat(lng);
 
   const center = { lat: latitude, lng: longitude };
 
-  if (isNaN(latitude) || isNaN(longitude)) {
-    console.error('Invalid latitude or longitude');
-    return <div>Invalid location data</div>;
+  const apiK = process.env.REACT_APP_GOOGLE_PLACES_API_KEY;
+
+  useEffect(() => {
+    if (!window.google) {
+      loadScript(`https://maps.googleapis.com/maps/api/js?key=${apiK}`)
+        .then(() => setMapLoaded(true))
+        .catch(() => setError('Failed to load Google Maps API'));
+    } else {
+      setMapLoaded(true);
+    }
+  }, [apiK]);
+
+  if (error) {
+    return <div>{error}</div>;
   }
-  const apiK = process.env.REACT_APP_GOOGLE_PLACES_API_KEY
-  if (!apiK) {
-    console.error('Google Maps API key is missing');
-    return <div>Google Maps API key is missing</div>;
+
+  if (!mapLoaded) {
+    return <div>Loading map...</div>;
   }
-  return ( 
-    <LoadScript googleMapsApiKey={apiK}>
-      <GoogleMap
-        mapContainerStyle={containerStyle}
-        center={center}
-        zoom={13}
-      >
-        <Marker position={center} />
-      </GoogleMap>
-      
-    </LoadScript>
+
+  return (
+    <GoogleMap
+      mapContainerStyle={containerStyle}
+      center={center}
+      zoom={13}
+    >
+      <Marker position={center} />
+    </GoogleMap>
   );
-}
+};
 
 export default MapComponent;

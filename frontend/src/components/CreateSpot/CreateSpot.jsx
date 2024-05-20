@@ -141,34 +141,32 @@ const validateForm = () => {
         {errors.country && <div className="error">{errors.country}</div>}
 
         <label htmlFor="address">Street Address</label>
-        <div className="eag-mb-20">
-        <input
-        id="address" name="address" 
-          type="text"
-          placeholder="Address"
-          onChange={(e) => {
-            getPlacePredictions({
-              input: e.target.value
-            });
-          
-          }}
-        />
-
-        {!isPlacePredictionsLoading &&
-          placePredictions.map((item) => (
-            <div
-            key={item.place_id}
-              onClick={() => {
-                placesService?.getDetails(
-                  { placeId: item.place_id },
-                  (placeDetails) => handlePlaceSelected(placeDetails) 
-                );
-              }}>
-            {!placeSelected && item.description}
-            </div>
-          ))}
-      </div>
-        {errors.address && <div className="error">{errors.address}</div>}
+          <div className="eag-mb-20">
+            <input
+              id="address" name="address"
+              type="text"
+              placeholder="Address"
+              onChange={(e) => {
+                getPlacePredictions({
+                  input: e.target.value
+                });
+              }}
+            />
+            {!isPlacePredictionsLoading &&
+              placePredictions.map((item) => (
+                <div
+                  key={item.place_id}
+                  onClick={() => {
+                    placesService?.getDetails(
+                      { placeId: item.place_id },
+                      (placeDetails) => handlePlaceSelected(placeDetails)
+                    );
+                  }}>
+                  {!placeSelected && item.description}
+                </div>
+              ))}
+          </div>
+          {errors.address && <div className="error">{errors.address}</div>}
   
    
         

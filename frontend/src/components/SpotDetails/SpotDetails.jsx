@@ -102,7 +102,7 @@ function SpotDetails() {
       
         <div className="spot-details">
     
-      <MapComponent lat={spotData.lat} lng ={spotData.lng}></MapComponent>
+     
         <h2>{spotData.name}</h2>
         <p>{spotData.address}, {spotData.state},  {spotData.country}</p>
         <div className='images'>
@@ -207,7 +207,7 @@ function SpotDetails() {
         </div>
 
         <div id="map" className="spot-map"></div>
-
+        <MapComponent lat={spotData.lat} lng ={spotData.lng}></MapComponent>
     </div>
 );
 

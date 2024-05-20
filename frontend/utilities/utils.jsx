@@ -33,7 +33,7 @@ export function calculateStarsAndReviews(reviews, spotId) {
   }
 
 
-  export function StarRating({ stars }) {
+  export function StarRating({ stars }) { 
     const totalStars = 5;
   
     const filledStars = Array.from({ length: stars }, (_, index) => (
@@ -51,3 +51,21 @@ export function calculateStarsAndReviews(reviews, spotId) {
     );
   }
 
+  export function loadScript (url) {
+    return new Promise((resolve, reject) => {
+      const existingScript = document.querySelector(`script[src="${url}"]`);
+      if (existingScript) {
+        existingScript.addEventListener('load', resolve);
+        existingScript.addEventListener('error', reject);
+        return;
+      }
+  
+      const script = document.createElement('script');
+      script.src = url;
+      script.async = true;
+      script.defer = true;
+      script.onload = resolve;
+      script.onerror = reject;
+      document.body.appendChild(script);
+    });
+  };
