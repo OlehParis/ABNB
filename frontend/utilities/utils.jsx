@@ -1,4 +1,4 @@
-import { FaStar , FaRegStar} from 'react-icons/fa';
+
 
 export function calculateStarsAndReviews(reviews, spotId) {
     let totalStars = 0;
@@ -32,40 +32,21 @@ export function calculateStarsAndReviews(reviews, spotId) {
     return `${month} ${year}`;
   }
 
-
-  export function StarRating({ stars }) { 
-    const totalStars = 5;
-  
-    const filledStars = Array.from({ length: stars }, (_, index) => (
-      <FaStar key={index} color="#ffc107" />
-    ));
-  
-    const emptyStars = Array.from({ length: totalStars - stars }, (_, index) => (
-      <FaRegStar key={index} color="#e4e5e9" />
-    ));
-    return (
-      <div>
-        {filledStars}
-        {emptyStars}
-      </div>
-    );
-  }
-
   export function loadScript (url) {
     return new Promise((resolve, reject) => {
-      const existingScript = document.querySelector(`script[src="${url}"]`);
+      const existingScript = document.querySelector(`script[src="${url}"]`)
       if (existingScript) {
-        existingScript.addEventListener('load', resolve);
-        existingScript.addEventListener('error', reject);
+        existingScript.addEventListener('load', resolve)
+        existingScript.addEventListener('error', reject)
         return;
       }
   
-      const script = document.createElement('script');
-      script.src = url;
-      script.async = true;
-      script.defer = true;
-      script.onload = resolve;
-      script.onerror = reject;
-      document.body.appendChild(script);
-    });
-  };
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.defer = true
+      script.onload = resolve
+      script.onerror = reject
+      document.body.appendChild(script)
+    })
+  }

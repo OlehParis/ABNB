@@ -4,13 +4,13 @@ import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { fetchSpot } from '../../store/spots';
 import './SpotDetails.css';
-import { FaStar } from 'react-icons/fa';
+import { FaStar, FaRegStar } from 'react-icons/fa';
 import OpenModalButton from '../OpenModalButton/OpenModalButton'
 import ReviewFromModal from '../ReviewFromModal/ReviewFromModal'
 import DeleteReviewModal from '../DeleteReviewModal/DeleteReviewModal';
 import CalendarModal from './ModalCalendar';
 import { fetchBookings } from '../../store/bookings';
-import { calculateStarsAndReviews, formatDate , StarRating} from '../../../utilities/utils';
+import { calculateStarsAndReviews, formatDate } from '../../../utilities/utils';
 
 import MapComponent from './Map';
 
@@ -37,7 +37,23 @@ function SpotDetails() {
     const sortedReviews = Object.keys(reviews).map(reviewId => {
       return reviews[reviewId];
   });
+  function StarRating({ stars }) { 
+    const totalStars = 5;
   
+    const filledStars = Array.from({ length: stars }, (_, index) => (
+      <FaStar key={index} color="#ffc107" />
+    ));
+  
+    const emptyStars = Array.from({ length: totalStars - stars }, (_, index) => (
+      <FaRegStar key={index} color="#e4e5e9" />
+    ));
+    return (
+      <div>
+        {filledStars}
+        {emptyStars}
+      </div>
+    );
+  }
   const sortedR = sortedReviews.slice().sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
     useEffect(() => {
