@@ -4,17 +4,6 @@ import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { fetchSpot } from '../../store/spots';
 import './SpotDetails.css';
-<<<<<<< HEAD
-import { FaStar } from 'react-icons/fa';
-import OpenModalButton from '../OpenModalButton/OpenModalButton'
-import ReviewFromModal from '../ReviewFromModal/ReviewFromModal'
-import DeleteReviewModal from '../DeleteReviewModal/DeleteReviewModal';
-import 'react-calendar/dist/Calendar.css'
-import CalendarModal from './ModalCalendar';
-import { calculateStarsAndReviews, formatDate , StarRating} from '../../../utilities/utils';
-
-
-=======
 import { FaStar, FaRegStar } from 'react-icons/fa';
 import OpenModalButton from '../OpenModalButton/OpenModalButton'
 import ReviewFromModal from '../ReviewFromModal/ReviewFromModal'
@@ -26,27 +15,12 @@ import { calculateStarsAndReviews, formatDate } from '../../../utilities/utils';
 import MapComponent from './Map';
 
 
-
->>>>>>> googleAPI
 function SpotDetails() {
     const { spotId } = useParams();
     const dispatch = useDispatch()
     const spotData = useSelector(state => state.spots[spotId]);
     const session = useSelector(state => state.session)
     const reviews = useSelector(state => state.reviews)
-<<<<<<< HEAD
-    const [checkIn, setCheckIn] = useState(null);
-    const [checkOut, setCheckOut] = useState(null);
- 
-
-    const sortedReviews = Object.keys(reviews).map(reviewId => {
-      return reviews[reviewId];
-  });
-  
-  const sortedR = sortedReviews.slice().sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
-
-
-=======
     const bookings = useSelector(state => state.bookings)
     const [beError, setBeError] = useState(null);
     const [checkIn, setCheckIn] = useState(null);
@@ -81,7 +55,7 @@ function SpotDetails() {
   }
   const sortedR = sortedReviews.slice().sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
->>>>>>> googleAPI
+
     useEffect(() => {
         dispatch(fetchSpot(spotId));
       }, [dispatch, spotId]);

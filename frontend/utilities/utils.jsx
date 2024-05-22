@@ -1,9 +1,4 @@
 
-<<<<<<< HEAD
-import { FaStar , FaRegStar} from 'react-icons/fa';
-=======
->>>>>>> googleAPI
-
 export function calculateStarsAndReviews(reviews, spotId) {
     let totalStars = 0;
     let reviewCount = 0;
@@ -36,25 +31,7 @@ export function calculateStarsAndReviews(reviews, spotId) {
     return `${month} ${year}`;
   }
 
-<<<<<<< HEAD
 
-  export function StarRating({ stars }) {
-    const totalStars = 5;
-  
-    const filledStars = Array.from({ length: stars }, (_, index) => (
-      <FaStar key={index} color="#ffc107" />
-    ));
-  
-    const emptyStars = Array.from({ length: totalStars - stars }, (_, index) => (
-      <FaRegStar key={index} color="#e4e5e9" />
-    ));
-    return (
-      <div>
-        {filledStars}
-        {emptyStars}
-      </div>
-    );
-=======
   export function loadScript (url) {
     return new Promise((resolve, reject) => {
       const existingScript = document.querySelector(`script[src="${url}"]`)
@@ -72,5 +49,5 @@ export function calculateStarsAndReviews(reviews, spotId) {
       script.onerror = reject
       document.body.appendChild(script)
     })
->>>>>>> googleAPI
+
   }

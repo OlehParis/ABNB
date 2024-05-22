@@ -130,13 +130,10 @@ const validateForm = () => {
   return (
     <div className='createspot-container'>
     <div className="create-spot-form">
-<<<<<<< HEAD
+
       <h2>Create a New Spot</h2>
-=======
-      <h2>Create a new Spot</h2>
-     
-     
->>>>>>> googleAPI
+
+ 
       <h4>Where&apos;s your place located?</h4>
       <p>Guests will only get your exact address once they booked a reservation.</p>
       <form onSubmit={handleSubmit}>
