@@ -3,8 +3,8 @@
     grid-template-columns: repeat(4, minmax(250px, 1fr));
     column-count: 4;
     gap: 45px;
-    /* margin-right: 50px; */
-    /* row-gap: 40px; */
+    margin-right: 40px;
+    
     /* justify-content: center; */
     padding: 20px;
   justify-content: center;
@@ -12,6 +12,7 @@
   }
   .tooltip {
     display: inline-block;
+    
   }
   .addressAvgRating {
     display: flex;
@@ -118,4 +119,10 @@
   color: white;
   border: none;
   /* Add more styles as needed */
+}
+.address-price{
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
 }

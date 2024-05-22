@@ -10,13 +10,17 @@ import CreateSpot from './components/CreateSpot/CreateSpot';
 import ManageSpots from './components/Spots/ManageSpots'
 import EditSpot from './components/CreateSpot/EditSpot';
 import ManageReviews from './components/SpotDetails/ManageReviews';
+import RequestToBook from './components/SpotDetails/RequestToBook';
+import YourBookings from './components/Spots/YourBookings';
+import ImageGallery from './components/SpotDetails/ImageGallery';
 
 function App() {
   const dispatch = useDispatch();
   const spots = useSelector(state => state.spots.data);
   const reviews = useSelector(state => state.reviews.data)
   const [isLoaded, setIsLoaded] = useState(false);
-  
+ 
+ 
 
   useEffect(() => {
     dispatch(sessionActions.restoreUser()).then(() => {
@@ -64,6 +68,18 @@ function App() {
          {
           path: "reviews/current",
           element:  <ManageReviews review = {reviews}/>
+        },
+        {
+          path: "spots/:spotId/booking",
+          element:  <RequestToBook review = {reviews}/>
+        },
+        {
+          path: "bookings/manage",
+          element:  <YourBookings spot = {spots}/>
+        },
+        {
+          path: "spots/:spotId/gallery",
+          element:  <ImageGallery  />
         },
 
       ]

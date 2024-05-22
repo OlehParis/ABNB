@@ -10,7 +10,6 @@ function ManageReviews() {
     const dispatch = useDispatch();
     const reviewsById = useSelector(state => state.reviews);
     const session = useSelector(state => state.session)
-   
     const curUserId = session.user?.id ?? null;
     useEffect(() => {
         dispatch( allReviews()); 
@@ -31,7 +30,7 @@ function ManageReviews() {
        <div className="spot-details">
                 {Object.keys(reviewsById).map(reviewId => {
                     const review = reviewsById[reviewId];
-                   
+                   {console.log(review)}
                     if (review.userId === curUserId) {
                     return (
                         <div key={reviewId} >

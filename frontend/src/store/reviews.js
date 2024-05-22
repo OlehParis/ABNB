@@ -2,9 +2,9 @@ import { csrfFetch } from "./csrf";
 // import { fetchSpotByID } from "./spots";
 
 export const loadReviewData = (reviewsArr) => ({
-  type: 'LOAD_REVIEW_DATA',
+  type: "LOAD_REVIEW_DATA",
   payload: reviewsArr,
-})
+});
 
 export const fetchCreateRaviewById = (review) => ({
   type: "FETCH_CREATE_REVIEW_BYID",
@@ -15,16 +15,16 @@ export const UpdateReviewById = (review) => ({
   type: "UPDATE_REVIEW_BYID",
   payload: review,
 });
+
 export const fetchDeleteReview = (reviewId) => ({
   type: "FETCH_DELETE_REVIEW",
   payload: reviewId,
 });
+
 export const fetchAllReviews = (reviews) => ({
   type: "FETCH_ALL_REVIEWS",
   payload: reviews,
 });
-
-
 
 export const allReviews = () => {
   return async (dispatch) => {
@@ -34,18 +34,16 @@ export const allReviews = () => {
     }
     const data = await response.json();
     const normalizedData = {};
-    data.Reviews.forEach(review => {
+    data.Reviews.forEach((review) => {
       normalizedData[review.id] = review;
     });
 
-  console.log(normalizedData)
+    console.log(normalizedData);
     dispatch(fetchAllReviews(normalizedData));
   };
 };
 
-
-export const deleteReview = (reviewId ) => {
- 
+export const deleteReview = (reviewId) => {
   return async (dispatch) => {
     const response = await csrfFetch(`/api/reviews/${reviewId}`, {
       method: "DELETE",
@@ -56,7 +54,6 @@ export const deleteReview = (reviewId ) => {
 
     if (response.ok) {
       dispatch(fetchDeleteReview(reviewId));
-
     }
   };
 };
@@ -75,17 +72,15 @@ export const fetchSpotReview = (spot) => {
       throw new Error("Failed to create review");
     }
     const data = await response.json();
-    
+
     dispatch(fetchCreateRaviewById(data));
-
-
   };
 };
 
 export const fetchUpdateSpotReview = (review) => {
   return async (dispatch) => {
-    console.log(review)
-    const {reviewId} = review;
+    console.log(review);
+    const { reviewId } = review;
     const response = await csrfFetch(`/api/reviews/${reviewId}`, {
       method: "PUT",
       headers: {
@@ -98,10 +93,8 @@ export const fetchUpdateSpotReview = (review) => {
     }
     const data = await response.json();
     dispatch(UpdateReviewById(data));
-
   };
 };
-
 
 const initialState = {};
 
@@ -110,33 +103,32 @@ const reviewReducer = (state = initialState, action) => {
     case "FETCH_CREATE_REVIEW_BYID": {
       return {
         ...state,
-        [action.payload.id]: action.payload
+        [action.payload.id]: action.payload,
       };
     }
     case "UPDATE_REVIEW_BYID": {
       return {
         ...state,
-        [action.payload.id]: action.payload
+        [action.payload.id]: action.payload,
       };
     }
-    case "FETCH_DELETE_REVIEW":{
-        const newState = { ...state };
-        delete newState[action.payload];
-        return newState;
-        }
-    case 'LOAD_REVIEW_DATA' :{
-      const newState = {...state};
+    case "FETCH_DELETE_REVIEW": {
+      const newState = { ...state };
+      delete newState[action.payload];
+      return newState;
+    }
+    case "LOAD_REVIEW_DATA": {
+      const newState = { ...state };
       action.payload.map((rev) => {
-        newState[rev.id] = rev
-        
-      })
+        newState[rev.id] = rev;
+      });
       return newState;
     }
     
     case "FETCH_ALL_REVIEWS": {
       return {
         ...state,
-        ...action.payload
+        ...action.payload,
       };
     }
     default:

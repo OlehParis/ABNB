@@ -11,6 +11,7 @@ export const fetchSpotsSuccess = (spots) => ({
   type: "FETCH_SPOTS_SUCCESS",
   payload: spots,
 });
+
 export const DeleteSpot = (spotId) => {
   return {
     type: "FETCH_DELETE_SPOT",
@@ -61,12 +62,22 @@ export const fetchSpot = (spotId) => {
     }
     const spotDetails = await response.json();
     const reviews = await res2.json();
-    const spotData = {
-      ...spotDetails[0],
-      // reviews,
-    };
     
-    dispatch(fetchSpotByID(spotData));
+    // Extract image data
+    const spotImages = spotDetails[0].SpotImages;
+
+    // Normalize image data
+    const normalizedImages = Object.fromEntries(
+      spotImages.map(image => [image.id, image])
+    );
+
+    // Replace spotDetails.SpotImages with normalized image data
+    const normalizedSpotDetails = {
+      ...spotDetails[0],
+      SpotImages: normalizedImages
+    };
+    console.log(normalizedSpotDetails)
+    dispatch(fetchSpotByID(normalizedSpotDetails));
     dispatch(loadReviewData(reviews.Reviews));
   };
 };
@@ -149,7 +160,6 @@ const initialState = {};
 const spotsReducer = (state = initialState, action) => {
   switch (action.type) {
     case "FETCH_SPOTS_SUCCESS":{
-      // Start the key from 1
       let nextState = {};
       Object.entries(action.payload).forEach(([key, value]) => {
         if (key !== "page" && key !== "size") {

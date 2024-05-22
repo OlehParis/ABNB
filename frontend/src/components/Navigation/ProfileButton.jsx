@@ -60,9 +60,9 @@ function ProfileButton({ user }) {
             <hr />
            <li> <Link  className='linkManageSpot' to="/spots/current">Manage Spots</Link></li>
        
-          
            <li> <Link  className='linkManageSpot' to="/reviews/current">Manage Reviews</Link></li>
-          
+           <li> <Link  className='linkManageSpot' to="/bookings/manage">Your Bookings</Link></li>
+
             <li>
               <button id='logoutButton'onClick={logout}>Log Out</button>
             </li>
@@ -87,3 +87,6 @@ function ProfileButton({ user }) {
 }
 
 export default ProfileButton;
+
+
+

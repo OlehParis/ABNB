@@ -25,12 +25,20 @@ module.exports = {
     { url: "https://media.istockphoto.com/id/1188452511/photo/stylish-scandinavian-living-room-with-design-mint-sofa-furnitures-mock-up-poster-map-plants.jpg?s=612x612&w=0&k=20&c=yK0GV6EuqXc09xBFMcNdd7ZjFephsGgSTjPBsvvv630=",
     spotId:1,
     preview: false },
+<<<<<<< HEAD
     { url: "https://images.pexels.com/photos/209296/pexels-photo-209296.jpeg?auto=compress&cs=tinysrgb&w=600",
+=======
+    { url: "https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=800",
+>>>>>>> googleAPI
     spotId:2,
     preview: true },
     { url: "https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=800",
     spotId:2,
+<<<<<<< HEAD
     preview: false},
+=======
+    preview: false },
+>>>>>>> googleAPI
     { url: "https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=800",
     spotId:2,
     preview: false},
@@ -46,6 +54,18 @@ module.exports = {
     { url: "https://images.pexels.com/photos/221540/pexels-photo-221540.jpeg?auto=compress&cs=tinysrgb&w=800",
     spotId:3,
     preview: true},
+<<<<<<< HEAD
+=======
+    { url: "https://images.pexels.com/photos/208736/pexels-photo-208736.jpeg?auto=compress&cs=tinysrgb&w=800",
+    spotId:4,
+    preview: true },
+    { url: "https://images.pexels.com/photos/206172/pexels-photo-206172.jpeg?auto=compress&cs=tinysrgb&w=800",
+    spotId:5,
+    preview: true },
+    { url: "https://images.pexels.com/photos/206172/pexels-photo-206172.jpeg?auto=compress&cs=tinysrgb&w=800",
+    spotId:5,
+    preview: false },
+>>>>>>> googleAPI
     
   ],{ validate: true } );
     },
