@@ -53,7 +53,7 @@ const EditSpot = () => {
 
   const validateForm = () => {
     let newErrors = {};
-   console.log(formData, 'formData')
+  
     if (formData.description.length < 30) {
       newErrors.description = "Description must be at least 30 characters long.";
     }

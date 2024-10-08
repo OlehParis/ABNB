@@ -98,7 +98,7 @@ router.post("/:reviewId/images", requireAuth, async (req, res, next) => {
       message: "Review couldn't be found",
     });
   }
-  console.log(curUserId, curUserId !== review.userId )
+ 
   if(curUserId !== review.userId) {
     return res.status(403).json({
       "message": "Forbidden"

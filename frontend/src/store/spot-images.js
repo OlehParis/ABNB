@@ -13,7 +13,7 @@ export const fetchImages = (spotId) => {
     }
    
     const imagesObj = await res.json();
-    console.log(imagesObj)
+    
     return  dispatch(getSpotImages({ id: spotId, images: imagesObj }));
   }
 }

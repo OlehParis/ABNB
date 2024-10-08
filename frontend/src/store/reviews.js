@@ -38,7 +38,6 @@ export const allReviews = () => {
       normalizedData[review.id] = review;
     });
 
-    console.log(normalizedData);
     dispatch(fetchAllReviews(normalizedData));
   };
 };
@@ -79,7 +78,7 @@ export const fetchSpotReview = (spot) => {
 
 export const fetchUpdateSpotReview = (review) => {
   return async (dispatch) => {
-    console.log(review);
+  
     const { reviewId } = review;
     const response = await csrfFetch(`/api/reviews/${reviewId}`, {
       method: "PUT",

@@ -76,7 +76,7 @@ export const fetchSpot = (spotId) => {
       ...spotDetails[0],
       SpotImages: normalizedImages
     };
-    console.log(normalizedSpotDetails)
+    
     dispatch(fetchSpotByID(normalizedSpotDetails));
     dispatch(loadReviewData(reviews.Reviews));
   };

@@ -19,7 +19,7 @@ const ImageGallery = () => {
     const handleClick = (image) => {
         // Perform the desired action on image click
         <OpenModalMenuItem   modalComponent={<DeleteReviewModal  />}></OpenModalMenuItem>
-        console.log('Image clicked:', image);
+       image
       
     };
 
