@@ -137,9 +137,7 @@ const validateForm = () => {
       <h4>Where&apos;s your place located?</h4>
       <p>Guests will only get your exact address once they booked a reservation.</p>
       <form onSubmit={handleSubmit}>
-        <label htmlFor="country">Country</label>
-        <input type="text" placeholder='Country' id="country" name="country" value={formData.country} onChange={handleChange} />
-        {errors.country && <div className="error">{errors.country}</div>}
+       
 
         <label htmlFor="address">Street Address</label>
           <div className="eag-mb-20">
@@ -169,7 +167,9 @@ const validateForm = () => {
           </div>
           {errors.address && <div className="error">{errors.address}</div>}
   
-   
+          <label htmlFor="country">Country</label>
+        <input type="text" placeholder='Country' id="country" name="country" value={formData.country} onChange={handleChange} />
+        {errors.country && <div className="error">{errors.country}</div>}
         
         <div className="city-state">
     <div className="input-group" id='state1' style={{width:'100%'}}>
